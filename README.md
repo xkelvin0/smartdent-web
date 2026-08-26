@@ -47,11 +47,10 @@ smartdent-web/
 
 Para este primer avance, nos hemos dividido el desarrollo del prototipo HTML/CSS/JS de la siguiente manera:
 
-1. **Añorga Pinedo Paolo Alexander** (Integrante 1: Diseñador UI/UX y Estilos Globales) 🎨
-   * **Misión:** Garantizar un diseño uniforme y profesional para todo el sitio.
+1. **Añorga Pinedo Paolo Alexander** (Integrante 1: Diseñador de Interfaz Principal) 🎨
+   * **Misión:** Garantizar una estructura atractiva y profesional para el inicio del sitio.
    * **Tareas:**
      * Crear la Landing Page principal (`index.html`).
-     * Diseñar el archivo de estilos global (`estilos.css`) con los colores, fuentes y botones unificados para todo el equipo.
 
 2. **Salinas Perez Joseph Sebastian** (Integrante 2: Módulo de Acceso - Login y Registro) 🔑
    * **Misión:** Desarrollar las pantallas de inicio de sesión y registro de pacientes.
@@ -65,9 +64,10 @@ Para este primer avance, nos hemos dividido el desarrollo del prototipo HTML/CSS
      * Crear `paciente.html` (historial de citas) y `reservar.html` (formulario para agendar citas).
      * Crear el script en JS para simular la agregación de citas en pantalla.
 
-4. **Acevedo Huarachi Kelvin Jesus** (Integrante 4: Módulo de Administración - Gestión Clínica) 💼
-   * **Misión:** Desarrollar la vista del personal de la clínica.
+4. **Acevedo Huarachi Kelvin Jesus** (Integrante 4: Administración y Estilos Globales) 💼
+   * **Misión:** Desarrollar la vista de administración y definir la identidad visual del sitio.
    * **Tareas:**
+     * Diseñar el archivo de estilos global (`estilos.css`) con la paleta de colores, tipografías y botones del proyecto.
      * Crear `admin.html` (tabla interactiva con las citas programadas).
      * Escribir JS para simular la confirmación/cancelación de citas en tiempo real.
 
