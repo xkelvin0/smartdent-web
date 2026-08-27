@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartDent | Registro de pacientes</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/auth.js" defer></script>
+</head>
+<body class="register-page">
+  <main class="auth-page">
+    <header class="page-brand">
+      <h1>SmartDent</h1>
+      <p>Excelencia Clinica a traves de la Sofisticacion.</p>
+    </header>
+
+    <section class="auth-card register-card" aria-labelledby="register-title">
+      <div class="card-rule"></div>
+      <header class="form-heading">
+        <h2 id="register-title">Crear Cuenta</h2>
+        <p>Por favor, complete sus datos para registrarse.</p>
+      </header>
+
+      <form id="registerForm" class="auth-form" novalidate>
+        <div class="field-group">
+          <label for="fullName">Nombre Completo</label>
+          <div class="input-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21a8 8 0 0 1 16 0"></path>
+              </svg>
+            </span>
+            <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="Ej. Juan Perez" required>
+          </div>
+          <small class="field-error" data-error-for="fullName"></small>
+        </div>
+
+        <div class="field-group">
+          <label for="documentNumber">DNI / Documento de Identidad</label>
+          <div class="input-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+                <path d="M8 10h8M8 14h5"></path>
+              </svg>
+            </span>
+            <input id="documentNumber" name="documentNumber" type="text" inputmode="numeric" maxlength="8" placeholder="Ej. 12345678" required>
+          </div>
+          <small class="field-error" data-error-for="documentNumber"></small>
+        </div>
+
+        <div class="field-group">
+          <label for="registerEmail">Correo Electronico</label>
+          <div class="input-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 6h16v12H4z"></path>
+                <path d="m4 7 8 6 8-6"></path>
+              </svg>
+            </span>
+            <input id="registerEmail" name="email" type="email" autocomplete="email" placeholder="correo@ejemplo.com" required>
+          </div>
+          <small class="field-error" data-error-for="registerEmail"></small>
+        </div>
+
+        <div class="field-group">
+          <label for="registerPassword">Contrasena</label>
+          <div class="input-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+              </svg>
+            </span>
+            <input id="registerPassword" name="password" type="password" autocomplete="new-password" placeholder="********" required>
+            <button type="button" class="icon-button" data-toggle-password="registerPassword" aria-label="Mostrar contrasena">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <small class="field-help">Minimo 8 caracteres, al menos una letra y un numero.</small>
+          <small class="field-error" data-error-for="registerPassword"></small>
+        </div>
+
+        <div class="field-group">
+          <label for="confirmPassword">Confirmar Contrasena</label>
+          <div class="input-wrap">
+            <span class="input-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+              </svg>
+            </span>
+            <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" placeholder="********" required>
+            <button type="button" class="icon-button" data-toggle-password="confirmPassword" aria-label="Mostrar contrasena">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <small class="field-error" data-error-for="confirmPassword"></small>
+        </div>
+
+        <button class="primary-button" type="submit">Registrarse</button>
+        <p class="form-feedback" id="registerFeedback" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="switch-copy">Ya tienes una cuenta? <a href="login.html">Inicia Sesion</a></p>
+    </section>
+
+    <p class="legal-note">Al registrarte, aceptas nuestros Terminos de Servicio y Politica de Privacidad.</p>
+  </main>
+</body>
+</html>
