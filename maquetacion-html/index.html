@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html class="light scroll-smooth" lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartDent - Excelencia Clínica a través de la Sofisticación</title>
+    <meta name="description" content="SmartDent ofrece odontología de precisión, estética y cuidado integral para pacientes que buscan una experiencia premium." />
+    <link rel="icon" type="image/svg+xml" href="favicon/logo-smartdent.svg" />
+    <link rel="apple-touch-icon" href="favicon/logo-smartdent.svg" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#e6eeff",
+                        "background": "#f8f9ff",
+                        "primary-fixed-dim": "#bcc7de",
+                        "on-surface": "#0d1c2f",
+                        "surface-dim": "#ccdbf4",
+                        "on-primary": "#ffffff",
+                        "on-background": "#0d1c2f",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "primary": "#091426",
+                        "outline-variant": "#c5c6cd",
+                        "on-surface-variant": "#45474c",
+                        "on-primary-container": "#8590a6",
+                        "on-secondary-fixed-variant": "#574500",
+                        "on-tertiary-container": "#8d9092",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#fed65b",
+                        "error": "#ba1a1a",
+                        "outline": "#75777d",
+                        "primary-fixed": "#d8e3fb",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#545f73",
+                        "surface-container-highest": "#d5e3fd",
+                        "on-secondary-fixed": "#241a00",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#735c00",
+                        "surface": "#f8f9ff",
+                        "inverse-surface": "#233144",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#dde9ff",
+                        "inverse-primary": "#bcc7de",
+                        "inverse-on-surface": "#ebf1ff",
+                        "surface-variant": "#d5e3fd",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#111516",
+                        "secondary-fixed": "#ffe088",
+                        "secondary-fixed-dim": "#e9c349",
+                        "on-secondary-container": "#745c00",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "primary-container": "#1e293b",
+                        "on-primary-fixed": "#111c2d",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-container": "#26292b"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                    spacing: {
+                        "container-max": "1280px",
+                        lg: "2.5rem",
+                        xl: "4rem",
+                        base: "4px",
+                        xs: "0.5rem",
+                        gutter: "24px",
+                        sm: "1rem",
+                        md: "1.5rem"
+                    },
+                    fontFamily: {
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "500" }],
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "display-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "display-lg-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "label-sm": ["12px", { lineHeight: "16px", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        section[id] {
+            scroll-margin-top: 100px;
+        }
+        .hero-slide {
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            background-position: center;
+            background-size: cover;
+        }
+        .hero-slide.active {
+            opacity: 1;
+        }
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-md text-body-md selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+    <header class="bg-surface dark:bg-primary-container border-b border-outline-variant shadow-sm z-50 sticky top-0 w-full transition-all duration-300" id="main-header">
+        <div class="max-w-container-max mx-auto flex h-20 items-center justify-between px-4 sm:px-6 lg:px-8">
+            <a href="#inicio" class="flex items-center gap-2" aria-label="SmartDent inicio">
+                <span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+                <span class="text-headline-md font-headline-md text-primary dark:text-primary-fixed">SmartDent</span>
+            </a>
+
+            <nav class="hidden items-center gap-7 md:flex" aria-label="Navegación principal">
+                <a class="pb-1 text-label-md font-label-md text-primary transition-colors duration-200 hover:text-secondary dark:text-primary-fixed border-b-2 border-secondary" href="#inicio">Inicio</a>
+                <a class="pb-1 text-label-md font-label-md text-on-surface-variant transition-colors duration-200 hover:text-secondary dark:text-on-primary-container" href="#servicios">Servicios</a>
+                <a class="pb-1 text-label-md font-label-md text-on-surface-variant transition-colors duration-200 hover:text-secondary dark:text-on-primary-container" href="#especialistas">Especialistas</a>
+                <a class="pb-1 text-label-md font-label-md text-on-surface-variant transition-colors duration-200 hover:text-secondary dark:text-on-primary-container" href="#clinica">Clínica</a>
+                <a class="pb-1 text-label-md font-label-md text-on-surface-variant transition-colors duration-200 hover:text-secondary dark:text-on-primary-container" href="#contacto">Contacto</a>
+            </nav>
+
+            <div class="hidden items-center gap-4 md:flex">
+                <a href="#contacto" class="rounded-lg border border-primary bg-transparent px-4 py-2 text-label-md font-label-md text-primary transition-all hover:bg-surface-container">Consulta inicial</a>
+                <a href="#contacto" class="rounded-lg bg-secondary px-6 py-2 text-label-md font-label-md text-on-secondary-fixed shadow-sm transition-all hover:bg-secondary-fixed hover:shadow-md">Contáctanos</a>
+            </div>
+
+            <button class="md:hidden text-primary" aria-label="Abrir menú">
+                <span class="material-symbols-outlined text-3xl">menu</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section id="inicio" class="relative flex min-h-[780px] w-full items-center overflow-hidden bg-primary text-on-primary">
+            <div class="absolute inset-0 z-0">
+                <div class="hero-slide active absolute inset-0" style="background-image: url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1600&q=80');"></div>
+                <div class="hero-slide absolute inset-0" style="background-image: url('https://images.unsplash.com/photo-1588776814546-da5a8a5c1c08?auto=format&fit=crop&w=1600&q=80');"></div>
+                <div class="hero-slide absolute inset-0" style="background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1600&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-transparent"></div>
+            </div>
+            <div class="relative z-10 mx-auto grid w-full max-w-container-max items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:px-20">
+                <div class="flex flex-col items-start gap-6">
+                    <span class="text-label-md font-label-md uppercase tracking-wider text-secondary-fixed">Odontología de Precisión</span>
+                    <h1 class="text-display-lg-mobile font-display-lg-mobile text-white md:text-display-lg md:font-display-lg leading-tight">Excelencia Clínica a través de la Sofisticación.</h1>
+                    <p class="max-w-lg text-body-lg font-body-lg text-primary-fixed-dim">Experimente una atención dental de primer nivel en un entorno diseñado para su confort y tranquilidad. Tecnología avanzada en manos expertas.</p>
+                    <div class="mt-4 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+                        <a href="#contacto" class="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-8 py-3 text-label-md font-label-md text-on-secondary-fixed shadow-sm transition-all hover:bg-secondary-fixed hover:shadow-md sm:w-auto">
+                            Solicitar evaluación
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </a>
+                        <a href="#clinica" class="w-full rounded-lg border border-primary-fixed px-8 py-3 text-center text-label-md font-label-md text-primary-fixed transition-all hover:bg-white/10 sm:w-auto">
+                            Conocer la Clínica
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-3">
+                <button class="slide-dot h-3 w-3 rounded-full bg-white/70 shadow-sm transition-all hover:bg-white data-[active=true]:bg-secondary" data-active="true" data-slide="0" aria-label="Ir a la diapositiva 1"></button>
+                <button class="slide-dot h-3 w-3 rounded-full bg-white/40 shadow-sm transition-all hover:bg-white data-[active=true]:bg-secondary" data-slide="1" aria-label="Ir a la diapositiva 2"></button>
+                <button class="slide-dot h-3 w-3 rounded-full bg-white/40 shadow-sm transition-all hover:bg-white data-[active=true]:bg-secondary" data-slide="2" aria-label="Ir a la diapositiva 3"></button>
+            </div>
+        </section>
+
+        <section id="servicios" class="w-full bg-background py-xl md:py-[120px]">
+            <div class="mx-auto max-w-container-max px-4 sm:px-6 md:px-20">
+                <div class="mb-12 flex flex-col items-end justify-between gap-6 md:flex-row">
+                    <div class="max-w-2xl">
+                        <h2 class="mb-4 text-headline-md font-headline-md text-primary">Nuestros Servicios Especializados</h2>
+                        <p class="text-body-md font-body-md text-on-surface-variant">Soluciones integrales para su salud y estética dental, respaldadas por tecnología de vanguardia y especialistas altamente cualificados.</p>
+                    </div>
+                    <a href="#contacto" class="inline-flex items-center gap-1 text-label-md font-label-md text-secondary transition-colors hover:text-secondary-fixed">
+                        Ver todos los servicios
+                        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                    <article class="group relative min-h-[320px] overflow-hidden rounded-xl border border-outline-variant/30 bg-white p-8 md:col-span-2">
+                        <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-surface-container to-transparent opacity-70"></div>
+                        <img src="https://images.pexels.com/photos/3845625/pexels-photo-3845625.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Implantología avanzada" class="absolute inset-0 h-full w-full object-cover opacity-80" />
+                        <div class="relative z-10 flex h-full flex-col justify-end">
+                            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-surface-container-low">
+                                <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">save_as</span>
+                            </div>
+                            <h3 class="mb-2 text-headline-sm font-headline-sm text-primary">Implantología Avanzada</h3>
+                            <p class="max-w-md text-body-md font-body-md text-on-surface-variant">Restauración funcional y estética permanente utilizando sistemas de implantes guiados por computadora 3D.</p>
+                        </div>
+                    </article>
+
+                    <article class="group flex min-h-[250px] flex-col justify-between rounded-xl border border-outline-variant/30 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+                        <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=900&q=80" alt="Diseño de sonrisa" class="mb-5 h-32 w-full rounded-lg object-cover" />
+                        <div>
+                            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-surface-container-low">
+                                <span class="material-symbols-outlined text-secondary">sentiment_satisfied</span>
+                            </div>
+                            <h3 class="mb-2 text-headline-sm font-headline-sm text-primary">Diseño de Sonrisa</h3>
+                            <p class="text-body-md font-body-md text-on-surface-variant">Carillas de porcelana ultra delgadas y planificación digital.</p>
+                        </div>
+                    </article>
+
+                    <article class="group flex min-h-[250px] flex-col justify-between rounded-xl border border-outline-variant/30 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+                        <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=900&q=80" alt="Endodoncia microscópica" class="mb-5 h-32 w-full rounded-lg object-cover" />
+                        <div>
+                            <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-surface-container-low">
+                                <span class="material-symbols-outlined text-secondary">medical_services</span>
+                            </div>
+                            <h3 class="mb-2 text-headline-sm font-headline-sm text-primary">Endodoncia Microscópica</h3>
+                            <p class="text-body-md font-body-md text-on-surface-variant">Tratamientos de conducto precisos y sin dolor.</p>
+                        </div>
+                    </article>
+
+                    <article class="min-h-[220px] rounded-xl border border-outline-variant/30 bg-surface-container-low p-8 md:col-span-2">
+                        <div class="flex h-full flex-col gap-8 md:flex-row md:items-center md:justify-between">
+                            <div class="flex-1">
+                                <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-outline-variant/50 bg-white px-3 py-1">
+                                    <div class="h-2 w-2 rounded-full bg-secondary"></div>
+                                    <span class="text-label-sm font-label-sm text-primary">Tecnología Láser</span>
+                                </div>
+                                <h3 class="mb-2 text-headline-sm font-headline-sm text-primary">Periodoncia y Cuidado de Encías</h3>
+                                <p class="text-body-md font-body-md text-on-surface-variant">Tratamientos mínimamente invasivos para la salud gingival, promoviendo una base sólida para sus dientes.</p>
+                            </div>
+                            <div class="w-full rounded-lg border border-outline-variant/20 bg-white p-2 md:w-1/3">
+                                <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=900&q=80" alt="Periodoncia con tecnología láser" class="h-36 w-full rounded-lg object-cover" />
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="especialistas" class="w-full bg-surface py-xl md:py-[120px]">
+            <div class="mx-auto max-w-container-max px-4 sm:px-6 md:px-20">
+                <div class="mb-12 text-center">
+                    <h2 class="mb-4 text-headline-md font-headline-md text-primary">Nuestro Equipo de Especialistas</h2>
+                    <p class="mx-auto max-w-2xl text-body-md font-body-md text-on-surface-variant">Profesionales dedicados a tu salud y bienestar dental.</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+                    <article class="overflow-hidden rounded-xl border border-outline-variant/30 bg-white shadow-sm transition-all hover:shadow-md">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=80" alt="Dr. Carlos Mendoza" class="aspect-[4/5] w-full object-cover" />
+                        <div class="p-6 text-center">
+                            <h4 class="text-headline-sm font-headline-sm text-primary">Dr. Carlos Mendoza</h4>
+                            <p class="mb-2 text-secondary uppercase tracking-wider text-label-sm font-label-sm">Director Médico</p>
+                            <p class="text-body-md font-body-md text-on-surface-variant">Especialista en Cirugía Maxilofacial</p>
+                        </div>
+                    </article>
+
+                    <article class="overflow-hidden rounded-xl border border-outline-variant/30 bg-white shadow-sm transition-all hover:shadow-md">
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80" alt="Dra. Elena Ruiz" class="aspect-[4/5] w-full object-cover" />
+                        <div class="p-6 text-center">
+                            <h4 class="text-headline-sm font-headline-sm text-primary">Dra. Elena Ruiz</h4>
+                            <p class="mb-2 text-secondary uppercase tracking-wider text-label-sm font-label-sm">Ortodoncista</p>
+                            <p class="text-body-md font-body-md text-on-surface-variant">Experta en Ortodoncia Invisible</p>
+                        </div>
+                    </article>
+
+                    <article class="overflow-hidden rounded-xl border border-outline-variant/30 bg-white shadow-sm transition-all hover:shadow-md">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80" alt="Dr. Miguel Silva" class="aspect-[4/5] w-full object-cover" />
+                        <div class="p-6 text-center">
+                            <h4 class="text-headline-sm font-headline-sm text-primary">Dr. Miguel Silva</h4>
+                            <p class="mb-2 text-secondary uppercase tracking-wider text-label-sm font-label-sm">Endodoncista</p>
+                            <p class="text-body-md font-body-md text-on-surface-variant">Especialista en Endodoncia Microscópica</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="clinica" class="w-full bg-primary-container py-xl text-on-primary">
+            <div class="mx-auto grid max-w-container-max gap-10 px-4 py-6 sm:px-6 md:grid-cols-2 md:px-20 md:py-16">
+                <div class="flex items-center justify-center">
+                    <img src="https://images.pexels.com/photos/3779708/pexels-photo-3779708.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Interior de la clínica SmartDent" class="w-full max-w-xl rounded-[2rem] border border-white/10 shadow-2xl object-cover" />
+                </div>
+                <div class="flex flex-col justify-center">
+                    <span class="mb-4 text-label-md font-label-md uppercase tracking-[0.2em] text-secondary-fixed">Nuestra clínica</span>
+                    <h2 class="mb-6 text-display-lg-mobile font-display-lg-mobile text-white md:text-display-lg md:font-display-lg leading-tight">Un entorno pensado para cada detalle.</h2>
+                    <p class="mb-8 text-body-lg font-body-lg text-primary-fixed-dim">La experiencia SmartDent combina estética premium, tecnología avanzada y un equipo comprometido con la salud bucal a largo plazo.</p>
+                    <ul class="space-y-4 text-body-md font-body-md text-primary-fixed-dim">
+                        <li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed">check_circle</span> Diagnóstico digital con imagenología de última generación.</li>
+                        <li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed">check_circle</span> Ambientes cálidos, luminosos y diseñados para reducir la ansiedad.</li>
+                        <li class="flex items-start gap-3"><span class="material-symbols-outlined text-secondary-fixed">check_circle</span> Planes de tratamiento personalizados con seguimiento continuo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative w-full overflow-hidden bg-primary-container py-xl text-on-primary">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.25),_transparent_55%)]"></div>
+            </div>
+            <div class="relative z-10 mx-auto max-w-container-max px-4 text-center sm:px-6 md:px-20">
+                <h2 class="mb-6 text-display-lg-mobile font-display-lg-mobile text-white md:text-display-lg md:font-display-lg">¿Listo para transformar tu sonrisa?</h2>
+                <p class="mx-auto mb-10 max-w-2xl text-body-lg font-body-lg text-primary-fixed-dim">Agenda tu primera consulta de evaluación hoy mismo y descubre la excelencia en cuidado dental.</p>
+                <a href="#contacto" class="inline-flex items-center gap-2 rounded-lg bg-secondary px-10 py-4 text-label-md font-label-md text-on-secondary-fixed shadow-sm transition-all hover:bg-secondary-fixed hover:shadow-md">
+                    Solicitar evaluación
+                    <span class="material-symbols-outlined">calendar_today</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contacto" class="w-full bg-primary dark:bg-tertiary">
+        <div class="mx-auto flex w-full max-w-container-max flex-col items-center justify-between gap-8 px-4 py-xl sm:px-6 md:flex-row md:px-20">
+            <div class="flex flex-col items-center md:items-start">
+                <div class="mb-2 flex items-center gap-2 opacity-80 transition-opacity hover:opacity-100">
+                    <span class="material-symbols-outlined text-secondary-fixed text-2xl" style="font-variation-settings: 'FILL' 1;">dentistry</span>
+                    <span class="text-headline-md font-headline-md text-secondary-fixed">SmartDent</span>
+                </div>
+                <p class="mt-2 text-center text-label-sm font-label-sm text-outline-variant md:text-left">© 2024 SmartDent. Excelencia Clínica a través de la Sofisticación.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-6 md:justify-end md:gap-8">
+                <a class="text-label-sm font-label-sm text-outline-variant transition-colors hover:text-secondary-fixed" href="#inicio">Inicio</a>
+                <a class="text-label-sm font-label-sm text-outline-variant transition-colors hover:text-secondary-fixed" href="#servicios">Servicios</a>
+                <a class="text-label-sm font-label-sm text-outline-variant transition-colors hover:text-secondary-fixed" href="#especialistas">Especialistas</a>
+                <a class="text-label-sm font-label-sm text-outline-variant transition-colors hover:text-secondary-fixed" href="#clinica">Clínica</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll('.hero-slide'));
+        const dots = Array.from(document.querySelectorAll('.slide-dot'));
+        let currentSlide = 0;
+
+        function updateHeroSlider(nextIndex) {
+            currentSlide = nextIndex;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            dots.forEach((dot, index) => {
+                const active = index === currentSlide;
+                dot.dataset.active = String(active);
+                dot.style.opacity = active ? '1' : '0.6';
+                dot.style.width = active ? '1.25rem' : '0.75rem';
+            });
+        }
+
+        dots.forEach((dot) => {
+            dot.addEventListener('click', () => updateHeroSlider(Number(dot.dataset.slide)));
+        });
+
+        setInterval(() => {
+            const nextIndex = (currentSlide + 1) % slides.length;
+            updateHeroSlider(nextIndex);
+        }, 4500);
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (!header) return;
+
+            if (window.scrollY > 20) {
+                header.classList.remove('h-20');
+                header.classList.add('h-16');
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('h-16');
+                header.classList.add('h-20');
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body>
+</html>
