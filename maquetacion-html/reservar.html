@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Cita | SmartDent</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="smartdent-patient-page" data-page="reservar">
+  <svg aria-hidden="true" style="display:none">
+    <symbol id="icon-grid" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+      <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+      <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+      <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+    </symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24">
+      <path d="M7 3v4M17 3v4M4 9h16"></path>
+      <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+    </symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24">
+      <path d="M6 3h9l3 3v15H6z"></path>
+      <path d="M9 12h6M9 16h6M15 3v4h4"></path>
+    </symbol>
+    <symbol id="icon-card" viewBox="0 0 24 24">
+      <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+      <path d="M4 10h16M8 15h4"></path>
+    </symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24">
+      <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+      <path d="M3 12h2M19 12h2M12 3v2M12 19v2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"></path>
+    </symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24">
+      <path d="M12 5v14M5 12h14"></path>
+    </symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M9.8 9a2.4 2.4 0 0 1 4.5 1.2c0 1.8-2.3 2-2.3 3.8M12 17h.01"></path>
+    </symbol>
+    <symbol id="icon-logout" viewBox="0 0 24 24">
+      <path d="M14 8V5H5v14h9v-3M10 12h10M17 9l3 3-3 3"></path>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path d="m5 12 4 4L19 6"></path>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+      <path d="M5 12h14M13 6l6 6-6 6"></path>
+    </symbol>
+  </svg>
+
+  <div class="patient-app">
+    <aside class="patient-sidebar" aria-label="Navegacion del paciente">
+      <a class="patient-sidebar__brand" href="paciente.html" aria-label="SmartDent Panel del Paciente">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>
+          <strong class="patient-sidebar__title">Panel del Paciente</strong>
+          <span class="patient-sidebar__subtitle">SmartDent Clinic</span>
+        </span>
+      </a>
+
+      <nav class="patient-nav">
+        <a class="patient-nav__item" href="paciente.html">
+          <svg class="patient-nav__icon"><use href="#icon-grid"></use></svg>
+          Panel de Control
+        </a>
+        <a class="patient-nav__item" href="paciente.html#proximas-citas">
+          <svg class="patient-nav__icon"><use href="#icon-calendar"></use></svg>
+          Mis Citas
+        </a>
+        <a class="patient-nav__item" href="paciente.html#historial-tratamientos">
+          <svg class="patient-nav__icon"><use href="#icon-file"></use></svg>
+          Historial Clinico
+        </a>
+        <a class="patient-nav__item" href="paciente.html#historial-tratamientos">
+          <svg class="patient-nav__icon"><use href="#icon-card"></use></svg>
+          Facturacion
+        </a>
+        <a class="patient-nav__item" href="paciente.html#perfil-paciente">
+          <svg class="patient-nav__icon"><use href="#icon-settings"></use></svg>
+          Configuracion
+        </a>
+      </nav>
+
+      <div class="patient-sidebar__footer">
+        <a class="patient-sidebar__button is-active" href="reservar.html" aria-current="page">
+          <svg class="patient-nav__icon"><use href="#icon-plus"></use></svg>
+          Nueva Cita
+        </a>
+        <a class="patient-sidebar__link" href="https://api.whatsapp.com/send?phone=51922454334&text=Hola%20SmartDent%2C%20quiero%20ayuda%20con%20mi%20cita." target="_blank" rel="noopener noreferrer">
+          <svg class="patient-nav__icon"><use href="#icon-help"></use></svg>
+          Soporte
+        </a>
+        <a class="patient-sidebar__link" href="login.html">
+          <svg class="patient-nav__icon"><use href="#icon-logout"></use></svg>
+          Cerrar Sesion
+        </a>
+      </div>
+    </aside>
+
+    <main class="patient-main">
+      <div class="patient-main__inner">
+        <header class="patient-header">
+          <div>
+            <p class="patient-eyebrow">SmartDent Clinic</p>
+            <h1 class="patient-title">Agendar Nueva Cita</h1>
+            <p class="patient-subtitle">Completa los datos para programar tu proxima cita dental.</p>
+          </div>
+          <a class="patient-button patient-button--ghost" href="paciente.html">
+            <svg class="patient-button__icon"><use href="#icon-arrow"></use></svg>
+            Volver al Panel
+          </a>
+        </header>
+
+        <section class="booking-grid">
+          <article class="patient-card booking-card" aria-labelledby="bookingFormTitle">
+            <div class="patient-card__body">
+              <h2 class="section-title" id="bookingFormTitle">
+                <svg class="section-title__icon"><use href="#icon-calendar"></use></svg>
+                Datos de la Cita
+              </h2>
+
+              <div class="form-alert" id="formMessage" role="status" aria-live="polite"></div>
+
+              <form class="appointment-form" id="appointmentForm" novalidate>
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label class="form-label" for="treatment">Tratamiento</label>
+                    <select class="form-control" id="treatment" name="tratamiento" aria-describedby="treatmentError">
+                      <option value="">Selecciona un tratamiento</option>
+                      <option value="Consulta General">Consulta General</option>
+                      <option value="Limpieza Dental">Limpieza Dental</option>
+                      <option value="Limpieza Profunda">Limpieza Profunda</option>
+                      <option value="Blanqueamiento Dental">Blanqueamiento Dental</option>
+                      <option value="Ortodoncia">Ortodoncia</option>
+                      <option value="Implantes">Implantes</option>
+                      <option value="Radiografia Panoramica">Radiografia Panoramica</option>
+                    </select>
+                    <span class="form-error" id="treatmentError"></span>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="doctor">Odontologo</label>
+                    <select class="form-control" id="doctor" name="doctor" aria-describedby="doctorError">
+                      <option value="">Selecciona un odontologo</option>
+                      <option value="Dra. Elena Silva">Dra. Elena Silva</option>
+                      <option value="Dr. Carlos Mendoza">Dr. Carlos Mendoza</option>
+                      <option value="Dr. Luis Torres">Dr. Luis Torres</option>
+                    </select>
+                    <span class="form-error" id="doctorError"></span>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="appointmentDate">Fecha</label>
+                    <input class="form-control" type="date" id="appointmentDate" name="fecha" aria-describedby="appointmentDateError">
+                    <span class="form-error" id="appointmentDateError"></span>
+                  </div>
+
+                  <div class="form-field">
+                    <label class="form-label" for="appointmentTime">Hora</label>
+                    <select class="form-control" id="appointmentTime" name="hora" aria-describedby="appointmentTimeError">
+                      <option value="">Selecciona una hora</option>
+                      <option value="09:00 AM">09:00 AM</option>
+                      <option value="10:00 AM">10:00 AM</option>
+                      <option value="11:00 AM">11:00 AM</option>
+                      <option value="02:00 PM">02:00 PM</option>
+                      <option value="03:00 PM">03:00 PM</option>
+                      <option value="04:00 PM">04:00 PM</option>
+                      <option value="05:00 PM">05:00 PM</option>
+                    </select>
+                    <span class="form-error" id="appointmentTimeError"></span>
+                  </div>
+
+                  <div class="form-field form-field--full">
+                    <label class="form-label" for="reason">Motivo de consulta</label>
+                    <textarea class="form-control" id="reason" name="motivo" rows="5" placeholder="Describe brevemente el motivo de tu visita"></textarea>
+                    <span class="form-error" id="reasonError"></span>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <a class="patient-button" href="paciente.html">Cancelar</a>
+                  <button class="patient-button patient-button--primary" type="submit">
+                    <svg class="patient-button__icon"><use href="#icon-check"></use></svg>
+                    Guardar Cita
+                  </button>
+                </div>
+              </form>
+            </div>
+          </article>
+
+          <aside class="booking-aside" aria-label="Informacion para reservar">
+            <div class="patient-card booking-summary">
+              <h2>Resumen del paciente</h2>
+              <p id="bookingPatientName">Alex Mercer</p>
+              <ul class="booking-summary__list">
+                <li><span class="booking-summary__dot"></span>Selecciona una fecha desde hoy en adelante.</li>
+                <li><span class="booking-summary__dot"></span>La nueva cita aparecera en Proximas Citas.</li>
+                <li><span class="booking-summary__dot"></span>La informacion se guarda temporalmente en este navegador.</li>
+              </ul>
+            </div>
+          </aside>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/paciente.js"></script>
+</body>
+</html>
