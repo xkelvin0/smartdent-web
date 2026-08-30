@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del Paciente | SmartDent</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="smartdent-patient-page" data-page="paciente">
+  <svg aria-hidden="true" style="display:none">
+    <symbol id="icon-grid" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="6" height="6" rx="1"></rect>
+      <rect x="14" y="4" width="6" height="6" rx="1"></rect>
+      <rect x="4" y="14" width="6" height="6" rx="1"></rect>
+      <rect x="14" y="14" width="6" height="6" rx="1"></rect>
+    </symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24">
+      <path d="M7 3v4M17 3v4M4 9h16"></path>
+      <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+    </symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24">
+      <path d="M6 3h9l3 3v15H6z"></path>
+      <path d="M9 12h6M9 16h6M15 3v4h4"></path>
+    </symbol>
+    <symbol id="icon-card" viewBox="0 0 24 24">
+      <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+      <path d="M4 10h16M8 15h4"></path>
+    </symbol>
+    <symbol id="icon-settings" viewBox="0 0 24 24">
+      <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+      <path d="M3 12h2M19 12h2M12 3v2M12 19v2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"></path>
+    </symbol>
+    <symbol id="icon-plus" viewBox="0 0 24 24">
+      <path d="M12 5v14M5 12h14"></path>
+    </symbol>
+    <symbol id="icon-help" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M9.8 9a2.4 2.4 0 0 1 4.5 1.2c0 1.8-2.3 2-2.3 3.8M12 17h.01"></path>
+    </symbol>
+    <symbol id="icon-logout" viewBox="0 0 24 24">
+      <path d="M14 8V5H5v14h9v-3M10 12h10M17 9l3 3-3 3"></path>
+    </symbol>
+    <symbol id="icon-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 7v5l3 2"></path>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="3.5"></circle>
+      <path d="M5 20a7 7 0 0 1 14 0"></path>
+    </symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24">
+      <path d="M4 19V5h16v14zM8 16l3-5 3 3 3-7"></path>
+    </symbol>
+    <symbol id="icon-history" viewBox="0 0 24 24">
+      <path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v6h6"></path>
+      <path d="M12 8v5l4 2"></path>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+      <path d="M5 12h14M13 6l6 6-6 6"></path>
+    </symbol>
+    <symbol id="icon-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M12 11v6M12 7h.01"></path>
+    </symbol>
+  </svg>
+
+  <div class="patient-app">
+    <aside class="patient-sidebar" aria-label="Navegacion del paciente">
+      <a class="patient-sidebar__brand" href="paciente.html" aria-label="SmartDent Panel del Paciente">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>
+          <strong class="patient-sidebar__title">Panel del Paciente</strong>
+          <span class="patient-sidebar__subtitle">SmartDent Clinic</span>
+        </span>
+      </a>
+
+      <nav class="patient-nav" aria-label="Menu del paciente">
+        <a class="patient-nav__item is-active" href="#panel-home" data-panel-target="panel-home" aria-current="page">
+          <svg class="patient-nav__icon"><use href="#icon-grid"></use></svg>
+          Panel de Control
+        </a>
+        <a class="patient-nav__item" href="#panel-citas" data-panel-target="panel-citas">
+          <svg class="patient-nav__icon"><use href="#icon-calendar"></use></svg>
+          Mis Citas
+        </a>
+        <a class="patient-nav__item" href="#panel-historial" data-panel-target="panel-historial">
+          <svg class="patient-nav__icon"><use href="#icon-file"></use></svg>
+          Historial Clinico
+        </a>
+        <a class="patient-nav__item" href="#panel-facturacion" data-panel-target="panel-facturacion">
+          <svg class="patient-nav__icon"><use href="#icon-card"></use></svg>
+          Facturacion
+        </a>
+        <a class="patient-nav__item" href="#panel-configuracion" data-panel-target="panel-configuracion">
+          <svg class="patient-nav__icon"><use href="#icon-settings"></use></svg>
+          Configuracion
+        </a>
+      </nav>
+
+      <div class="patient-sidebar__footer">
+        <a class="patient-sidebar__button" href="reservar.html">
+          <svg class="patient-nav__icon"><use href="#icon-plus"></use></svg>
+          Nueva Cita
+        </a>
+        <a class="patient-sidebar__link" href="https://api.whatsapp.com/send?phone=51922454334&text=Hola%20SmartDent%2C%20quiero%20ayuda%20con%20mi%20cita." target="_blank" rel="noopener noreferrer">
+          <svg class="patient-nav__icon"><use href="#icon-help"></use></svg>
+          Soporte
+        </a>
+        <a class="patient-sidebar__link" href="login.html">
+          <svg class="patient-nav__icon"><use href="#icon-logout"></use></svg>
+          Cerrar Sesion
+        </a>
+      </div>
+    </aside>
+
+    <main class="patient-main">
+      <div class="patient-main__inner">
+        <header class="patient-header">
+          <div>
+            <h1 class="patient-title">Bienvenido, <span id="patientWelcomeName">Alex</span></h1>
+            <p class="patient-subtitle">Tu salud dental esta al dia. Tienes una cita proxima.</p>
+          </div>
+          <a class="patient-button patient-button--primary" href="reservar.html">
+            <svg class="patient-button__icon"><use href="#icon-calendar"></use></svg>
+            Agendar Cita
+          </a>
+        </header>
+
+        <section id="panel-home" class="patient-panel is-active">
+          <div class="patient-overview" aria-label="Resumen del paciente">
+            <article class="patient-card patient-profile" id="perfil-paciente">
+              <div class="patient-card__body">
+                <div class="patient-profile__head">
+                  <div class="patient-avatar" aria-hidden="true"></div>
+                  <div>
+                    <h2 class="patient-profile__name" id="patientProfileName">Alex Mercer</h2>
+                    <p class="patient-profile__type" id="patientProfileType">Paciente Premium</p>
+                  </div>
+                </div>
+                <dl class="patient-facts">
+                  <div class="patient-fact">
+                    <dt>Ultima Visita</dt>
+                    <dd id="lastVisitDate">15 Oct 2023</dd>
+                  </div>
+                  <div class="patient-fact">
+                    <dt>Odontologo</dt>
+                    <dd id="mainDentist">Dra. Elena Silva</dd>
+                  </div>
+                  <div class="patient-fact">
+                    <dt>Estado de Cuenta</dt>
+                    <dd id="accountStatus">Al dia</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+
+            <section class="patient-card" id="proximas-citas">
+              <div class="patient-card__body">
+                <h2 class="section-title">
+                  <svg class="section-title__icon"><use href="#icon-calendar"></use></svg>
+                  Proximas Citas
+                </h2>
+                <div class="appointments-list" id="upcomingAppointments" aria-live="polite"></div>
+              </div>
+            </section>
+          </div>
+
+          <section class="patient-card treatment-card" aria-labelledby="treatmentProgressTitle">
+            <div class="patient-card__body">
+              <h2 class="section-title" id="treatmentProgressTitle">
+                <svg class="section-title__icon"><use href="#icon-chart"></use></svg>
+                Progreso de Tratamiento
+              </h2>
+              <div class="treatment-layout">
+                <div class="treatment-tabs" role="tablist" aria-label="Tratamientos">
+                  <button class="treatment-tab is-active" type="button" data-treatment-tab="ortodoncia" role="tab" aria-selected="true">Ortodoncia</button>
+                  <button class="treatment-tab" type="button" data-treatment-tab="limpieza" role="tab" aria-selected="false">Limpieza</button>
+                  <button class="treatment-tab" type="button" data-treatment-tab="implantes" role="tab" aria-selected="false">Implantes</button>
+                </div>
+
+                <div class="treatment-chart" aria-label="Grafica de progreso por mes">
+                  <div class="chart-area">
+                    <div class="chart-scale" aria-hidden="true">
+                      <span>100%</span>
+                      <span>75%</span>
+                      <span>50%</span>
+                      <span>25%</span>
+                      <span>0%</span>
+                    </div>
+                    <div class="chart-bars" id="treatmentChart"></div>
+                  </div>
+                  <div class="chart-labels" aria-hidden="true">
+                    <span>Mes 1</span>
+                    <span>Mes 2</span>
+                    <span>Mes 3</span>
+                    <span>Mes 4</span>
+                    <span>Mes 5</span>
+                  </div>
+                </div>
+              </div>
+              <p class="treatment-note" id="treatmentSummary">
+                <svg class="meta-icon"><use href="#icon-info"></use></svg>
+                Tratamiento actual: <strong>Ortodoncia</strong>. Progreso total: <strong>60%</strong>.
+              </p>
+            </div>
+          </section>
+
+          <section class="patient-card history-card" id="historial-tratamientos" aria-labelledby="historyTitle">
+            <div class="patient-card__body">
+              <div class="history-card__header">
+                <h2 class="section-title" id="historyTitle">
+                  <svg class="section-title__icon"><use href="#icon-history"></use></svg>
+                  Historial de Tratamientos
+                </h2>
+                <a class="history-link" href="#panel-historial" data-panel-target="panel-historial">
+                  Ver todo
+                  <svg class="patient-button__icon"><use href="#icon-arrow"></use></svg>
+                </a>
+              </div>
+              <div class="history-table-wrap">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Hora</th>
+                      <th>Tratamiento</th>
+                      <th>Especialista</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <section id="panel-citas" class="patient-panel" aria-labelledby="sectionCitasTitle">
+          <article class="patient-card detail-panel">
+            <div class="patient-card__body">
+              <h2 class="section-title" id="sectionCitasTitle">
+                <svg class="section-title__icon"><use href="#icon-calendar"></use></svg>
+                Mis Citas
+              </h2>
+              <div class="detail-panel__grid">
+                <div class="mini-stat">
+                  <span class="mini-stat__label">Próxima</span>
+                  <strong>12 Nov 2026</strong>
+                  <small>10:00 AM</small>
+                </div>
+                <div class="mini-stat">
+                  <span class="mini-stat__label">Pendientes</span>
+                  <strong>02</strong>
+                  <small>Por confirmar</small>
+                </div>
+                <div class="mini-stat">
+                  <span class="mini-stat__label">Atendidas</span>
+                  <strong>08</strong>
+                  <small>Este año</small>
+                </div>
+              </div>
+              <div class="detail-list">
+                <div class="detail-item">
+                  <div>
+                    <h3>Limpieza Profunda</h3>
+                    <p>Dra. Elena Silva · 12 Nov 2026 · 10:00 AM</p>
+                  </div>
+                  <span class="status-badge status-badge--scheduled">Programada</span>
+                </div>
+                <div class="detail-item">
+                  <div>
+                    <h3>Revisión de Ortodoncia</h3>
+                    <p>Dr. Carlos Mendoza · 18 Nov 2026 · 03:00 PM</p>
+                  </div>
+                  <span class="status-badge">Confirmada</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="panel-historial" class="patient-panel" aria-labelledby="sectionHistorialTitle">
+          <article class="patient-card detail-panel">
+            <div class="patient-card__body">
+              <h2 class="section-title" id="sectionHistorialTitle">
+                <svg class="section-title__icon"><use href="#icon-file"></use></svg>
+                Historial Clínico
+              </h2>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <span class="timeline-date">15 Oct 2023</span>
+                  <div class="timeline-content">
+                    <h3>Blanqueamiento Dental</h3>
+                    <p>Se completó con resultado satisfactorio y seguimiento orientado.</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-date">02 Ago 2023</span>
+                  <div class="timeline-content">
+                    <h3>Radiografía Panorámica</h3>
+                    <p>Se revisó estructura dental y se evaluó la salud periodontal.</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-date">10 May 2023</span>
+                  <div class="timeline-content">
+                    <h3>Consulta General</h3>
+                    <p>Se evaluó la salud bucal general y se recomendaron hábitos preventivos.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="panel-facturacion" class="patient-panel" aria-labelledby="sectionFacturacionTitle">
+          <article class="patient-card detail-panel">
+            <div class="patient-card__body">
+              <h2 class="section-title" id="sectionFacturacionTitle">
+                <svg class="section-title__icon"><use href="#icon-card"></use></svg>
+                Facturación
+              </h2>
+              <div class="billing-cards">
+                <div class="billing-card billing-card--primary">
+                  <span>Saldo actual</span>
+                  <strong>S/ 0.00</strong>
+                  <small>Cuenta al día</small>
+                </div>
+                <div class="billing-card">
+                  <span>Última boleta</span>
+                  <strong>S/ 290.00</strong>
+                  <small>15 Oct 2023</small>
+                </div>
+                <div class="billing-card">
+                  <span>Próximo pago</span>
+                  <strong>S/ 160.00</strong>
+                  <small>12 Nov 2026</small>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section id="panel-configuracion" class="patient-panel" aria-labelledby="sectionConfigTitle">
+          <article class="patient-card detail-panel">
+            <div class="patient-card__body">
+              <h2 class="section-title" id="sectionConfigTitle">
+                <svg class="section-title__icon"><use href="#icon-settings"></use></svg>
+                Configuración
+              </h2>
+              <div class="settings-list">
+                <div class="setting-row">
+                  <div>
+                    <h3>Notificaciones por correo</h3>
+                    <p>Recibe avisos de recordatorios y cambios de cita.</p>
+                  </div>
+                  <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+                <div class="setting-row">
+                  <div>
+                    <h3>Recordatorios por WhatsApp</h3>
+                    <p>Mensajes de confirmación antes de cada cita.</p>
+                  </div>
+                  <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                </div>
+                <div class="setting-row">
+                  <div>
+                    <h3>Datos de contacto</h3>
+                    <p>alex.mercer@email.com · +51 987 654 321</p>
+                  </div>
+                  <button class="patient-button patient-button--small" type="button">Editar</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="patient-toast" id="patientToast" role="status" aria-live="polite"></div>
+  <script src="js/paciente.js"></script>
+</body>
+</html>
