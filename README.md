@@ -1,81 +1,156 @@
-# SmartDent - Sistema de Gestión de Citas y Pacientes 🦷
+# SmartDent — Gestión de citas odontológicas
 
-Este es el repositorio oficial del proyecto final del curso **Desarrollo Web Integrado**. 
-El proyecto está estructurado de manera modular para facilitar el trabajo del equipo y la revisión por entregas.
+SmartDent es un prototipo web para gestionar citas, pacientes y atenciones de una clínica odontológica. El proyecto corresponde al curso **Desarrollo Web Integrado** de la Universidad Tecnológica del Perú.
 
----
+## Estado del proyecto
 
-## 📂 Estructura del Repositorio
+El repositorio contiene el **Avance 1**, desarrollado con HTML, CSS y JavaScript. En esta etapa no existe un backend ni una base de datos: la autenticación, las citas y los registros clínicos se simulan mediante `localStorage`.
 
-Para evitar desorden y conflictos al combinar el backend, el frontend y la maquetación inicial, utilizaremos la siguiente estructura de carpetas:
+## Funcionalidades
+
+### Sitio público
+
+- Página principal con servicios odontológicos.
+- Catálogo completo de servicios.
+- Páginas de Nosotros y Contacto.
+- Mapa de ubicación de la clínica.
+- Navegación y pie de página compartidos.
+- Reserva protegida mediante inicio de sesión.
+
+### Autenticación
+
+- Registro de pacientes con validaciones.
+- Inicio de sesión por correo y contraseña.
+- Identificación de roles: paciente, odontólogo y administrador.
+- Redirección al panel correspondiente.
+
+### Panel del paciente
+
+- Resumen de citas y recordatorios.
+- Reserva, consulta, cancelación y reprogramación de citas.
+- Historial clínico e indicaciones del odontólogo.
+- Progreso del tratamiento por etapas.
+- Comprobantes de atenciones completadas.
+- Preferencias de contacto y recordatorios.
+
+### Panel del odontólogo
+
+- Agenda personal filtrada por día, semana, mes y estado.
+- Confirmación y cancelación de citas.
+- Bloqueo de horarios no disponibles.
+- Consulta de pacientes asignados.
+- Registro de diagnóstico, tratamiento, indicaciones y próximo control.
+- Actualización de la etapa del tratamiento.
+- Indicadores, alertas y actividad reciente.
+
+### Panel del administrador
+
+- Agenda global con filtros y exportación CSV.
+- Consulta de pacientes, odontólogos y administradores.
+- Gestión de servicios, precios, costos y disponibilidad.
+- Configuración de gastos fijos mensuales.
+- Cálculo estimado de ingresos, costos, utilidad y margen.
+- Gráficos de estados, actividad, demanda e ingresos frente a costos.
+
+## Tecnologías
+
+- HTML5.
+- CSS3 y Tailwind CSS mediante CDN.
+- JavaScript vanilla.
+- Google Fonts y Material Symbols.
+- `localStorage` y `sessionStorage` para la simulación de datos.
+
+## Ejecución local
+
+No es necesario instalar dependencias.
+
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/xkelvin0/smartdent-web.git
+   ```
+
+2. Ingresa al proyecto:
+
+   ```bash
+   cd smartdent-web
+   ```
+
+3. Abre `maquetacion-html/index.html` mediante un servidor local. Se recomienda la extensión **Live Server** de Visual Studio Code.
+
+4. Navega a la dirección mostrada por Live Server, por ejemplo:
+
+   ```text
+   http://127.0.0.1:5500/maquetacion-html/index.html
+   ```
+
+> No se recomienda abrir los archivos únicamente con `file://`, ya que algunas funciones del navegador pueden comportarse de forma diferente.
+
+## Credenciales de prueba
+
+Las cuentas de paciente, odontólogos y administrador están documentadas en [`doc/CREDENCIALES_PRUEBA.md`](doc/CREDENCIALES_PRUEBA.md).
+
+Estas credenciales son exclusivamente para la demostración del Avance 1. No deben utilizarse como modelo de seguridad para una aplicación real.
+
+## Estructura del repositorio
 
 ```text
 smartdent-web/
-│
-├── maquetacion-html/        # 💻 Avance 1: Prototipo estático (HTML, CSS y JS)
-│   ├── css/                 # Hojas de estilo unificadas
-│   ├── js/                  # Validaciones y simulaciones interactivas
-│   ├── index.html           # Landing Page principal
-│   ├── login.html           # Pantalla de acceso
-│   ├── registro.html        # Pantalla de registro de pacientes
-│   ├── paciente.html        # Panel del paciente
-│   └── admin.html           # Panel de administración/doctores
-│
-├── backend-springboot/      # ⚙️ Avance 2: API REST en Java (Spring Boot)
-│   ├── src/                 # Código fuente (Controllers, Services, Repositories)
-│   └── pom.xml              # Dependencias de Maven
-│
-├── frontend-angular/        # 🅰️ Avance 3: Aplicación SPA (Angular)
-│   ├── src/                 # Componentes y servicios de Angular
-│   └── package.json         # Dependencias de Node
-│
-├── .gitignore               # Archivo para excluir archivos innecesarios de Git
-└── README.md                # Presentación e instrucciones del repositorio (este archivo)
+├── doc/
+│   ├── canvas/                    # Evidencias y tablero del proyecto
+│   ├── CREDENCIALES_PRUEBA.md
+│   ├── SmartDent_Avance_1.docx
+│   └── requerimientos_funcionales.md
+├── maquetacion-html/
+│   ├── css/                       # Estilos globales
+│   ├── img/                       # Logos, odontólogos y servicios
+│   ├── js/                        # Autenticación, navegación y paneles
+│   ├── index.html                 # Página principal
+│   ├── login.html                 # Inicio de sesión
+│   ├── registro.html              # Registro de pacientes
+│   ├── reservar.html              # Programación de citas
+│   ├── paciente.html              # Panel del paciente
+│   ├── odontologo.html            # Panel del odontólogo
+│   ├── admin.html                 # Panel administrativo
+│   ├── servicios.html
+│   ├── nosotros.html
+│   └── contacto.html
+├── .gitignore
+└── README.md
 ```
 
----
+## Persistencia del prototipo
 
-## 👥 Integrantes del Equipo
-* **Acevedo Huarachi Kelvin Jesus** - U23309803
-* **Añorga Pinedo Paolo Alexander** - U23305864
-* **Calle Paredes Maykol Adan** - U23242558
-* **Salinas Perez Joseph Sebastian** - u23325202
+Los principales datos se almacenan en el navegador:
 
----
+| Clave | Contenido |
+|---|---|
+| `smartdent_users` | Pacientes registrados |
+| `smartdent_session` | Sesión activa |
+| `smartdent_appointments` | Citas creadas |
+| `smartdent_clinical_records` | Registros clínicos |
+| `smartdent_doctor_blocks` | Horarios bloqueados |
+| `smartdent_service_catalog` | Servicios, precios y costos |
+| `smartdent_fixed_costs` | Gastos fijos administrativos |
 
-## 📋 Organización del Avance 1 (Maquetación)
+Los datos de distintos perfiles deben probarse en el mismo navegador y contexto. Una ventana de incógnito utiliza un almacenamiento independiente.
 
-Para este primer avance, nos hemos dividido el desarrollo del prototipo HTML/CSS/JS de la siguiente manera:
+## Próximos avances
 
-1. **Integrante 1: Diseñador UI/UX y Estilos Globales** 🎨
-   * **Misión:** Garantizar un diseño uniforme y profesional para todo el sitio.
-   * **Tareas:**
-     * Crear la Landing Page principal (`index.html`).
-     * Diseñar el archivo de estilos global (`estilos.css`) con los colores, fuentes y botones unificados para todo el equipo.
+- API REST con Spring Boot.
+- Persistencia mediante JPA/Hibernate y una base de datos relacional.
+- Autenticación y autorización con Spring Security y JWT.
+- Migración del frontend a Angular.
+- Validación de disponibilidad desde el servidor.
+- Despliegue de frontend, backend y base de datos.
 
-2. **Integrante 2: Módulo de Acceso (Login y Registro)** 🔑
-   * **Misión:** Desarrollar las pantallas de inicio de sesión y registro de pacientes.
-   * **Tareas:**
-     * Crear `login.html` y `registro.html`.
-     * Escribir el script de validación `auth.js` (validación de contraseñas, correos y simulación de redirección).
+## Integrantes
 
-3. **Integrante 3: Módulo del Paciente (Agendar Cita)** 📅
-   * **Misión:** Crear la zona de cliente donde el paciente gestiona sus citas.
-   * **Tareas:**
-     * Crear `paciente.html` (historial de citas) y `reservar.html` (formulario para agendar citas).
-     * Crear el script en JS para simular la agregación de citas en pantalla.
+- Acevedo Huarachi Kelvin Jesus — U23309803.
+- Añorga Pinedo Paolo Alexander — U23305864.
+- Calle Paredes Maykol Adan — U23242558.
+- Salinas Perez Joseph Sebastian — U23325202.
 
-4. **Integrante 4: Módulo de Administración (Gestión Clínica)** 💼
-   * **Misión:** Desarrollar la vista del personal de la clínica.
-   * **Tareas:**
-     * Crear `admin.html` (tabla interactiva con las citas programadas).
-     * Escribir JS para simular la confirmación/cancelación de citas en tiempo real.
+## Nota de seguridad
 
----
-
-## 🚀 Instrucciones de Trabajo en Git
-
-Para evitar problemas al subir cambios, sigan estas reglas básicas:
-1. **Nunca trabajen directo en `main`:** Cada integrante debe crear su propia rama para trabajar (ejemplo: `git checkout -b feature-login`).
-2. **Hagan `git pull origin main` siempre:** Antes de empezar a programar en el día, actualicen su código local con lo que sus compañeros hayan subido.
-3. **Suban cambios limpios:** Asegúrense de no modificar carpetas de otros integrantes sin avisar.
+Este avance es una maqueta académica. Las contraseñas y datos almacenados en el navegador no son seguros para producción. La versión final deberá cifrar las contraseñas, validar los permisos en el backend y proteger la información clínica.
