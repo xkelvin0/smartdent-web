@@ -1,7 +1,6 @@
 const adminSession = readAdminStorage("smartdent_session", null);
 
 const ADMIN_DEMO_USERS = [
-  { name: "Juan Pérez", email: "paciente@gmail.com", role: "PACIENTE" },
   { name: "Dr. Carlos Mendoza", email: "carlos.mendoza@smartdent.com", role: "ODONTOLOGO", professionalId: "DOC-CARLOS-MENDOZA" },
   { name: "Dra. Elena Ruiz", email: "elena.ruiz@smartdent.com", role: "ODONTOLOGO", professionalId: "DOC-ELENA-RUIZ" },
   { name: "Dr. Miguel Silva", email: "miguel.silva@smartdent.com", role: "ODONTOLOGO", professionalId: "DOC-MIGUEL-SILVA" },

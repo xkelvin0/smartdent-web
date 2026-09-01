@@ -7,12 +7,6 @@ function setError(input, message) {
 
 const DEMO_USERS = [
   {
-    name: "Juan Pérez",
-    email: "paciente@gmail.com",
-    password: "Paciente123",
-    role: "PACIENTE"
-  },
-  {
     name: "Dr. Carlos Mendoza",
     email: "carlos.mendoza@smartdent.com",
     password: "Carlos123",

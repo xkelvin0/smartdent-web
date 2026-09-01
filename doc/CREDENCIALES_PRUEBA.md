@@ -2,16 +2,6 @@
 
 Estas cuentas permiten probar el inicio de sesión y la identificación de roles durante la maquetación estática del proyecto.
 
-## Paciente
-
-```text
-Correo: paciente@gmail.com
-Contraseña: Paciente123
-Rol: PACIENTE
-```
-
-Al iniciar sesión, la página principal muestra el saludo **“Bienvenido, Juan Pérez”** y el rol **Paciente**.
-
 ## Odontólogos
 
 Cada profesional cuenta con credenciales propias. Al iniciar sesión, su panel muestra únicamente las citas asignadas a su nombre.
@@ -62,7 +52,7 @@ Al iniciar sesión, la página principal muestra el saludo **“Bienvenido, Admi
 
 - Los correos y las contraseñas deben escribirse exactamente como aparecen en este documento.
 - Las contraseñas distinguen entre mayúsculas y minúsculas.
-- Los pacientes registrados desde `registro.html` también pueden iniciar sesión con sus propios datos.
+- No existe una cuenta de paciente precargada. Cada paciente debe crear su cuenta desde `registro.html` y luego iniciar sesión con sus propios datos.
 - La sesión simulada se almacena temporalmente en `localStorage`.
 - Estas credenciales se utilizan únicamente en el prototipo del Avance 1.
 - En la versión final, las cuentas serán administradas por Spring Boot, la base de datos, Spring Security y JWT. Las contraseñas no deben almacenarse como texto sin cifrar.

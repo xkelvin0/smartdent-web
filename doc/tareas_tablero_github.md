@@ -71,7 +71,7 @@ Desarrollar el flujo de acceso al sistema (Login y Registro) de manera estática
 - Crear el script `maquetacion-html/js/auth.js`.
 - Diseñar formularios utilizando las clases CSS globales (inputs limpios, tarjetas modernas).
 - Escribir validaciones en JS (correo válido `@`, contraseña mínimo de 6 caracteres, contraseñas coincidentes al registrarse).
-- Simular redirección: al ingresar con `paciente@gmail.com` redirigir a `paciente.html`, y al ingresar con `admin@smartdent.com` redirigir a `admin.html`.
+- Simular redirección: al ingresar con una cuenta de paciente previamente registrada, redirigir a `paciente.html`; al ingresar como administrador, redirigir a `admin.html`.
 
 **Responsable:** Salinas Perez Joseph Sebastian
 ```
