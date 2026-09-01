@@ -102,22 +102,54 @@ smartdent-web/
 │   ├── SmartDent_Avance_1.docx
 │   └── requerimientos_funcionales.md
 ├── maquetacion-html/
-│   ├── css/                       # Estilos globales
-│   ├── img/                       # Logos, odontólogos y servicios
-│   ├── js/                        # Autenticación, navegación y paneles
-│   ├── index.html                 # Página principal
-│   ├── login.html                 # Inicio de sesión
-│   ├── registro.html              # Registro de pacientes
-│   ├── reservar.html              # Programación de citas
-│   ├── paciente.html              # Panel del paciente
-│   ├── odontologo.html            # Panel del odontólogo
-│   ├── admin.html                 # Panel administrativo
-│   ├── servicios.html
-│   ├── nosotros.html
-│   └── contacto.html
+│   ├── css/
+│   │   ├── estilos.css            # Estilos globales actuales
+│   │   └── styles.css             # Estilos conservados del módulo de acceso
+│   ├── img/
+│   │   ├── branding/              # Logos de SmartDent y UTP
+│   │   ├── odontologos/           # Fotografías de profesionales
+│   │   └── servicios/             # Imágenes de tratamientos
+│   ├── js/
+│   │   ├── auth.js                # Registro, login y validaciones
+│   │   ├── navbar.js              # Navegación pública compartida
+│   │   ├── footer.js              # Pie de página compartido
+│   │   ├── dashboard-nav.js       # Navegación de los paneles
+│   │   ├── reservar.js            # Reserva y reprogramación de citas
+│   │   ├── paciente.js            # Funciones del panel del paciente
+│   │   ├── odontologo.js          # Agenda y expedientes clínicos
+│   │   ├── admin.js               # Administración y reportes
+│   │   ├── service-catalog.js     # Catálogo central de tarifas y costos
+│   │   ├── servicios.js           # Interacción del catálogo público
+│   │   ├── contacto.js            # Validaciones de contacto
+│   │   └── tailwind-config.js     # Colores y configuración visual
+│   ├── index.html                 # Página principal pública
+│   ├── login.html                 # Inicio de sesión por roles
+│   ├── registro.html              # Creación de cuentas de pacientes
+│   ├── reservar.html              # Selección de servicio, doctor, fecha y hora
+│   ├── paciente.html              # Citas, historial, facturación y configuración
+│   ├── odontologo.html            # Agenda, pacientes y expedientes clínicos
+│   ├── admin.html                 # Agenda global, usuarios, tarifas y finanzas
+│   ├── servicios.html             # Catálogo de tratamientos odontológicos
+│   ├── nosotros.html              # Información de SmartDent y del proyecto
+│   └── contacto.html              # Formulario, datos y mapa de ubicación
 ├── .gitignore
 └── README.md
 ```
+
+### Páginas HTML
+
+| Archivo | Acceso | Propósito |
+|---|---|---|
+| `index.html` | Público | Landing page y presentación de SmartDent |
+| `servicios.html` | Público | Catálogo de servicios odontológicos |
+| `nosotros.html` | Público | Información de la clínica y del equipo |
+| `contacto.html` | Público | Contacto, ubicación y formulario de mensajes |
+| `login.html` | Público | Autenticación de pacientes, odontólogos y administrador |
+| `registro.html` | Público | Registro de nuevas cuentas de pacientes |
+| `reservar.html` | Paciente | Creación y reprogramación de citas |
+| `paciente.html` | Paciente | Panel personal, historial y comprobantes |
+| `odontologo.html` | Odontólogo | Agenda profesional y gestión clínica |
+| `admin.html` | Administrador | Gestión general, tarifas, costos y reportes |
 
 ## Persistencia del prototipo
 
