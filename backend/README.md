@@ -139,7 +139,7 @@ POST /api/admin/odontologos
 PUT  /api/admin/odontologos/{id}
 ```
 
-Al iniciar por primera vez se cargan los 16 servicios de la maqueta, los cuatro odontólogos y la cuenta administrativa documentada en `doc/CREDENCIALES_PRUEBA.md`.
+Al iniciar por primera vez se cargan los 17 servicios de la maqueta, incluido Control y Seguimiento a costo cero, los cuatro odontólogos y la cuenta administrativa documentada en `doc/CREDENCIALES_PRUEBA.md`.
 
 Para consultar el catálogo desde el navegador:
 

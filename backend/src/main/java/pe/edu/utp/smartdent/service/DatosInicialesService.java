@@ -30,6 +30,7 @@ public class DatosInicialesService {
 
     private static final List<ServicioInicial> SERVICIOS = List.of(
             new ServicioInicial("SRV-CONSULTA", "Consulta y Diagnóstico", "Prevención", "Evaluación clínica integral y plan de tratamiento personalizado.", 80, 15, 30, "consulta-diagnostico.png"),
+            new ServicioInicial("SRV-CONTROL", "Control y Seguimiento", "Prevención", "Sesión de control incluida para pacientes con un tratamiento activo.", 0, 0, 30, null),
             new ServicioInicial("SRV-LIMPIEZA", "Limpieza y Profilaxis", "Prevención", "Eliminación de placa y sarro para prevenir caries y enfermedades de las encías.", 120, 35, 45, "limpieza-profilaxis.png"),
             new ServicioInicial("SRV-URGENCIA", "Urgencias Dentales", "Urgencias", "Atención prioritaria para dolor, fracturas, traumatismos e infecciones.", 150, 50, 40, "urgencias-dentales.png"),
             new ServicioInicial("SRV-DISENO", "Diseño de Sonrisa", "Estética", "Planificación digital para conseguir una sonrisa armónica y natural.", 180, 55, 60, "diseno-sonrisa.webp"),
@@ -147,27 +148,24 @@ public class DatosInicialesService {
 
     private void inicializarServiciosDeOdontologos() {
         asignarServicios("DOC-CARLOS-MENDOZA",
-                "SRV-IMPLANTE", "SRV-CONSULTA", "SRV-URGENCIA", "SRV-PROTESIS",
+                "SRV-IMPLANTE", "SRV-CONSULTA", "SRV-CONTROL", "SRV-URGENCIA", "SRV-PROTESIS",
                 "SRV-EXTRACCION", "SRV-TERCEROS-MOLARES");
         asignarServicios("DOC-ELENA-RUIZ",
-                "SRV-DISENO", "SRV-CONSULTA", "SRV-LIMPIEZA", "SRV-RESINA",
+                "SRV-DISENO", "SRV-CONSULTA", "SRV-CONTROL", "SRV-LIMPIEZA", "SRV-RESINA",
                 "SRV-BLANQUEAMIENTO", "SRV-CARILLAS", "SRV-ORTODONCIA",
                 "SRV-ORTODONCIA-INVISIBLE");
         asignarServicios("DOC-MIGUEL-SILVA",
-                "SRV-ENDODONCIA", "SRV-CONSULTA", "SRV-URGENCIA", "SRV-EXTRACCION");
+                "SRV-ENDODONCIA", "SRV-CONSULTA", "SRV-CONTROL", "SRV-URGENCIA", "SRV-EXTRACCION");
         asignarServicios("DOC-LUCIA-TORRES",
-                "SRV-PERIODONCIA", "SRV-LIMPIEZA", "SRV-RESINA", "SRV-ODONTOPEDIATRIA");
+                "SRV-PERIODONCIA", "SRV-CONTROL", "SRV-LIMPIEZA", "SRV-RESINA", "SRV-ODONTOPEDIATRIA");
     }
 
     private void asignarServicios(String codigoOdontologo, String... codigosServicio) {
         var odontologo = odontologoRepository.findByCodigoIgnoreCase(codigoOdontologo).orElseThrow();
-        if (!odontologo.getServicios().isEmpty()) {
-            return;
-        }
         Set<Servicio> servicios = java.util.Arrays.stream(codigosServicio)
                 .map(codigo -> servicioRepository.findByCodigoIgnoreCase(codigo).orElseThrow())
                 .collect(Collectors.toSet());
-        odontologo.setServicios(servicios);
+        odontologo.getServicios().addAll(servicios);
     }
 
     private record ServicioInicial(

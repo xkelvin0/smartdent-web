@@ -43,10 +43,10 @@ class CatalogoApiIntegrationTests {
     private ServicioRepository servicioRepository;
 
     @Test
-    void debePublicarLosDieciseisServiciosSinExponerCostos() throws Exception {
+    void debePublicarLosDiecisieteServiciosSinExponerCostos() throws Exception {
         mockMvc.perform(get("/api/servicios"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(16)))
+                .andExpect(jsonPath("$", hasSize(17)))
                 .andExpect(jsonPath("$[0].precio").exists())
                 .andExpect(jsonPath("$[0].costo").doesNotExist());
     }
@@ -68,7 +68,7 @@ class CatalogoApiIntegrationTests {
         mockMvc.perform(get("/api/admin/servicios")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + login.token()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(16)))
+                .andExpect(jsonPath("$", hasSize(17)))
                 .andExpect(jsonPath("$[0].costo").exists());
     }
 

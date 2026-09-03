@@ -21,7 +21,7 @@ async function initializeBookingPage() {
   const timeContainer = document.querySelector("#time-options");
   const rebookId = sessionStorage.getItem("smartdent_rebook_id");
   const servicesByCategory = {
-    PREVENCION: ["SRV-CONSULTA", "SRV-LIMPIEZA", "SRV-URGENCIA"],
+    PREVENCION: ["SRV-CONSULTA", "SRV-CONTROL", "SRV-LIMPIEZA", "SRV-URGENCIA"],
     ESTETICA: ["SRV-DISENO", "SRV-RESINA", "SRV-BLANQUEAMIENTO", "SRV-CARILLAS"],
     ORTODONCIA: ["SRV-ORTODONCIA", "SRV-ORTODONCIA-INVISIBLE"],
     REHABILITACION: ["SRV-IMPLANTE", "SRV-PROTESIS"],

@@ -1,6 +1,7 @@
 (() => {
   const defaults = [
     { id: "SRV-CONSULTA", name: "Consulta y Diagnóstico", specialty: "Prevención", price: 80, cost: 15, duration: 30, active: true },
+    { id: "SRV-CONTROL", name: "Control y Seguimiento", specialty: "Prevención", price: 0, cost: 0, duration: 30, active: true },
     { id: "SRV-LIMPIEZA", name: "Limpieza y Profilaxis", specialty: "Prevención", price: 120, cost: 35, duration: 45, active: true },
     { id: "SRV-URGENCIA", name: "Urgencias Dentales", specialty: "Urgencias", price: 150, cost: 50, duration: 40, active: true },
     { id: "SRV-DISENO", name: "Diseño de Sonrisa", specialty: "Estética", price: 180, cost: 55, duration: 60, active: true },
