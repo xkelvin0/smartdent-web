@@ -100,6 +100,8 @@ El repositorio conserva el frontend del **Avance 1** desarrollado con HTML, CSS 
 
 La documentación interactiva de la API se encuentra en `http://localhost:8080/swagger-ui.html`.
 
+En GitHub Pages, el cliente HTTP selecciona automáticamente el backend compartido desplegado en `https://smartdent-web.onrender.com`. En `localhost` continúa utilizando `http://localhost:8080`, por lo que ambos entornos pueden usarse sin editar el código. El archivo `index.html` de la raíz redirige automáticamente a la página principal del frontend.
+
 ## Respaldo y apagado seguro
 
 El proyecto incluye automatizaciones para proteger `smartdent_db`:
