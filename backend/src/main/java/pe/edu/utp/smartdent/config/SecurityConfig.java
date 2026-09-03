@@ -1,6 +1,7 @@
 package pe.edu.utp.smartdent.config;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.crypto.SecretKey;
@@ -109,13 +110,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource(
+            @Value("${app.cors.allowed-origin-patterns}") String allowedOriginPatterns) {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of(
-                "http://localhost:*",
-                "http://127.0.0.1:*"));
+        configuration.setAllowedOriginPatterns(Arrays.stream(allowedOriginPatterns.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isBlank())
+                .toList());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", configuration);

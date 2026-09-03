@@ -228,3 +228,40 @@ $env:DB_PASSWORD = "tu_contraseña"
 Las contraseñas reales no deben guardarse en el repositorio.
 
 El proyecto utiliza `MariaDBLegacyDialect` porque la distribución actual de XAMPP incluye MariaDB 10.4. En un despliegue posterior se recomienda actualizar MariaDB a una versión soportada y retirar el dialecto heredado.
+
+## Docker y despliegue con Aiven
+
+El backend admite dos configuraciones sin cambiar los endpoints:
+
+- Local: MariaDB de XAMPP mediante los valores predeterminados.
+- Nube: MySQL de Aiven mediante variables de entorno.
+
+Para comprobar la imagen localmente desde esta carpeta:
+
+```powershell
+docker build -t smartdent-backend .
+docker run --rm -p 8080:8080 --env-file .env smartdent-backend
+```
+
+Antes de usar el segundo comando, copia `.env.example` como `.env` y completa sus valores únicamente en tu computadora. `.env` está excluido de Git.
+
+En Render se debe seleccionar `backend` como directorio raíz y `Dockerfile` como entorno de ejecución. Las variables necesarias son:
+
+```text
+DB_URL
+DB_USERNAME
+DB_PASSWORD
+DB_DRIVER=com.mysql.cj.jdbc.Driver
+DB_DIALECT=org.hibernate.dialect.MySQLDialect
+DB_DDL_AUTO=update
+JWT_SECRET
+CORS_ALLOWED_ORIGINS
+```
+
+La URL JDBC de Aiven utiliza este formato:
+
+```text
+jdbc:mysql://HOST:PUERTO/defaultdb?sslMode=REQUIRED&serverTimezone=America/Lima
+```
+
+Render proporciona `PORT` automáticamente. El estado del servicio puede comprobarse en `GET /api/health`. Las contraseñas y la URI completa de Aiven nunca deben guardarse en GitHub.
