@@ -1,12 +1,12 @@
-const doctorSession = readStorage("smartdent_session", null);
+const doctorSession = SmartDentApi.getSession();
 
-if (!doctorSession || doctorSession.role !== "ODONTOLOGO") {
-  window.location.replace("index.html");
+if (!doctorSession || doctorSession.role !== "ODONTOLOGO" || !doctorSession.token) {
+  window.location.replace("login.html");
 } else {
   initializeDoctorPanel();
 }
 
-function initializeDoctorPanel() {
+async function initializeDoctorPanel() {
   const table = document.querySelector("#doctor-appointments");
   const empty = document.querySelector("#doctor-empty");
   const filter = document.querySelector("#status-filter");
@@ -19,9 +19,22 @@ function initializeDoctorPanel() {
   document.querySelector("#block-date").min = localDateValue(new Date());
   document.querySelector("#sidebar-user").textContent = doctorSession.name;
   document.querySelector("#welcome-title").textContent = `Bienvenido, ${doctorSession.name}`;
+  try {
+    await Promise.all([
+      SmartDentAppointments.listDentist(),
+      SmartDentSchedule.list()
+    ]);
+  } catch (error) {
+    SmartDentAppointments.saveCache([]);
+    if (error.status === 401) {
+      window.location.replace("login.html");
+      return;
+    }
+    window.alert(error.message);
+  }
 
   function doctorAppointments() {
-    return readStorage("smartdent_appointments", [])
+    return SmartDentAppointments.current()
       .filter(appointmentBelongsToDoctor)
       .sort((a, b) => `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`));
   }
@@ -47,7 +60,7 @@ function initializeDoctorPanel() {
     renderBlockedSchedule();
   }
 
-  table.addEventListener("click", (event) => {
+  table.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
     if (button.dataset.details) {
@@ -56,15 +69,11 @@ function initializeDoctorPanel() {
     }
     if (button.dataset.record) {
       activeRecordAppointmentId = button.dataset.id || null;
-      openPatientRecord(button.dataset.record, doctorAppointments());
+      await openPatientRecord(button.dataset.record, doctorAppointments());
       return;
     }
     if (!button.dataset.status) return;
-    const appointments = readStorage("smartdent_appointments", []);
-    const target = appointments.find((item) => item.id === button.dataset.id && appointmentBelongsToDoctor(item));
-    if (!target) return;
-    target.status = button.dataset.status;
-    localStorage.setItem("smartdent_appointments", JSON.stringify(appointments));
+    await updateAppointmentStatus(button.dataset.id, button.dataset.status);
     render();
   });
   filter.addEventListener("change", render);
@@ -80,11 +89,11 @@ function initializeDoctorPanel() {
     render();
   }));
   patientSearch.addEventListener("input", () => renderPatients(doctorAppointments(), patientSearch.value));
-  document.querySelector("#patient-list").addEventListener("click", (event) => {
+  document.querySelector("#patient-list").addEventListener("click", async (event) => {
     const button = event.target.closest("[data-patient-record]");
     if (!button) return;
     activeRecordAppointmentId = null;
-    openPatientRecord(button.dataset.patientRecord, doctorAppointments());
+    await openPatientRecord(button.dataset.patientRecord, doctorAppointments());
   });
   document.querySelectorAll("[data-doctor-view]").forEach((button) => button.addEventListener("click", () => {
     document.querySelector(`aside nav a[href="#${button.dataset.doctorView}"]`)?.click();
@@ -95,58 +104,83 @@ function initializeDoctorPanel() {
     render();
     document.querySelector('aside nav a[href="#agenda"]')?.click();
   });
-  document.querySelector("#block-time-button").addEventListener("click", () => openModal("#block-time-modal"));
-  document.querySelector("#block-time-form").addEventListener("submit", (event) => {
+  document.querySelector("#block-time-button").addEventListener("click", () => {
+    document.querySelector("#block-form-error").classList.add("hidden");
+    openModal("#block-time-modal");
+  });
+  document.querySelector("#block-time").addEventListener("change", (event) => {
+    if (!event.target.value) return;
+    const [hours, minutes] = event.target.value.split(":").map(Number);
+    const end = new Date(2026, 0, 1, hours, minutes + 30);
+    document.querySelector("#block-end-time").value = `${String(end.getHours()).padStart(2, "0")}:${String(end.getMinutes()).padStart(2, "0")}`;
+  });
+  document.querySelector("#block-time-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const date = document.querySelector("#block-date").value;
     const time = document.querySelector("#block-time").value;
+    const endTime = document.querySelector("#block-end-time").value;
     const reason = document.querySelector("#block-reason").value.trim();
-    const blocks = readStorage("smartdent_doctor_blocks", []);
-    const duplicate = blocks.some((item) => blockBelongsToDoctor(item) && item.date === date && item.time === time);
-    if (!duplicate) {
-      blocks.push({ id: `BL-${Date.now()}`, dentistId: doctorSession.professionalId || "", dentistEmail: doctorSession.email, date, time, reason });
-      localStorage.setItem("smartdent_doctor_blocks", JSON.stringify(blocks));
+    const errorNode = document.querySelector("#block-form-error");
+    const submit = document.querySelector("#block-submit");
+    errorNode.classList.add("hidden");
+    submit.disabled = true;
+    submit.textContent = "Guardando...";
+    try {
+      await SmartDentSchedule.create({ fecha: date, horaInicio: time, horaFin: endTime, motivo: reason });
+      event.target.reset();
+      closeModal("#block-time-modal");
+      render();
+    } catch (error) {
+      errorNode.textContent = Object.values(error.fields || {}).join(" ") || error.message;
+      errorNode.classList.remove("hidden");
+      if (error.status === 401) window.location.replace("login.html");
+    } finally {
+      submit.disabled = false;
+      submit.textContent = "Guardar bloqueo";
     }
-    event.target.reset();
-    closeModal("#block-time-modal");
-    render();
   });
-  document.querySelector("#blocked-schedule-list").addEventListener("click", (event) => {
+  document.querySelector("#blocked-schedule-list").addEventListener("click", async (event) => {
     const button = event.target.closest("[data-remove-block]");
     if (!button) return;
-    const blocks = readStorage("smartdent_doctor_blocks", []).filter((item) => item.id !== button.dataset.removeBlock);
-    localStorage.setItem("smartdent_doctor_blocks", JSON.stringify(blocks));
-    render();
+    button.disabled = true;
+    try {
+      await SmartDentSchedule.remove(button.dataset.removeBlock);
+      render();
+    } catch (error) {
+      window.alert(error.message);
+      button.disabled = false;
+    }
   });
-  document.querySelector("#clinical-record-form").addEventListener("submit", (event) => {
+  document.querySelector("#clinical-record-form").addEventListener("submit", async (event) => {
     event.preventDefault();
-    saveClinicalRecord(activeRecordAppointmentId);
+    const saved = await saveClinicalRecord(activeRecordAppointmentId);
+    if (!saved) return;
     activeRecordAppointmentId = null;
     closeModal("#patient-record-modal");
     render();
   });
-  document.querySelector("#appointment-detail-actions").addEventListener("click", (event) => {
+  document.querySelector("#appointment-detail-actions").addEventListener("click", async (event) => {
     const button = event.target.closest("button");
     if (!button) return;
     if (button.dataset.detailStatus) {
-      updateAppointmentStatus(button.dataset.id, button.dataset.detailStatus);
+      await updateAppointmentStatus(button.dataset.id, button.dataset.detailStatus);
       closeModal("#appointment-detail-modal");
     }
     if (button.dataset.detailRecord) {
       activeRecordAppointmentId = button.dataset.id;
       closeModal("#appointment-detail-modal");
-      openPatientRecord(button.dataset.detailRecord, doctorAppointments());
+      await openPatientRecord(button.dataset.detailRecord, doctorAppointments());
     }
     render();
   });
   bindModalClose("#appointment-detail-modal", "[data-close-appointment-modal]");
   bindModalClose("#patient-record-modal", "[data-close-record-modal]");
   bindModalClose("#block-time-modal", "[data-close-block-modal]");
-  window.addEventListener("storage", (event) => {
-    if (event.key === "smartdent_appointments") render();
-  });
-  document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") render();
+  document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState === "visible") {
+      try { await Promise.all([SmartDentAppointments.listDentist(), SmartDentSchedule.list()]); } catch { /* Se conserva la última vista. */ }
+      render();
+    }
   });
   ["#logout", "#mobile-logout"].forEach((selector) => document.querySelector(selector).addEventListener("click", logout));
   render();
@@ -285,11 +319,18 @@ function openAppointmentDetail(item) {
   openModal("#appointment-detail-modal");
 }
 
-function openPatientRecord(email, appointments) {
+async function openPatientRecord(email, appointments) {
   const visits = appointments.filter((item) => item.patientEmail === email);
   const patient = visits.at(-1);
   if (!patient) return;
-  const record = readStorage("smartdent_clinical_records", []).find((item) => item.patientEmail === email && recordBelongsToDoctor(item));
+  let record = null;
+  try {
+    record = await SmartDentClinical.getForDentist(email);
+  } catch (error) {
+    window.alert(error.message);
+    if (error.status === 401) window.location.replace("login.html");
+    return;
+  }
   document.querySelector("#patient-record-profile").innerHTML = `<div class="flex flex-col gap-4 rounded-xl bg-slate-50 p-5 sm:flex-row sm:items-center"><span class="grid h-14 w-14 place-items-center rounded-full bg-navy font-bold text-white">${initials(patient.patientName)}</span><div class="flex-1"><strong class="text-base text-navy">${escapeHtml(patient.patientName)}</strong><p class="mt-1 text-xs text-slate-500">${escapeHtml(email)} · ${escapeHtml(patient.phone || "Sin teléfono")}</p></div><span class="rounded-full bg-gold-soft px-3 py-1 text-[10px] font-bold text-navy">${visits.length} ${visits.length === 1 ? "cita" : "citas"}</span></div>`;
   document.querySelector("#patient-record-history").innerHTML = `<h3 class="text-xs font-bold text-navy">Historial de citas</h3><div class="mt-3 max-h-44 space-y-2 overflow-y-auto">${[...visits].reverse().map((item) => `<div class="grid grid-cols-[1fr_auto] gap-3 rounded-lg border border-slate-200 p-3 text-xs"><div><strong class="text-navy">${escapeHtml(item.service)}</strong><p class="mt-1 text-[10px] text-slate-500">${formatDate(item.date)} · ${formatTime(item.time)}</p></div><span class="self-center rounded-full px-2 py-1 text-[9px] font-bold ${statusClass(item.status)}">${escapeHtml(item.status)}</span></div>`).join("")}</div>`;
   document.querySelector("#record-patient-email").value = email;
@@ -302,46 +343,57 @@ function openPatientRecord(email, appointments) {
   openModal("#patient-record-modal");
 }
 
-function saveClinicalRecord(appointmentId) {
+async function saveClinicalRecord(appointmentId) {
   const email = document.querySelector("#record-patient-email").value;
-  const records = readStorage("smartdent_clinical_records", []);
-  const index = records.findIndex((item) => item.patientEmail === email && recordBelongsToDoctor(item));
-  const record = {
-    id: index >= 0 ? records[index].id : `HC-${Date.now()}`,
-    patientEmail: email,
-    dentistId: doctorSession.professionalId || "",
-    dentistEmail: doctorSession.email,
-    treatmentStage: document.querySelector("#record-stage").value,
-    allergies: document.querySelector("#record-allergies").value.trim(),
-    diagnosis: document.querySelector("#record-diagnosis").value.trim(),
-    treatment: document.querySelector("#record-treatment").value.trim(),
-    instructions: document.querySelector("#record-instructions").value.trim(),
-    nextControl: document.querySelector("#record-next-control").value,
-    notes: document.querySelector("#record-notes").value.trim(),
-    updatedAt: new Date().toISOString()
-  };
-  if (index >= 0) records[index] = record; else records.push(record);
-  localStorage.setItem("smartdent_clinical_records", JSON.stringify(records));
-  if (appointmentId) updateAppointmentStatus(appointmentId, "ATENDIDA");
-  setRecordMessage(appointmentId ? "Atención guardada y cita marcada como atendida." : "Expediente clínico actualizado correctamente.");
+  try {
+    await SmartDentClinical.saveForDentist(email, {
+      citaId: appointmentId ? Number(appointmentId) : null,
+      etapaTratamiento: document.querySelector("#record-stage").value,
+      alergias: document.querySelector("#record-allergies").value.trim() || null,
+      diagnostico: document.querySelector("#record-diagnosis").value.trim(),
+      tratamiento: document.querySelector("#record-treatment").value.trim(),
+      indicaciones: document.querySelector("#record-instructions").value.trim() || null,
+      proximoControl: document.querySelector("#record-next-control").value || null,
+      observaciones: document.querySelector("#record-notes").value.trim() || null
+    });
+    await SmartDentAppointments.listDentist();
+    setRecordMessage(appointmentId ? "Atención guardada y cita marcada como atendida." : "Expediente clínico actualizado correctamente.");
+    return true;
+  } catch (error) {
+    const node = document.querySelector("#record-message");
+    node.textContent = error.message;
+    node.className = "mb-3 rounded-lg bg-red-50 p-3 text-xs text-red-700";
+    if (error.status === 401) window.location.replace("login.html");
+    return false;
+  }
 }
 
 function renderBlockedSchedule() {
-  const blocks = readStorage("smartdent_doctor_blocks", []).filter(blockBelongsToDoctor).sort((a, b) => `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`));
+  const blocks = SmartDentSchedule.current().sort((a, b) => `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`));
   const section = document.querySelector("#blocked-schedule");
   section.classList.toggle("hidden", blocks.length === 0);
-  document.querySelector("#blocked-schedule-list").innerHTML = blocks.map((item) => `<span class="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-[10px] text-red-700"><strong>${formatDate(item.date)} · ${formatTime(item.time)}</strong>${escapeHtml(item.reason)}<button class="grid h-5 w-5 place-items-center rounded-full hover:bg-red-100" data-remove-block="${item.id}" type="button" aria-label="Eliminar bloqueo">×</button></span>`).join("");
+  document.querySelector("#blocked-schedule-list").innerHTML = blocks.map((item) => {
+    const endLabel = item.endTime ? `-${formatTime(item.endTime)}` : "";
+    const reason = escapeHtml(item.reason || "Horario no disponible");
+    return `<span class="inline-flex items-center gap-2 rounded-lg bg-red-50 px-3 py-2 text-[10px] text-red-700"><strong>${formatDate(item.date)} · ${formatTime(item.time)}${endLabel}</strong>${reason}<button class="grid h-5 w-5 place-items-center rounded-full hover:bg-red-100" data-remove-block="${item.id}" type="button" aria-label="Eliminar bloqueo">×</button></span>`;
+  }).join("");
 }
 
-function blockBelongsToDoctor(item) { return recordBelongsToDoctor(item); }
 function recordBelongsToDoctor(item) { return (item.dentistId && item.dentistId === doctorSession.professionalId) || String(item.dentistEmail || "").toLowerCase() === String(doctorSession.email || "").toLowerCase(); }
-function updateAppointmentStatus(id, status) { const items = readStorage("smartdent_appointments", []); const item = items.find((entry) => entry.id === id && appointmentBelongsToDoctor(entry)); if (item) { item.status = status; localStorage.setItem("smartdent_appointments", JSON.stringify(items)); } }
+async function updateAppointmentStatus(id, status) {
+  try {
+    await SmartDentAppointments.updateDentistStatus(id, status);
+    await SmartDentAppointments.listDentist();
+  } catch (error) {
+    window.alert(error.message);
+    if (error.status === 401) window.location.replace("login.html");
+  }
+}
 function openModal(selector) { const modal = document.querySelector(selector); modal.classList.remove("hidden"); modal.classList.add("flex"); document.body.classList.add("overflow-hidden"); }
 function closeModal(selector) { const modal = document.querySelector(selector); modal.classList.add("hidden"); modal.classList.remove("flex"); document.body.classList.remove("overflow-hidden"); }
 function bindModalClose(modalSelector, closeSelector) { const modal = document.querySelector(modalSelector); modal.addEventListener("click", (event) => { if (event.target === modal || event.target.closest(closeSelector)) closeModal(modalSelector); }); }
 function setRecordMessage(message) { const node = document.querySelector("#record-message"); node.textContent = message; node.classList.toggle("hidden", !message); node.className = `${message ? "mb-3 rounded-lg bg-green-50 p-3 text-xs text-green-700" : "hidden"}`; }
 
-function readStorage(key, fallback) { try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); } catch { return fallback; } }
 function countStatus(items, status) { return items.filter((item) => item.status === status).length; }
 function formatDate(value) { return new Intl.DateTimeFormat("es-PE", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(`${value}T12:00:00`)); }
 function formatTime(value) { return new Intl.DateTimeFormat("es-PE", { hour: "2-digit", minute: "2-digit" }).format(new Date(`2026-01-01T${value}:00`)); }
@@ -349,4 +401,4 @@ function localDateValue(value) { const year = value.getFullYear(); const month =
 function statusClass(status) { return { PENDIENTE: "bg-amber-50 text-amber-700", CONFIRMADA: "bg-blue-50 text-blue-700", ATENDIDA: "bg-green-50 text-green-700", CANCELADA: "bg-red-50 text-red-700" }[status] || "bg-slate-100 text-slate-600"; }
 function initials(name) { return name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase(); }
 function escapeHtml(value) { const node = document.createElement("div"); node.textContent = String(value || ""); return node.innerHTML; }
-function logout() { localStorage.removeItem("smartdent_session"); window.location.replace("index.html"); }
+function logout() { SmartDentApi.clearSession(); window.location.replace("index.html"); }

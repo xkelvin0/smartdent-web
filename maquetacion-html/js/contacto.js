@@ -9,7 +9,7 @@
     subject: document.querySelector("#contact-subject"),
     message: document.querySelector("#contact-message")
   };
-  const session = readContactStorage("smartdent_session", null);
+  const session = SmartDentApi.getSession();
   const result = document.querySelector("#contact-result");
 
   if (session?.name) fields.name.value = session.name;
@@ -23,7 +23,7 @@
     });
   });
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const isValid = Object.keys(fields).map(validateField).every(Boolean);
     if (!isValid) {
@@ -32,22 +32,27 @@
       return;
     }
 
-    const messages = readContactStorage("smartdent_contact_messages", []);
-    messages.push({
-      id: `MSG-${Date.now()}`,
-      name: fields.name.value.trim(),
-      email: fields.email.value.trim().toLowerCase(),
-      phone: fields.phone.value.trim(),
-      subject: fields.subject.value,
-      message: fields.message.value.trim(),
-      status: "NUEVO",
-      createdAt: new Date().toISOString()
-    });
-    localStorage.setItem("smartdent_contact_messages", JSON.stringify(messages));
-    form.reset();
-    if (session?.name) fields.name.value = session.name;
-    if (session?.email) fields.email.value = session.email;
-    showResult("Tu mensaje fue enviado correctamente. Nos comunicaremos contigo pronto.", true);
+    const submit = form.querySelector("button[type='submit']");
+    submit.disabled = true;
+    submit.classList.add("opacity-60");
+    try {
+      await SmartDentContact.send({
+        nombre: fields.name.value.trim(),
+        email: fields.email.value.trim().toLowerCase(),
+        telefono: fields.phone.value.trim(),
+        asunto: fields.subject.value,
+        mensaje: fields.message.value.trim()
+      });
+      form.reset();
+      if (session?.name) fields.name.value = session.name;
+      if (session?.email) fields.email.value = session.email;
+      showResult("Tu mensaje fue enviado correctamente. Nos comunicaremos contigo pronto.", true);
+    } catch (error) {
+      showResult(Object.values(error.fields || {}).join(" ") || error.message, false);
+    } finally {
+      submit.disabled = false;
+      submit.classList.remove("opacity-60");
+    }
   });
 
   function validateField(name) {
@@ -75,8 +80,3 @@
   }
   function clearResult() { result.classList.add("hidden"); result.textContent = ""; }
 })();
-
-function readContactStorage(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
-  catch { return fallback; }
-}

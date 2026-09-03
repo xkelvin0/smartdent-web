@@ -5,57 +5,6 @@ function setError(input, message) {
   if (error) error.textContent = message;
 }
 
-const DEMO_USERS = [
-  {
-    name: "Dr. Carlos Mendoza",
-    email: "carlos.mendoza@smartdent.com",
-    password: "Carlos123",
-    professionalId: "DOC-CARLOS-MENDOZA",
-    role: "ODONTOLOGO"
-  },
-  {
-    name: "Dra. Elena Ruiz",
-    email: "elena.ruiz@smartdent.com",
-    password: "Elena123",
-    professionalId: "DOC-ELENA-RUIZ",
-    role: "ODONTOLOGO"
-  },
-  {
-    name: "Dr. Miguel Silva",
-    email: "miguel.silva@smartdent.com",
-    password: "Miguel123",
-    professionalId: "DOC-MIGUEL-SILVA",
-    role: "ODONTOLOGO"
-  },
-  {
-    name: "Dra. Lucía Torres",
-    email: "lucia.torres@smartdent.com",
-    password: "Lucia123",
-    professionalId: "DOC-LUCIA-TORRES",
-    role: "ODONTOLOGO"
-  },
-  {
-    name: "Administrador SmartDent",
-    email: "admin@smartdent.com",
-    password: "Admin123",
-    role: "ADMIN"
-  }
-];
-
-function getRegisteredUsers() {
-  try {
-    return JSON.parse(localStorage.getItem("smartdent_users") || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveSession(user) {
-  const session = { name: user.name, email: user.email, role: user.role };
-  if (user.professionalId) session.professionalId = user.professionalId;
-  localStorage.setItem("smartdent_session", JSON.stringify(session));
-}
-
 function setupPasswordToggles() {
   document.querySelectorAll("[data-password-toggle]").forEach((button) => {
     const input = document.querySelector(`#${button.dataset.passwordToggle}`);
@@ -147,7 +96,7 @@ function setupLoginForm() {
     password.focus();
   }
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearLoginMessage();
     email.value = email.value.trim().toLowerCase();
@@ -158,33 +107,41 @@ function setupLoginForm() {
       return;
     }
 
-    const users = [...DEMO_USERS, ...getRegisteredUsers()];
-    const user = users.find(
-      (candidate) => candidate.email.toLowerCase() === email.value.trim().toLowerCase()
-        && candidate.password === password.value
-    );
-    if (!user) {
-      message.textContent = "El correo o la contraseña son incorrectos.";
-      message.classList.remove("is-success");
-      password.value = "";
-      password.classList.remove("is-valid");
-      password.focus();
-      return;
-    }
-
-    saveSession(user);
-    message.textContent = "Inicio de sesión correcto. Redirigiendo...";
-    message.classList.add("is-success");
     submitButton.disabled = true;
-    submitButton.textContent = "Ingresando...";
-    const pendingDestination = sessionStorage.getItem("smartdent_redirect");
-    sessionStorage.removeItem("smartdent_redirect");
-    const destinationsByRole = {
-      PACIENTE: pendingDestination || "index.html",
-      ODONTOLOGO: "odontologo.html",
-      ADMIN: "admin.html"
-    };
-    window.location.href = destinationsByRole[user.role] || "index.html";
+    submitButton.textContent = "Verificando...";
+    let loginSuccessful = false;
+    try {
+      const response = await SmartDentApi.request("/auth/login", {
+        method: "POST",
+        auth: false,
+        body: JSON.stringify({ email: email.value, password: password.value })
+      });
+      const session = SmartDentApi.saveSession(response);
+      loginSuccessful = true;
+      message.textContent = "Inicio de sesión correcto. Redirigiendo...";
+      message.classList.add("is-success");
+      const pendingDestination = sessionStorage.getItem("smartdent_redirect");
+      sessionStorage.removeItem("smartdent_redirect");
+      const destinationsByRole = {
+        PACIENTE: pendingDestination || "index.html",
+        ODONTOLOGO: "odontologo.html",
+        ADMIN: "admin.html"
+      };
+      window.location.href = destinationsByRole[session.role] || "index.html";
+    } catch (error) {
+      message.textContent = error.message;
+      message.classList.remove("is-success");
+      if (error.status === 401) {
+        password.value = "";
+        password.classList.remove("is-valid");
+        password.focus();
+      }
+    } finally {
+      if (!loginSuccessful) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Iniciar Sesión";
+      }
+    }
   });
 }
 
@@ -277,43 +234,63 @@ function setupRegisterForm() {
   password.addEventListener("blur", validators.password);
   updatePasswordStrength();
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    registerMessage.textContent = "";
+    registerMessage.classList.remove("is-success");
     const isValid = Object.values(validators).map((validate) => validate()).every(Boolean);
-    if (!isValid) return;
-
-    const users = getRegisteredUsers();
-    const emailAlreadyExists = [...DEMO_USERS, ...users].some(
-      (user) => user.email.toLowerCase() === email.value.trim().toLowerCase()
-    );
-    if (emailAlreadyExists) {
-      registerMessage.textContent = "Ya existe una cuenta registrada con este correo.";
-      registerMessage.classList.remove("is-success");
+    if (!isValid) {
+      form.querySelector(".is-invalid")?.focus();
       return;
     }
 
     const registeredEmail = email.value.trim().toLowerCase();
-    users.push({
-      name: fullName.value.trim(),
-      dni: dni.value.trim(),
-      email: registeredEmail,
-      password: password.value,
-      role: "PACIENTE"
-    });
-    localStorage.setItem("smartdent_users", JSON.stringify(users));
-    sessionStorage.setItem("smartdent_registered_email", registeredEmail);
-    registerMessage.textContent = "Cuenta creada correctamente. Te llevaremos al inicio de sesión...";
-    registerMessage.classList.add("is-success");
     registerButton.disabled = true;
-    registerButton.textContent = "Cuenta creada";
-    form.reset();
-    form.querySelectorAll("input").forEach((input) => {
-      input.classList.remove("is-valid", "is-invalid");
-      input.setAttribute("aria-invalid", "false");
-    });
-    form.querySelectorAll(".field-error").forEach((error) => { error.textContent = ""; });
-    updatePasswordStrength();
-    window.setTimeout(() => { window.location.href = "login.html"; }, 1800);
+    registerButton.textContent = "Creando cuenta...";
+    let registrationSuccessful = false;
+    try {
+      await SmartDentApi.request("/auth/registro", {
+        method: "POST",
+        auth: false,
+        body: JSON.stringify({
+          nombreCompleto: fullName.value.trim(),
+          dni: dni.value.trim(),
+          email: registeredEmail,
+          password: password.value,
+          telefono: null
+        })
+      });
+      registrationSuccessful = true;
+      sessionStorage.setItem("smartdent_registered_email", registeredEmail);
+      registerMessage.textContent = "Cuenta creada correctamente. Te llevaremos al inicio de sesión...";
+      registerMessage.classList.add("is-success");
+      registerButton.textContent = "Cuenta creada";
+      form.reset();
+      form.querySelectorAll("input").forEach((input) => {
+        input.classList.remove("is-valid", "is-invalid");
+        input.setAttribute("aria-invalid", "false");
+      });
+      form.querySelectorAll(".field-error").forEach((fieldError) => { fieldError.textContent = ""; });
+      updatePasswordStrength();
+      window.setTimeout(() => { window.location.href = "login.html"; }, 1800);
+    } catch (error) {
+      const fields = {
+        nombreCompleto: fullName,
+        dni,
+        email,
+        password
+      };
+      Object.entries(error.fields || {}).forEach(([field, fieldMessage]) => {
+        if (fields[field]) setError(fields[field], fieldMessage);
+      });
+      registerMessage.textContent = error.message;
+      form.querySelector(".is-invalid")?.focus();
+    } finally {
+      if (!registrationSuccessful) {
+        registerButton.disabled = false;
+        registerButton.textContent = "Registrarse";
+      }
+    }
   });
 }
 

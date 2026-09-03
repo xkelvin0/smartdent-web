@@ -55,3 +55,6 @@ Thumbs.db
 desktop.ini
 .agents/
 .gemini/
+
+# === Archivos temporales de presentación ===
+doc/ppt-preview/

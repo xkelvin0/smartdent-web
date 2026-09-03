@@ -1,5 +1,4 @@
 (() => {
-  const STORAGE_KEY = "smartdent_service_catalog";
   const defaults = [
     { id: "SRV-CONSULTA", name: "Consulta y Diagnóstico", specialty: "Prevención", price: 80, cost: 15, duration: 30, active: true },
     { id: "SRV-LIMPIEZA", name: "Limpieza y Profilaxis", specialty: "Prevención", price: 120, cost: 35, duration: 45, active: true },
@@ -19,16 +18,10 @@
     { id: "SRV-ODONTOPEDIATRIA", name: "Odontopediatría", specialty: "Odontopediatría", price: 120, cost: 35, duration: 45, active: true }
   ];
 
-  function get() {
-    try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-      if (Array.isArray(stored) && stored.length) return stored;
-    } catch {}
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
-    return defaults.map((item) => ({ ...item }));
-  }
+  let currentItems = defaults.map((item) => ({ ...item }));
 
-  function save(items) { localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); }
+  function get() { return currentItems; }
+  function save(items) { currentItems = Array.isArray(items) ? items : []; return currentItems; }
   function find(name) { return get().find((item) => item.name === name); }
   function price(name) { return Number(find(name)?.price || 0); }
   function cost(name) { return Number(find(name)?.cost || 0); }

@@ -1,6 +1,6 @@
 # Credenciales de prueba de SmartDent
 
-Estas cuentas permiten probar el inicio de sesión y la identificación de roles durante la maquetación estática del proyecto.
+Estas cuentas permiten probar el inicio de sesión y la identificación de roles tanto en la maqueta como en el backend de Spring Boot. El backend las registra automáticamente en MariaDB con contraseñas cifradas mediante BCrypt.
 
 ## Odontólogos
 
@@ -53,6 +53,6 @@ Al iniciar sesión, la página principal muestra el saludo **“Bienvenido, Admi
 - Los correos y las contraseñas deben escribirse exactamente como aparecen en este documento.
 - Las contraseñas distinguen entre mayúsculas y minúsculas.
 - No existe una cuenta de paciente precargada. Cada paciente debe crear su cuenta desde `registro.html` y luego iniciar sesión con sus propios datos.
-- La sesión simulada se almacena temporalmente en `localStorage`.
+- El navegador conserva en `localStorage` únicamente la sesión real y el token JWT emitido por la API.
 - Estas credenciales se utilizan únicamente en el prototipo del Avance 1.
-- En la versión final, las cuentas serán administradas por Spring Boot, la base de datos, Spring Security y JWT. Las contraseñas no deben almacenarse como texto sin cifrar.
+- En MariaDB las contraseñas se almacenan exclusivamente como hashes BCrypt.

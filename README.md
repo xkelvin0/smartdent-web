@@ -4,7 +4,7 @@ SmartDent es un prototipo web para gestionar citas, pacientes y atenciones de un
 
 ## Estado del proyecto
 
-El repositorio contiene el **Avance 1**, desarrollado con HTML, CSS y JavaScript. En esta etapa no existe un backend ni una base de datos: la autenticación, las citas y los registros clínicos se simulan mediante `localStorage`.
+El repositorio conserva el frontend del **Avance 1** desarrollado con HTML, CSS y JavaScript, e incorpora un backend funcional con Spring Boot y MariaDB. La API REST gestiona usuarios, autenticación JWT, servicios, odontólogos, citas, historias clínicas, bloqueos de agenda, configuración del paciente, reportes y mensajes de contacto en `smartdent_db`. El navegador conserva únicamente la sesión JWT; los datos de negocio se consultan desde la API.
 
 ## Funcionalidades
 
@@ -47,10 +47,12 @@ El repositorio contiene el **Avance 1**, desarrollado con HTML, CSS y JavaScript
 
 - Agenda global con filtros y exportación CSV.
 - Consulta de pacientes, odontólogos y administradores.
+- Creación y edición de cuentas de odontólogos con asignación de servicios.
 - Gestión de servicios, precios, costos y disponibilidad.
 - Configuración de gastos fijos mensuales.
 - Cálculo estimado de ingresos, costos, utilidad y margen.
 - Gráficos de estados, actividad, demanda e ingresos frente a costos.
+- Bandeja de mensajes de contacto con estados nuevo, leído y respondido.
 
 ## Tecnologías
 
@@ -58,11 +60,13 @@ El repositorio contiene el **Avance 1**, desarrollado con HTML, CSS y JavaScript
 - CSS3 y Tailwind CSS mediante CDN.
 - JavaScript vanilla.
 - Google Fonts y Material Symbols.
-- `localStorage` y `sessionStorage` para la simulación de datos.
+- Java 21 y Spring Boot para la API REST.
+- Spring Data JPA y MariaDB para persistencia.
+- Spring Security y JWT para autenticación y autorización.
+- Springdoc OpenAPI y Swagger UI para documentación interactiva.
+- JUnit y MockMvc para pruebas automatizadas.
 
 ## Ejecución local
-
-No es necesario instalar dependencias.
 
 1. Clona el repositorio:
 
@@ -76,9 +80,17 @@ No es necesario instalar dependencias.
    cd smartdent-web
    ```
 
-3. Abre `maquetacion-html/index.html` mediante un servidor local. Se recomienda la extensión **Live Server** de Visual Studio Code.
+3. Enciende MySQL desde XAMPP y verifica que exista la base de datos `smartdent_db`.
 
-4. Navega a la dirección mostrada por Live Server, por ejemplo:
+4. Inicia el backend desde `backend`:
+
+   ```powershell
+   .\mvnw.cmd spring-boot:run
+   ```
+
+5. Abre `maquetacion-html/index.html` mediante un servidor local. Se recomienda la extensión **Live Server** de Visual Studio Code.
+
+6. Navega a la dirección mostrada por Live Server, por ejemplo:
 
    ```text
    http://127.0.0.1:5500/maquetacion-html/index.html
@@ -86,9 +98,21 @@ No es necesario instalar dependencias.
 
 > No se recomienda abrir los archivos únicamente con `file://`, ya que algunas funciones del navegador pueden comportarse de forma diferente.
 
+La documentación interactiva de la API se encuentra en `http://localhost:8080/swagger-ui.html`.
+
+## Respaldo y apagado seguro
+
+El proyecto incluye automatizaciones para proteger `smartdent_db`:
+
+- `RESPALDAR_BD.cmd`: genera inmediatamente una copia SQL.
+- `INSTALAR_RESPALDO_AUTOMATICO.cmd`: programa una copia diaria a las 8:00 p. m.
+- `CERRAR_SMARTDENT.cmd`: comprueba que Spring Boot esté detenido, crea un respaldo y apaga MariaDB de manera segura.
+
+Los respaldos se conservan fuera de la carpeta de datos de MariaDB, en `%LOCALAPPDATA%\SmartDent\backups`. Se guardan las 14 copias más recientes. Al finalizar una jornada, primero se debe detener Spring Boot con `Ctrl+C` y después ejecutar `CERRAR_SMARTDENT.cmd`; finalmente se puede cerrar XAMPP.
+
 ## Credenciales de prueba
 
-Las cuentas de paciente, odontólogos y administrador están documentadas en [`doc/CREDENCIALES_PRUEBA.md`](doc/CREDENCIALES_PRUEBA.md).
+Las cuentas precargadas de odontólogos y administrador están documentadas en [`doc/CREDENCIALES_PRUEBA.md`](doc/CREDENCIALES_PRUEBA.md). Los pacientes crean su propia cuenta desde la página de registro.
 
 Estas credenciales son exclusivamente para la demostración del Avance 1. No deben utilizarse como modelo de seguridad para una aplicación real.
 
@@ -96,6 +120,11 @@ Estas credenciales son exclusivamente para la demostración del Avance 1. No deb
 
 ```text
 smartdent-web/
+├── scripts/                       # Respaldo y apagado seguro de MariaDB
+├── RESPALDAR_BD.cmd               # Respaldo manual con doble clic
+├── CERRAR_SMARTDENT.cmd           # Respaldo y cierre seguro
+├── INSTALAR_RESPALDO_AUTOMATICO.cmd
+├── backend/                       # API REST con Spring Boot
 ├── doc/
 │   ├── canvas/                    # Evidencias y tablero del proyecto
 │   ├── CREDENCIALES_PRUEBA.md
@@ -110,6 +139,15 @@ smartdent-web/
 │   │   ├── odontologos/           # Fotografías de profesionales
 │   │   └── servicios/             # Imágenes de tratamientos
 │   ├── js/
+│   │   ├── api.js                 # Cliente HTTP compartido y sesión JWT
+│   │   ├── appointment-api.js     # Integración REST y adaptación visual de citas
+│   │   ├── clinical-api.js        # Integración REST de historias clínicas
+│   │   ├── service-api.js         # Integración REST del catálogo administrativo
+│   │   ├── admin-user-api.js      # Integración REST de usuarios y odontólogos
+│   │   ├── admin-report-api.js    # Integración REST de indicadores y finanzas
+│   │   ├── schedule-api.js        # Integración REST de bloqueos de agenda
+│   │   ├── patient-settings-api.js # Configuración persistente del paciente
+│   │   ├── contact-api.js         # Envío y administración de mensajes
 │   │   ├── auth.js                # Registro, login y validaciones
 │   │   ├── navbar.js              # Navegación pública compartida
 │   │   ├── footer.js              # Pie de página compartido
@@ -151,30 +189,26 @@ smartdent-web/
 | `odontologo.html` | Odontólogo | Agenda profesional y gestión clínica |
 | `admin.html` | Administrador | Gestión general, tarifas, costos y reportes |
 
-## Persistencia del prototipo
+## Persistencia
 
-Los principales datos se almacenan en el navegador:
+Los datos de negocio se almacenan en MariaDB mediante JPA/Hibernate. Esto incluye usuarios, odontólogos, servicios, citas, historias clínicas, bloqueos de agenda, costos fijos, preferencias del paciente y mensajes de contacto. `localStorage` conserva solamente el perfil de la sesión activa y su JWT; `sessionStorage` se utiliza para estados temporales de navegación, como el resultado de una reserva.
 
-| Clave | Contenido |
-|---|---|
-| `smartdent_users` | Pacientes registrados |
-| `smartdent_session` | Sesión activa |
-| `smartdent_appointments` | Citas creadas |
-| `smartdent_clinical_records` | Registros clínicos |
-| `smartdent_doctor_blocks` | Horarios bloqueados |
-| `smartdent_service_catalog` | Servicios, precios y costos |
-| `smartdent_fixed_costs` | Gastos fijos administrativos |
+## Estado de integración
 
-Los datos de distintos perfiles deben probarse en el mismo navegador y contexto. Una ventana de incógnito utiliza un almacenamiento independiente.
-
-## Próximos avances
-
-- API REST con Spring Boot.
-- Persistencia mediante JPA/Hibernate y una base de datos relacional.
-- Autenticación y autorización con Spring Security y JWT.
-- Migración del frontend a Angular.
-- Validación de disponibilidad desde el servidor.
-- Despliegue de frontend, backend y base de datos.
+- API REST de usuarios, roles, servicios, odontólogos y citas implementada.
+- Persistencia mediante JPA/Hibernate y MariaDB implementada.
+- Registro, login y autorización JWT implementados.
+- Formularios HTML de registro e inicio de sesión conectados al backend.
+- Disponibilidad, reserva, reprogramación, cancelación y agendas por rol implementadas en el backend.
+- Reserva HTML y paneles de paciente, odontólogo y administrador conectados a la API de citas.
+- Historias clínicas persistentes conectadas a los paneles de paciente y odontólogo.
+- Catálogo administrativo de precios, costos, duración y disponibilidad conectado a la API.
+- Listado real de usuarios y gestión de odontólogos conectados al backend.
+- Configuraciones personales, gastos fijos y mensajes de contacto persistentes.
+- Bloqueos de agenda persistentes conectados al panel del odontólogo y a la disponibilidad pública.
+- Documentación OpenAPI disponible mediante Swagger UI.
+- 34 pruebas automatizadas del backend superadas.
+- Pendiente para avances posteriores: migración del frontend a Angular y despliegue en la nube.
 
 ## Integrantes
 
@@ -185,4 +219,4 @@ Los datos de distintos perfiles deben probarse en el mismo navegador y contexto.
 
 ## Nota de seguridad
 
-Este avance es una maqueta académica. Las contraseñas y datos almacenados en el navegador no son seguros para producción. La versión final deberá cifrar las contraseñas, validar los permisos en el backend y proteger la información clínica.
+Este avance es una maqueta académica. Las contraseñas ya se cifran con BCrypt y no se guardan en el navegador. Para producción todavía se deberá reforzar el almacenamiento del token, usar HTTPS y proteger adecuadamente la información clínica.
