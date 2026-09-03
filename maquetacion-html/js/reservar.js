@@ -66,6 +66,9 @@ async function initializeBookingPage() {
       button.classList.toggle("border-navy", selected);
       button.classList.toggle("bg-navy", selected);
       button.classList.toggle("text-white", selected);
+      button.classList.toggle("border-slate-200", !selected);
+      button.classList.toggle("bg-white", !selected);
+      button.classList.toggle("text-slate-700", !selected);
       button.querySelector(".material-symbols-outlined").classList.toggle("text-gold", !selected);
       button.querySelector(".material-symbols-outlined").classList.toggle("text-gold-soft", selected);
       button.setAttribute("aria-pressed", String(selected));
