@@ -12,6 +12,7 @@ public record ServicioResponse(
         String descripcion,
         BigDecimal precio,
         Integer duracionMinutos,
+        Integer sesionesIncluidas,
         String imagenUrl) {
 
     public static ServicioResponse desde(Servicio servicio) {
@@ -23,6 +24,7 @@ public record ServicioResponse(
                 servicio.getDescripcion(),
                 servicio.getPrecio(),
                 servicio.getDuracionMinutos(),
+                servicio.getSesionesIncluidas(),
                 servicio.getImagenUrl());
     }
 }

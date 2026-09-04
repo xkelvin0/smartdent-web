@@ -23,6 +23,10 @@
       notes: cita.motivo || "",
       status: cita.estado,
       price: Number(cita.precioPactado),
+      treatmentCode: cita.tratamientoCodigo,
+      sessionNumber: Number(cita.numeroSesion || 1),
+      totalSessions: Number(cita.totalSesiones || 1),
+      remainingSessions: Number(cita.sesionesRestantes || 0),
       createdAt: cita.creadoEn
     };
   }

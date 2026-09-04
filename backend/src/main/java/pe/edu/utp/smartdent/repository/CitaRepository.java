@@ -21,6 +21,8 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
     List<Cita> findAllByOrderByFechaDescHoraInicioDesc();
 
+    List<Cita> findByPaciente_IdAndServicio_IdOrderByCreadoEnDesc(Long pacienteId, Long servicioId);
+
     Optional<Cita> findByIdAndPaciente_EmailIgnoreCase(Long id, String email);
 
     Optional<Cita> findByIdAndOdontologo_Usuario_EmailIgnoreCase(Long id, String email);

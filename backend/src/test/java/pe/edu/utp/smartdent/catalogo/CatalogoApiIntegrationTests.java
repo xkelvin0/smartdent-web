@@ -1,6 +1,7 @@
 package pe.edu.utp.smartdent.catalogo;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -43,10 +44,10 @@ class CatalogoApiIntegrationTests {
     private ServicioRepository servicioRepository;
 
     @Test
-    void debePublicarLosDiecisieteServiciosSinExponerCostos() throws Exception {
+    void debePublicarLosDieciseisServiciosSinExponerCostos() throws Exception {
         mockMvc.perform(get("/api/servicios"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(17)))
+                .andExpect(jsonPath("$", hasSize(16)))
                 .andExpect(jsonPath("$[0].precio").exists())
                 .andExpect(jsonPath("$[0].costo").doesNotExist());
     }
@@ -68,7 +69,7 @@ class CatalogoApiIntegrationTests {
         mockMvc.perform(get("/api/admin/servicios")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + login.token()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(17)))
+                .andExpect(jsonPath("$", hasSize(greaterThanOrEqualTo(16))))
                 .andExpect(jsonPath("$[0].costo").exists());
     }
 

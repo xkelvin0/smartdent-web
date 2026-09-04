@@ -141,6 +141,38 @@ class CitaServiceIntegrationTests {
                 .hasMessageContaining("no está disponible");
     }
 
+    @Test
+    void debeCobrarUnaSolaVezYControlarLasSesionesDelTratamiento() {
+        String paciente = registrarPaciente("Paciente Implantología");
+        var odontologo = odontologoRepository.findByCodigoIgnoreCase("DOC-CARLOS-MENDOZA").orElseThrow();
+        var servicio = servicioRepository.findByCodigoIgnoreCase("SRV-IMPLANTE").orElseThrow();
+
+        var primera = reservarSesion(paciente, odontologo.getId(), servicio.getId(), 10);
+        var segunda = reservarSesion(paciente, odontologo.getId(), servicio.getId(), 11);
+        var tercera = reservarSesion(paciente, odontologo.getId(), servicio.getId(), 12);
+        var cuarta = reservarSesion(paciente, odontologo.getId(), servicio.getId(), 13);
+        var nuevoTratamiento = reservarSesion(paciente, odontologo.getId(), servicio.getId(), 14);
+
+        assertThat(primera.precioPactado()).isEqualByComparingTo("900.00");
+        assertThat(primera.numeroSesion()).isEqualTo(1);
+        assertThat(primera.sesionesRestantes()).isEqualTo(3);
+        assertThat(segunda.precioPactado()).isZero();
+        assertThat(tercera.precioPactado()).isZero();
+        assertThat(cuarta.precioPactado()).isZero();
+        assertThat(cuarta.numeroSesion()).isEqualTo(4);
+        assertThat(cuarta.sesionesRestantes()).isZero();
+        assertThat(nuevoTratamiento.precioPactado()).isEqualByComparingTo("900.00");
+        assertThat(nuevoTratamiento.numeroSesion()).isEqualTo(1);
+        assertThat(nuevoTratamiento.tratamientoCodigo()).isNotEqualTo(primera.tratamientoCodigo());
+    }
+
+    private pe.edu.utp.smartdent.dto.cita.CitaResponse reservarSesion(
+            String paciente, Long odontologoId, Long servicioId, int dias) {
+        return citaService.reservar(paciente, new CrearCitaRequest(
+                odontologoId, servicioId, siguienteDiaHabil(dias), LocalTime.of(9, 0),
+                "Sesión del tratamiento", "987654321"));
+    }
+
     private String registrarPaciente(String nombre) {
         String aleatorio = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
         String email = "cita." + aleatorio + "@smartdent.test";

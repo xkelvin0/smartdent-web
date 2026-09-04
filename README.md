@@ -28,6 +28,7 @@ El repositorio conserva el frontend del **Avance 1** desarrollado con HTML, CSS 
 
 - Resumen de citas y recordatorios.
 - Reserva, consulta, cancelación y reprogramación de citas.
+- Tratamientos multisesión con pago único, seguimiento de sesión actual y sesiones restantes.
 - Historial clínico e indicaciones del odontólogo.
 - Progreso del tratamiento por etapas.
 - Comprobantes de atenciones completadas.

@@ -1,5 +1,6 @@
 package pe.edu.utp.smartdent.service;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -79,7 +80,7 @@ public class CitaService {
         cita.setEstado(CitaEstado.PENDIENTE);
         cita.setMotivo(normalizarOpcional(request.motivo()));
         cita.setTelefonoContacto(request.telefono().trim());
-        cita.setPrecioPactado(servicio.getPrecio());
+        asignarTratamientoYPrecio(cita, paciente, servicio);
 
         try {
             return CitaResponse.desde(citaRepository.saveAndFlush(cita));
@@ -295,6 +296,36 @@ public class CitaService {
         if (!ESTADOS_ACTIVOS.contains(cita.getEstado())) {
             throw new ReglaNegocioException("La cita ya no se puede modificar");
         }
+    }
+
+    private void asignarTratamientoYPrecio(Cita cita, Usuario paciente, Servicio servicio) {
+        int totalSesiones = Math.max(1, servicio.getSesionesIncluidas());
+        var ultimaVigente = citaRepository
+                .findByPaciente_IdAndServicio_IdOrderByCreadoEnDesc(paciente.getId(), servicio.getId())
+                .stream()
+                .filter(anterior -> anterior.getEstado() != CitaEstado.CANCELADA)
+                .findFirst();
+
+        if (totalSesiones > 1 && ultimaVigente.isPresent()) {
+            Cita anterior = ultimaVigente.get();
+            if (anterior.getTratamientoCodigo() == null) {
+                anterior.setTratamientoCodigo("TRA-" + UUID.randomUUID().toString().toUpperCase());
+                anterior.setNumeroSesion(1);
+                anterior.setTotalSesiones(totalSesiones);
+            }
+            if (anterior.getNumeroSesion() < anterior.getTotalSesiones()) {
+                cita.setTratamientoCodigo(anterior.getTratamientoCodigo());
+                cita.setNumeroSesion(anterior.getNumeroSesion() + 1);
+                cita.setTotalSesiones(anterior.getTotalSesiones());
+                cita.setPrecioPactado(BigDecimal.ZERO);
+                return;
+            }
+        }
+
+        cita.setTratamientoCodigo("TRA-" + UUID.randomUUID().toString().toUpperCase());
+        cita.setNumeroSesion(1);
+        cita.setTotalSesiones(totalSesiones);
+        cita.setPrecioPactado(servicio.getPrecio());
     }
 
     private String normalizarOpcional(String valor) {

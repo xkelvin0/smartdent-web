@@ -45,9 +45,9 @@ Al iniciar por primera vez, JPA crea las tablas base:
 - `roles`: permisos disponibles en el sistema.
 - `usuarios`: información común de pacientes, odontólogos y administradores.
 - `odontologos`: información profesional vinculada a un usuario.
-- `servicios`: catálogo, duración, precio y costo de cada atención.
+- `servicios`: catálogo, duración, sesiones incluidas, precio y costo de cada tratamiento.
 - `odontologo_servicios`: servicios que puede realizar cada profesional.
-- `citas`: reservas persistentes con paciente, odontólogo, servicio, horario, precio y estado.
+- `citas`: reservas persistentes con paciente, odontólogo, servicio, horario, precio, estado y sesión del tratamiento.
 - `historias_clinicas`: diagnóstico, tratamiento, indicaciones y seguimiento por paciente y odontólogo.
 - `bloqueos_horario`: períodos no disponibles definidos por cada odontólogo.
 - `costos_fijos_config`: gastos mensuales utilizados en los reportes administrativos.
@@ -139,7 +139,7 @@ POST /api/admin/odontologos
 PUT  /api/admin/odontologos/{id}
 ```
 
-Al iniciar por primera vez se cargan los 17 servicios de la maqueta, incluido Control y Seguimiento a costo cero, los cuatro odontólogos y la cuenta administrativa documentada en `doc/CREDENCIALES_PRUEBA.md`.
+Al iniciar por primera vez se cargan los 16 servicios de la maqueta, los cuatro odontólogos y la cuenta administrativa documentada en `doc/CREDENCIALES_PRUEBA.md`.
 
 Para consultar el catálogo desde el navegador:
 
@@ -149,6 +149,8 @@ http://localhost:8080/api/odontologos
 ```
 
 ## Gestión de citas
+
+Los servicios de varias sesiones se cobran una sola vez al abrir el tratamiento. Las reservas siguientes del mismo tratamiento se registran a costo cero e indican el número de sesión y las sesiones restantes. Al completar todas las sesiones, una nueva reserva inicia un nuevo tratamiento y aplica nuevamente el precio configurado.
 
 El paciente se obtiene del JWT; el frontend no puede reservar una cita a nombre de otro usuario. La clínica atiende de lunes a sábado, de `09:00` a `18:00`, en intervalos de 30 minutos. El backend calcula la hora final usando la duración del servicio y evita cruces tanto del odontólogo como del paciente.
 

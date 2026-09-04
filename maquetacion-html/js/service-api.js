@@ -10,6 +10,7 @@
       price: Number(servicio.precio),
       cost: Number(servicio.costo || 0),
       duration: Number(servicio.duracionMinutos),
+      sessions: Number(servicio.sesionesIncluidas || 1),
       image: servicio.imagenUrl || "",
       active: servicio.activo !== false
     };

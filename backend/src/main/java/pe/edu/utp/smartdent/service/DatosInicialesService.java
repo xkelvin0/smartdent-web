@@ -29,23 +29,22 @@ public class DatosInicialesService {
             RolNombre.ADMIN, "Administrador general de SmartDent");
 
     private static final List<ServicioInicial> SERVICIOS = List.of(
-            new ServicioInicial("SRV-CONSULTA", "Consulta y Diagnóstico", "Prevención", "Evaluación clínica integral y plan de tratamiento personalizado.", 80, 15, 30, "consulta-diagnostico.png"),
-            new ServicioInicial("SRV-CONTROL", "Control y Seguimiento", "Prevención", "Sesión de control incluida para pacientes con un tratamiento activo.", 0, 0, 30, null),
-            new ServicioInicial("SRV-LIMPIEZA", "Limpieza y Profilaxis", "Prevención", "Eliminación de placa y sarro para prevenir caries y enfermedades de las encías.", 120, 35, 45, "limpieza-profilaxis.png"),
-            new ServicioInicial("SRV-URGENCIA", "Urgencias Dentales", "Urgencias", "Atención prioritaria para dolor, fracturas, traumatismos e infecciones.", 150, 50, 40, "urgencias-dentales.png"),
-            new ServicioInicial("SRV-DISENO", "Diseño de Sonrisa", "Estética", "Planificación digital para conseguir una sonrisa armónica y natural.", 180, 55, 60, "diseno-sonrisa.webp"),
-            new ServicioInicial("SRV-RESINA", "Restauraciones con Resina", "Estética", "Reconstrucción estética para recuperar forma y función dental.", 180, 60, 60, "restauraciones-resina.png"),
-            new ServicioInicial("SRV-BLANQUEAMIENTO", "Blanqueamiento Dental", "Estética", "Aclaramiento dental profesional con control de sensibilidad.", 350, 110, 75, "blanqueamiento-dental.png"),
-            new ServicioInicial("SRV-CARILLAS", "Carillas Dentales", "Estética", "Láminas estéticas personalizadas para mejorar dientes anteriores.", 700, 260, 90, "carillas-dentales.png"),
-            new ServicioInicial("SRV-ORTODONCIA", "Ortodoncia Convencional", "Ortodoncia", "Corrección de la posición dental mediante brackets y controles periódicos.", 450, 160, 60, "ortodoncia-convencional.png"),
-            new ServicioInicial("SRV-ORTODONCIA-INVISIBLE", "Ortodoncia Invisible", "Ortodoncia", "Alineadores transparentes removibles diseñados digitalmente.", 900, 350, 60, "ortodoncia-invisible.png"),
-            new ServicioInicial("SRV-IMPLANTE", "Implantología Avanzada", "Rehabilitación", "Implantes planificados digitalmente para recuperar dientes ausentes.", 900, 420, 120, "implantologia-avanzada.webp"),
-            new ServicioInicial("SRV-PROTESIS", "Prótesis Dentales", "Rehabilitación", "Coronas, puentes y prótesis para recuperar comodidad y función.", 650, 280, 90, "protesis-dentales.png"),
-            new ServicioInicial("SRV-ENDODONCIA", "Endodoncia Microscópica", "Endodoncia", "Tratamiento de conductos con magnificación y alta precisión.", 650, 180, 90, "endodoncia-microscopica.webp"),
-            new ServicioInicial("SRV-EXTRACCION", "Extracciones Dentales", "Cirugía", "Extracción segura con evaluación y cuidados posteriores.", 200, 65, 45, "extracciones-dentales.png"),
-            new ServicioInicial("SRV-TERCEROS-MOLARES", "Cirugía de Terceros Molares", "Cirugía", "Evaluación y extracción quirúrgica de muelas del juicio.", 450, 170, 90, "cirugia-terceros-molares.png"),
-            new ServicioInicial("SRV-PERIODONCIA", "Periodoncia y Encías", "Periodoncia", "Prevención y tratamiento de enfermedades periodontales.", 300, 90, 60, "periodoncia-laser.webp"),
-            new ServicioInicial("SRV-ODONTOPEDIATRIA", "Odontopediatría", "Odontopediatría", "Atención preventiva y tratamientos adaptados a niños y adolescentes.", 120, 35, 45, "odontopediatria.png"));
+            new ServicioInicial("SRV-CONSULTA", "Consulta y Diagnóstico", "Prevención", "Evaluación clínica integral y plan de tratamiento personalizado.", 80, 15, 30, 1, "consulta-diagnostico.png"),
+            new ServicioInicial("SRV-LIMPIEZA", "Limpieza y Profilaxis", "Prevención", "Eliminación de placa y sarro para prevenir caries y enfermedades de las encías.", 120, 35, 45, 1, "limpieza-profilaxis.png"),
+            new ServicioInicial("SRV-URGENCIA", "Urgencias Dentales", "Urgencias", "Atención prioritaria para dolor, fracturas, traumatismos e infecciones.", 150, 50, 40, 1, "urgencias-dentales.png"),
+            new ServicioInicial("SRV-DISENO", "Diseño de Sonrisa", "Estética", "Planificación digital para conseguir una sonrisa armónica y natural.", 180, 55, 60, 2, "diseno-sonrisa.webp"),
+            new ServicioInicial("SRV-RESINA", "Restauraciones con Resina", "Estética", "Reconstrucción estética para recuperar forma y función dental.", 180, 60, 60, 1, "restauraciones-resina.png"),
+            new ServicioInicial("SRV-BLANQUEAMIENTO", "Blanqueamiento Dental", "Estética", "Aclaramiento dental profesional con control de sensibilidad.", 350, 110, 75, 2, "blanqueamiento-dental.png"),
+            new ServicioInicial("SRV-CARILLAS", "Carillas Dentales", "Estética", "Láminas estéticas personalizadas para mejorar dientes anteriores.", 700, 260, 90, 3, "carillas-dentales.png"),
+            new ServicioInicial("SRV-ORTODONCIA", "Ortodoncia Convencional", "Ortodoncia", "Corrección de la posición dental mediante brackets y controles periódicos.", 450, 160, 60, 4, "ortodoncia-convencional.png"),
+            new ServicioInicial("SRV-ORTODONCIA-INVISIBLE", "Ortodoncia Invisible", "Ortodoncia", "Alineadores transparentes removibles diseñados digitalmente.", 900, 350, 60, 4, "ortodoncia-invisible.png"),
+            new ServicioInicial("SRV-IMPLANTE", "Implantología Avanzada", "Rehabilitación", "Implantes planificados digitalmente para recuperar dientes ausentes.", 900, 420, 120, 4, "implantologia-avanzada.webp"),
+            new ServicioInicial("SRV-PROTESIS", "Prótesis Dentales", "Rehabilitación", "Coronas, puentes y prótesis para recuperar comodidad y función.", 650, 280, 90, 3, "protesis-dentales.png"),
+            new ServicioInicial("SRV-ENDODONCIA", "Endodoncia Microscópica", "Endodoncia", "Tratamiento de conductos con magnificación y alta precisión.", 650, 180, 90, 2, "endodoncia-microscopica.webp"),
+            new ServicioInicial("SRV-EXTRACCION", "Extracciones Dentales", "Cirugía", "Extracción segura con evaluación y cuidados posteriores.", 200, 65, 45, 1, "extracciones-dentales.png"),
+            new ServicioInicial("SRV-TERCEROS-MOLARES", "Cirugía de Terceros Molares", "Cirugía", "Evaluación y extracción quirúrgica de muelas del juicio.", 450, 170, 90, 2, "cirugia-terceros-molares.png"),
+            new ServicioInicial("SRV-PERIODONCIA", "Periodoncia y Encías", "Periodoncia", "Prevención y tratamiento de enfermedades periodontales.", 300, 90, 60, 3, "periodoncia-laser.webp"),
+            new ServicioInicial("SRV-ODONTOPEDIATRIA", "Odontopediatría", "Odontopediatría", "Atención preventiva y tratamientos adaptados a niños y adolescentes.", 120, 35, 45, 1, "odontopediatria.png"));
 
     private final RolRepository rolRepository;
     private final ServicioRepository servicioRepository;
@@ -89,7 +88,9 @@ public class DatosInicialesService {
 
     private void inicializarServicios() {
         SERVICIOS.forEach(inicial -> {
-            if (servicioRepository.existsByCodigoIgnoreCase(inicial.codigo())) {
+            var existente = servicioRepository.findByCodigoIgnoreCase(inicial.codigo());
+            if (existente.isPresent()) {
+                existente.get().setSesionesIncluidas(inicial.sesiones());
                 return;
             }
             Servicio servicio = new Servicio();
@@ -100,10 +101,12 @@ public class DatosInicialesService {
             servicio.setPrecio(BigDecimal.valueOf(inicial.precio()));
             servicio.setCosto(BigDecimal.valueOf(inicial.costo()));
             servicio.setDuracionMinutos(inicial.duracion());
+            servicio.setSesionesIncluidas(inicial.sesiones());
             servicio.setImagenUrl(inicial.imagen());
             servicio.setActivo(true);
             servicioRepository.save(servicio);
         });
+        servicioRepository.findByCodigoIgnoreCase("SRV-CONTROL").ifPresent(servicio -> servicio.setActivo(false));
     }
 
     private void inicializarAdministrador() {
@@ -148,16 +151,16 @@ public class DatosInicialesService {
 
     private void inicializarServiciosDeOdontologos() {
         asignarServicios("DOC-CARLOS-MENDOZA",
-                "SRV-IMPLANTE", "SRV-CONSULTA", "SRV-CONTROL", "SRV-URGENCIA", "SRV-PROTESIS",
+                "SRV-IMPLANTE", "SRV-CONSULTA", "SRV-URGENCIA", "SRV-PROTESIS",
                 "SRV-EXTRACCION", "SRV-TERCEROS-MOLARES");
         asignarServicios("DOC-ELENA-RUIZ",
-                "SRV-DISENO", "SRV-CONSULTA", "SRV-CONTROL", "SRV-LIMPIEZA", "SRV-RESINA",
+                "SRV-DISENO", "SRV-CONSULTA", "SRV-LIMPIEZA", "SRV-RESINA",
                 "SRV-BLANQUEAMIENTO", "SRV-CARILLAS", "SRV-ORTODONCIA",
                 "SRV-ORTODONCIA-INVISIBLE");
         asignarServicios("DOC-MIGUEL-SILVA",
-                "SRV-ENDODONCIA", "SRV-CONSULTA", "SRV-CONTROL", "SRV-URGENCIA", "SRV-EXTRACCION");
+                "SRV-ENDODONCIA", "SRV-CONSULTA", "SRV-URGENCIA", "SRV-EXTRACCION");
         asignarServicios("DOC-LUCIA-TORRES",
-                "SRV-PERIODONCIA", "SRV-CONTROL", "SRV-LIMPIEZA", "SRV-RESINA", "SRV-ODONTOPEDIATRIA");
+                "SRV-PERIODONCIA", "SRV-LIMPIEZA", "SRV-RESINA", "SRV-ODONTOPEDIATRIA");
     }
 
     private void asignarServicios(String codigoOdontologo, String... codigosServicio) {
@@ -176,6 +179,7 @@ public class DatosInicialesService {
             long precio,
             long costo,
             int duracion,
+            int sesiones,
             String imagen) {
     }
 }

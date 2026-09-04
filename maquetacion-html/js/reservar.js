@@ -21,7 +21,7 @@ async function initializeBookingPage() {
   const timeContainer = document.querySelector("#time-options");
   const rebookId = sessionStorage.getItem("smartdent_rebook_id");
   const servicesByCategory = {
-    PREVENCION: ["SRV-CONSULTA", "SRV-CONTROL", "SRV-LIMPIEZA", "SRV-URGENCIA"],
+    PREVENCION: ["SRV-CONSULTA", "SRV-LIMPIEZA", "SRV-URGENCIA"],
     ESTETICA: ["SRV-DISENO", "SRV-RESINA", "SRV-BLANQUEAMIENTO", "SRV-CARILLAS"],
     ORTODONCIA: ["SRV-ORTODONCIA", "SRV-ORTODONCIA-INVISIBLE"],
     REHABILITACION: ["SRV-IMPLANTE", "SRV-PROTESIS"],
@@ -37,19 +37,21 @@ async function initializeBookingPage() {
   let selectedDentist = null;
   let availabilitySequence = 0;
   let rebookAppointment = null;
+  let patientAppointments = [];
 
   document.querySelector("#patient-name").value = session.name;
   phoneInput.value = session.phone || "";
   showTimesMessage("Selecciona servicio, especialista y fecha.");
 
   try {
-    [services] = await Promise.all([
+    [services, patientAppointments] = await Promise.all([
       SmartDentApi.request("/servicios", { auth: false }),
-      rebookId ? SmartDentAppointments.listPatient().then((appointments) => {
-        rebookAppointment = appointments.find((item) =>
-          item.id === String(rebookId) && ["PENDIENTE", "CONFIRMADA"].includes(item.status));
-      }) : Promise.resolve()
+      SmartDentAppointments.listPatient()
     ]);
+    if (rebookId) {
+      rebookAppointment = patientAppointments.find((item) =>
+        item.id === String(rebookId) && ["PENDIENTE", "CONFIRMADA"].includes(item.status));
+    }
   } catch (error) {
     showError(error);
     disableForm();
@@ -76,7 +78,7 @@ async function initializeBookingPage() {
     const codes = servicesByCategory[category] || [];
     const categoryServices = services.filter((item) => codes.includes(item.codigo));
     serviceInput.innerHTML = `<option value="">Selecciona un tratamiento</option>${categoryServices
-      .map((item) => `<option value="${item.id}">${escapeHtml(item.nombre)} — S/ ${Number(item.precio).toFixed(2)}</option>`)
+      .map((item) => `<option value="${item.id}">${escapeHtml(item.nombre)} — S/ ${Number(item.precio).toFixed(2)}${Number(item.sesionesIncluidas || 1) > 1 ? ` · ${item.sesionesIncluidas} sesiones` : ""}</option>`)
       .join("")}`;
     serviceInput.disabled = categoryServices.length === 0;
     resetDentist();
@@ -252,6 +254,22 @@ async function initializeBookingPage() {
       ? new Intl.DateTimeFormat("es-PE", { dateStyle: "long" }).format(new Date(`${dateInput.value}T12:00:00`))
       : "Sin seleccionar";
     document.querySelector("#summary-time").textContent = timeInput.value ? formatTime(timeInput.value) : "Sin seleccionar";
+    document.querySelector("#summary-treatment").textContent = treatmentPreview(selectedService);
+  }
+
+  function treatmentPreview(service) {
+    if (!service) return "Sin seleccionar";
+    const total = Number(service.sesionesIncluidas || 1);
+    if (total <= 1) return `Pago por atención: S/ ${Number(service.precio).toFixed(2)}`;
+    const previous = patientAppointments
+      .filter((item) => String(item.serviceId) === String(service.id) && item.status !== "CANCELADA")
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+    const previousNumber = Number(previous?.sessionNumber || 1);
+    const previousTotal = Number(previous?.treatmentCode ? previous.totalSessions : total);
+    if (previous && previousNumber < previousTotal) {
+      return `Sesión ${previousNumber + 1} de ${previousTotal} · incluida, S/ 0.00`;
+    }
+    return `Sesión 1 de ${total} · pago único S/ ${Number(service.precio).toFixed(2)}`;
   }
 
   function getSelectedService() {

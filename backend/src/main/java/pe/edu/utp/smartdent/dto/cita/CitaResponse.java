@@ -25,6 +25,10 @@ public record CitaResponse(
         String motivo,
         String telefonoContacto,
         BigDecimal precioPactado,
+        String tratamientoCodigo,
+        Integer numeroSesion,
+        Integer totalSesiones,
+        Integer sesionesRestantes,
         LocalDateTime creadoEn) {
 
     public static CitaResponse desde(Cita cita) {
@@ -35,6 +39,8 @@ public record CitaResponse(
                 cita.getOdontologo().getUsuario().getNombreCompleto(),
                 cita.getServicio().getId(), cita.getServicio().getNombre(),
                 cita.getFecha(), cita.getHoraInicio(), cita.getHoraFin(), cita.getEstado(),
-                cita.getMotivo(), cita.getTelefonoContacto(), cita.getPrecioPactado(), cita.getCreadoEn());
+                cita.getMotivo(), cita.getTelefonoContacto(), cita.getPrecioPactado(),
+                cita.getTratamientoCodigo(), cita.getNumeroSesion(), cita.getTotalSesiones(),
+                Math.max(0, cita.getTotalSesiones() - cita.getNumeroSesion()), cita.getCreadoEn());
     }
 }

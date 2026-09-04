@@ -267,6 +267,13 @@ function appointmentPrice(appointment) {
   return Number(appointment.price ?? window.SmartDentCatalog?.price(appointment.service) ?? 0);
 }
 
+function treatmentSessionLabel(appointment) {
+  const total = Number(appointment.totalSessions || 1);
+  if (total <= 1) return "Atención individual";
+  const remaining = Math.max(0, Number(appointment.remainingSessions ?? total - appointment.sessionNumber));
+  return `Sesión ${appointment.sessionNumber} de ${total} · ${remaining} ${remaining === 1 ? "sesión restante" : "sesiones restantes"}`;
+}
+
 function renderNextAppointment(appointment) {
   const container = document.querySelector("#next-appointment");
   if (!appointment) {
@@ -275,7 +282,7 @@ function renderNextAppointment(appointment) {
   }
   container.innerHTML = `<div class="flex flex-col gap-5 rounded-lg border border-slate-200 p-5 sm:flex-row sm:items-center">
     <div class="grid h-16 w-16 shrink-0 place-items-center rounded-lg bg-slate-100 text-center"><span class="block text-[9px] font-bold uppercase text-slate-400">${monthShort(appointment.date)}</span><strong class="block text-xl text-navy">${dayNumber(appointment.date)}</strong></div>
-    <div class="flex-1"><h3 class="font-bold text-navy">${escapeHtml(appointment.service)}</h3><p class="mt-2 text-xs text-slate-500">${formatDate(appointment.date)} · ${formatTime(appointment.time)}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(appointment.dentist)}</p></div>
+    <div class="flex-1"><h3 class="font-bold text-navy">${escapeHtml(appointment.service)}</h3><p class="mt-1 text-[10px] font-bold text-gold">${treatmentSessionLabel(appointment)}</p><p class="mt-2 text-xs text-slate-500">${formatDate(appointment.date)} · ${formatTime(appointment.time)}</p><p class="mt-1 text-xs text-slate-500">${escapeHtml(appointment.dentist)}</p></div>
     <span class="self-start rounded-full px-3 py-1 text-[9px] font-bold ${statusClass(appointment.status)}">${escapeHtml(appointment.status)}</span>
   </div>`;
 }
@@ -295,7 +302,7 @@ function renderAppointmentTable(appointments) {
 
 function openAppointmentModal(appointment) {
   if (!appointment) return;
-  document.querySelector("#patient-appointment-detail").innerHTML = `<div class="grid gap-4 rounded-xl bg-slate-50 p-5 sm:grid-cols-2"><div><span class="text-[10px] uppercase text-slate-400">Servicio</span><strong class="mt-1 block text-sm text-navy">${escapeHtml(appointment.service)}</strong></div><div><span class="text-[10px] uppercase text-slate-400">Especialista</span><strong class="mt-1 block text-sm text-navy">${escapeHtml(appointment.dentist)}</strong></div><div><span class="text-[10px] uppercase text-slate-400">Fecha y hora</span><strong class="mt-1 block text-sm text-navy">${formatDate(appointment.date)} · ${formatTime(appointment.time)}</strong></div><div><span class="text-[10px] uppercase text-slate-400">Estado</span><span class="mt-1 inline-flex rounded-full px-3 py-1 text-[9px] font-bold ${statusClass(appointment.status)}">${escapeHtml(appointment.status)}</span></div><div class="sm:col-span-2"><span class="text-[10px] uppercase text-slate-400">Código de reserva</span><strong class="mt-1 block text-xs text-navy">${escapeHtml(appointment.id)}</strong></div><div class="sm:col-span-2"><span class="text-[10px] uppercase text-slate-400">Notas</span><p class="mt-1 text-xs text-slate-600">${escapeHtml(appointment.notes || "Sin notas adicionales")}</p></div></div>`;
+  document.querySelector("#patient-appointment-detail").innerHTML = `<div class="grid gap-4 rounded-xl bg-slate-50 p-5 sm:grid-cols-2"><div><span class="text-[10px] uppercase text-slate-400">Servicio</span><strong class="mt-1 block text-sm text-navy">${escapeHtml(appointment.service)}</strong><small class="mt-1 block font-bold text-gold">${treatmentSessionLabel(appointment)}</small></div><div><span class="text-[10px] uppercase text-slate-400">Especialista</span><strong class="mt-1 block text-sm text-navy">${escapeHtml(appointment.dentist)}</strong></div><div><span class="text-[10px] uppercase text-slate-400">Fecha y hora</span><strong class="mt-1 block text-sm text-navy">${formatDate(appointment.date)} · ${formatTime(appointment.time)}</strong></div><div><span class="text-[10px] uppercase text-slate-400">Importe de esta cita</span><strong class="mt-1 block text-sm text-navy">S/ ${appointmentPrice(appointment).toFixed(2)}</strong></div><div class="sm:col-span-2"><span class="text-[10px] uppercase text-slate-400">Código de reserva</span><strong class="mt-1 block text-xs text-navy">${escapeHtml(appointment.id)}</strong></div><div class="sm:col-span-2"><span class="text-[10px] uppercase text-slate-400">Notas</span><p class="mt-1 text-xs text-slate-600">${escapeHtml(appointment.notes || "Sin notas adicionales")}</p></div></div>`;
   const active = ["PENDIENTE", "CONFIRMADA"].includes(appointment.status);
   document.querySelector("#patient-appointment-actions").innerHTML = `<button class="rounded-lg border border-slate-300 px-4 py-2.5 text-xs font-bold text-navy" data-close-patient-appointment type="button">Cerrar</button>${active ? `<button class="rounded-lg bg-red-50 px-4 py-2.5 text-xs font-bold text-red-700" data-cancel-appointment="${escapeHtml(appointment.id)}" type="button">Cancelar</button><button class="rounded-lg bg-navy px-4 py-2.5 text-xs font-bold text-white" data-rebook-appointment="${escapeHtml(appointment.id)}" type="button">Reprogramar</button>` : ""}`;
   const modal = document.querySelector("#patient-appointment-modal");

@@ -44,6 +44,9 @@ public class Servicio {
     @Column(name = "duracion_minutos", nullable = false)
     private Integer duracionMinutos;
 
+    @Column(name = "sesiones_incluidas")
+    private Integer sesionesIncluidas = 1;
+
     @Column(name = "imagen_url", length = 500)
     private String imagenUrl;
 
@@ -129,6 +132,14 @@ public class Servicio {
 
     public void setDuracionMinutos(Integer duracionMinutos) {
         this.duracionMinutos = duracionMinutos;
+    }
+
+    public Integer getSesionesIncluidas() {
+        return sesionesIncluidas == null ? 1 : sesionesIncluidas;
+    }
+
+    public void setSesionesIncluidas(Integer sesionesIncluidas) {
+        this.sesionesIncluidas = sesionesIncluidas;
     }
 
     public String getImagenUrl() {

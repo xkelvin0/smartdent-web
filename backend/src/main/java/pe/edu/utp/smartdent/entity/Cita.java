@@ -67,6 +67,15 @@ public class Cita {
     @Column(name = "precio_pactado", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioPactado;
 
+    @Column(name = "tratamiento_codigo", length = 50)
+    private String tratamientoCodigo;
+
+    @Column(name = "numero_sesion")
+    private Integer numeroSesion;
+
+    @Column(name = "total_sesiones")
+    private Integer totalSesiones;
+
     @Column(name = "creado_en", nullable = false, updatable = false)
     private LocalDateTime creadoEn;
 
@@ -108,6 +117,12 @@ public class Cita {
     public void setTelefonoContacto(String telefonoContacto) { this.telefonoContacto = telefonoContacto; }
     public BigDecimal getPrecioPactado() { return precioPactado; }
     public void setPrecioPactado(BigDecimal precioPactado) { this.precioPactado = precioPactado; }
+    public String getTratamientoCodigo() { return tratamientoCodigo; }
+    public void setTratamientoCodigo(String tratamientoCodigo) { this.tratamientoCodigo = tratamientoCodigo; }
+    public Integer getNumeroSesion() { return numeroSesion == null ? 1 : numeroSesion; }
+    public void setNumeroSesion(Integer numeroSesion) { this.numeroSesion = numeroSesion; }
+    public Integer getTotalSesiones() { return totalSesiones == null ? 1 : totalSesiones; }
+    public void setTotalSesiones(Integer totalSesiones) { this.totalSesiones = totalSesiones; }
     public LocalDateTime getCreadoEn() { return creadoEn; }
     public LocalDateTime getActualizadoEn() { return actualizadoEn; }
 }
