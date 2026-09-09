@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Administrativo | Escuela Jurídica</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-login-page">
+    <header class="login-page-header"><div class="container login-page-nav"><a href="index.html" class="logo-area"><img src="img/logo.png" alt="Escuela Jurídica" class="logo-img"></a><a href="index.html" class="login-back-link"><i class="fa-solid fa-arrow-left"></i> Volver al sitio web</a></div></header>
+    <main class="admin-login-main">
+        <section class="admin-login-card">
+            <div class="admin-login-visual"><div class="admin-visual-content"><span class="admin-security-icon"><i class="fa-solid fa-shield-halved"></i></span><span class="slide-badge">Acceso restringido</span><h1>Panel administrativo</h1><p>Gestiona el contenido informativo y las consultas recibidas desde un entorno exclusivo para el personal autorizado.</p><ul><li><i class="fa-solid fa-check"></i> Gestión de contenido</li><li><i class="fa-solid fa-check"></i> Revisión de consultas</li><li><i class="fa-solid fa-check"></i> Administración segura</li></ul></div></div>
+            <div class="admin-login-form-area"><span class="section-subtitle">Administración</span><h2>Iniciar sesión</h2><p>Ingresa tus credenciales administrativas.</p><form onsubmit="event.preventDefault(); window.location.href='admin-panel.html';"><label><i class="fa-solid fa-user-shield"></i> Usuario administrador<input type="text" autocomplete="username" placeholder="Ingresa tu usuario" required></label><label><i class="fa-solid fa-key"></i> Contraseña<input type="password" autocomplete="current-password" placeholder="Ingresa tu contraseña" required></label><button type="submit"><i class="fa-solid fa-right-to-bracket"></i> Acceder al panel</button><a href="contacto.html" class="admin-help-link">¿Necesitas recuperar el acceso?</a></form></div>
+        </section>
+    </main>
+    <footer class="login-page-footer"><p>&copy; 2026 Escuela Jurídica · Área administrativa</p></footer>
+</body>
+</html>

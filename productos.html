@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programas académicos | Escuela Jurídica</title>
+    <meta name="description" content="Cursos, diplomados y seminarios de Escuela Jurídica para fortalecer tu desarrollo profesional.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo-area"><img src="img/logo.png" alt="Escuela Jurídica" class="logo-img"></a>
+            <nav class="nav" id="mainNav"><a href="index.html" class="nav-link">Inicio</a><a href="productos.html" class="nav-link active">Productos</a><a href="nosotros.html" class="nav-link">Nosotros</a><a href="contacto.html" class="nav-link">Contactos</a><a href="admin-login.html" class="btn-login-header"><i class="fa-solid fa-user-shield"></i> Administrador</a></nav>
+            <button class="menu-btn" id="menuBtn" aria-label="Abrir menú"><i class="fa-solid fa-bars"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <section class="products-page-hero">
+            <div class="container"><span class="section-subtitle">Formación especializada</span><h1>Programas para impulsar tu desarrollo profesional</h1><p>Encuentra diplomados, cursos y seminarios diseñados para responder a los desafíos actuales del ámbito jurídico.</p><div class="products-hero-actions"><a href="#catalogo" class="btn-primary">Explorar programas</a><a href="contacto.html" class="btn-secondary-light">Solicitar orientación</a></div></div>
+        </section>
+
+        <section class="products-catalog" id="catalogo">
+            <div class="container">
+                <div class="products-heading"><div><span class="section-subtitle">Oferta académica</span><h2 class="section-title">Elige el programa ideal para ti</h2><p>Consulta nuestra propuesta académica y comunícate con un asesor para conocer fechas y disponibilidad.</p></div><span class="products-count" id="productsCount">6 programas</span></div>
+                <div class="products-toolbar">
+                    <label class="products-search"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="productsSearch" placeholder="Buscar por nombre o especialidad..."></label>
+                    <div class="products-filters" id="productsFilters"><button class="active" data-type="">Todos</button><button data-type="Diplomado">Diplomados</button><button data-type="Curso">Cursos</button><button data-type="Seminario">Seminarios</button></div>
+                </div>
+                <div class="products-page-grid" id="productsPageGrid"></div>
+                <div class="products-empty" id="productsEmpty" hidden><i class="fa-regular fa-folder-open"></i><h3>No encontramos programas</h3><p>Prueba con otro nombre o selecciona una categoría diferente.</p></div>
+            </div>
+        </section>
+
+        <section class="products-benefits">
+            <div class="container"><div class="text-center-heading"><span class="section-subtitle">Una experiencia completa</span><h2 class="section-title">Beneficios de estudiar con nosotros</h2></div><div class="products-benefits-grid">
+                <article><i class="fa-solid fa-chalkboard-user"></i><h3>Especialistas reconocidos</h3><p>Aprende con profesionales de amplia experiencia registral, notarial y predial.</p></article>
+                <article><i class="fa-solid fa-video"></i><h3>Clases virtuales en vivo</h3><p>Participa desde cualquier lugar y accede posteriormente a las sesiones grabadas.</p></article>
+                <article><i class="fa-solid fa-file-arrow-down"></i><h3>Material académico</h3><p>Consulta diapositivas, lecturas y recursos complementarios desde el aula virtual.</p></article>
+                <article><i class="fa-solid fa-award"></i><h3>Respaldo institucional</h3><p>Programas orientados al crecimiento profesional y la actualización académica.</p></article>
+            </div></div>
+        </section>
+
+        <section class="products-featured"><div class="container"><div class="products-featured-box"><div><span>¿Necesitas orientación?</span><h2>Te ayudamos a elegir tu próximo programa</h2><p>Cuéntanos cuáles son tus objetivos y nuestro equipo académico te brindará información sobre modalidad, duración y próximas convocatorias.</p></div><div><a href="https://wa.me/51987654321?text=Hola%2C%20deseo%20orientaci%C3%B3n%20sobre%20los%20programas%20acad%C3%A9micos" target="_blank" rel="noopener noreferrer" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Consultar por WhatsApp</a><a href="contacto.html" class="btn-outline-white">Ir a Contacto</a></div></div></div></section>
+
+        <section class="products-faq"><div class="container"><div class="text-center-heading-sm"><span class="section-subtitle">Resolvemos tus dudas</span><h2 class="section-title">Preguntas frecuentes</h2></div><div class="faq-list">
+            <details><summary>¿Las clases quedan grabadas?<i class="fa-solid fa-plus"></i></summary><p>Los programas virtuales pueden incluir acceso a sesiones grabadas y materiales mediante el aula virtual, según las condiciones de cada convocatoria.</p></details>
+            <details><summary>¿Cómo conozco las próximas fechas?<i class="fa-solid fa-plus"></i></summary><p>Puedes solicitar información desde la página de Contacto o escribir directamente al WhatsApp institucional.</p></details>
+            <details><summary>¿Los programas entregan certificación?<i class="fa-solid fa-plus"></i></summary><p>La certificación y sus condiciones se informan en el detalle de cada curso, diplomado o seminario.</p></details>
+            <details><summary>¿La matrícula se realiza en esta página?<i class="fa-solid fa-plus"></i></summary><p>Este sitio es informativo. Cuando corresponda, el equipo te dirigirá al sistema oficial de matrícula de la empresa.</p></details>
+        </div></div></section>
+    </main>
+
+    <div class="program-modal" id="programModal" aria-hidden="true"><div class="program-modal-backdrop" data-close-modal></div><article class="program-modal-card" role="dialog" aria-modal="true" aria-labelledby="modalProgramTitle"><button class="program-modal-close" data-close-modal aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button><img id="modalProgramImage" src="" alt=""><div class="program-modal-content"><div class="program-modal-meta"><span id="modalProgramType"></span><span><i class="fa-regular fa-clock"></i> <b id="modalProgramHours"></b></span><span><i class="fa-solid fa-laptop"></i> Modalidad virtual</span></div><h2 id="modalProgramTitle"></h2><p id="modalProgramDescription"></p><h3>¿Qué encontrarás?</h3><ul><li>Contenido especializado con enfoque teórico-práctico.</li><li>Orientación de profesionales con experiencia en el sector.</li><li>Material académico y acceso según la convocatoria.</li></ul><div class="program-modal-actions"><a id="modalWhatsapp" href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> Consultar programa</a><a href="contacto.html" class="btn-product-modal">Solicitar información</a></div></div></article></div>
+
+    <footer class="footer"><div class="container"><div class="footer-grid">
+        <div class="footer-col footer-about"><div class="footer-logo-box"><img src="img/logo.png" alt="Logo de Escuela Jurídica" class="footer-logo"></div><p class="footer-desc">Institución dedicada al perfeccionamiento profesional en derecho registral, notarial y civil con calidad garantizada.</p><div class="footer-utp-project"><span>Proyecto académico</span><div class="utp-logo" role="img" aria-label="Logo UTP"><span>U</span><span>T</span><span>P</span></div></div><div class="social-links"><a href="https://www.facebook.com/escuela.juridica.esejur" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a><a href="https://www.linkedin.com/in/escuelajur%C3%ADdicaper%C3%BA/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a><a href="https://www.instagram.com/escuelajuridica.edu.pe/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a><a href="https://wa.me/51987654321" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a></div></div>
+        <div class="footer-col"><h4 class="footer-title">Empresas aliadas</h4><ul class="footer-allies-list"><li>MTC y Provías Nacional</li><li>SUNARP: Zonas III, IX y XIV</li><li>Cortes Superiores de Justicia</li><li>Notarías Gonzales Loli y Paino</li><li>SBN y ERCC</li></ul></div>
+        <div class="footer-col"><h4 class="footer-title">Contacto</h4><ul class="footer-contact-info"><li><i class="fa-solid fa-phone"></i> <a href="tel:+51987654321">+51 987 654 321</a></li><li><i class="fa-solid fa-envelope"></i> <a href="mailto:informes@escuelajuridica.edu.pe">informes@escuelajuridica.edu.pe</a></li><li><i class="fa-solid fa-location-dot"></i> <a href="https://www.google.com/maps/search/?api=1&amp;query=Calle+Elias+Aguirre+126+Oficina+302+Miraflores+Lima" target="_blank" rel="noopener noreferrer">Calle Elías Aguirre Nro. 126 Of. 302, Miraflores</a></li></ul></div>
+        <div class="footer-col footer-personal"><h4 class="footer-title">Personal de la empresa</h4><p class="footer-desc">Equipo responsable de la atención y gestión académica.</p><ul class="footer-staff-list"><li><i class="fa-solid fa-user-tie"></i> Lilia Mercedes Guerra Macedo</li><li><i class="fa-solid fa-user-graduate"></i> Yourka Lucich Berrío</li><li><i class="fa-solid fa-scale-balanced"></i> Rosario Guerra Macedo</li><li><i class="fa-solid fa-user"></i> Ximena Góngora Guerra</li></ul></div>
+    </div><div class="footer-bottom"><p>&copy; 2026 Escuela Jurídica. Todos los derechos reservados. | Proyecto Académico UTP.</p></div></div></footer>
+    <script src="site-data.js"></script><script src="page.js"></script><script src="productos.js"></script>
+</body>
+</html>

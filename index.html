@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escuela Jurídica | Especialización y Excelencia en Derecho</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos Personalizados -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 1. Cabecera (Header & Nav) -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#inicio" class="logo-area">
+                <img src="img/logo.png" alt="Escuela Jurídica Logo" class="logo-img">
+            </a>
+            
+            <!-- Menú de Navegación -->
+            <nav class="nav" id="mainNav">
+                <a href="#inicio" class="nav-link active">Inicio</a>
+                <a href="productos.html" class="nav-link">Productos</a>
+                <a href="nosotros.html" class="nav-link">Nosotros</a>
+                <a href="contacto.html" class="nav-link">Contactos</a>
+                <!-- Botón de Login rápido integrado para cumplir el requerimiento de login -->
+                <a href="admin-login.html" class="btn-login-header"><i class="fa-solid fa-user-shield"></i> Administrador</a>
+            </nav>
+
+            <!-- Menú Hamburguesa Móvil -->
+            <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 2. Portada (Hero Slider de 3 Diapositivas) -->
+    <section class="hero-slider" id="inicio">
+        <div class="slider-container" id="sliderContainer">
+            
+            <!-- Slide 1 -->
+            <div class="slide active" style="background-image: linear-gradient(rgba(15, 44, 89, 0.85), rgba(15, 44, 89, 0.85)), url('img/slide1.jpg');">
+                <div class="slide-content">
+                    <span class="slide-badge">Programas Especializados</span>
+                    <h1 class="slide-title">Especialización y Excelencia en Derecho</h1>
+                    <p class="slide-desc">Lleva tu carrera al siguiente nivel con diplomados y cursos diseñados por reconocidos juristas y magistrados del sector notarial y registral.</p>
+                    <div class="slide-actions">
+                        <a href="#productos" class="btn-primary">Explorar Programas</a>
+                        <a href="nosotros.html" class="btn-secondary">Saber Más</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="slide" style="background-image: linear-gradient(rgba(15, 44, 89, 0.85), rgba(15, 44, 89, 0.85)), url('img/slide2.jpg');">
+                <div class="slide-content">
+                    <span class="slide-badge">Derecho Notarial y Registral</span>
+                    <h1 class="slide-title">Formación Académica con Propósito</h1>
+                    <p class="slide-desc">Obtén certificaciones de alto impacto académico que te preparan para afrontar los desafíos legales más exigentes del ámbito público y privado.</p>
+                    <div class="slide-actions">
+                        <a href="#productos" class="btn-primary">Ver Cursos</a>
+                        <a href="contacto.html" class="btn-secondary">Consultar Admisiones</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="slide" style="background-image: linear-gradient(rgba(15, 44, 89, 0.85), rgba(15, 44, 89, 0.85)), url('img/slide3.jpg');">
+                <div class="slide-content">
+                    <span class="slide-badge">Clases Virtuales en Vivo</span>
+                    <h1 class="slide-title">Aula Virtual de Última Generación</h1>
+                    <p class="slide-desc">Accede a nuestra plataforma de aprendizaje interactivo desde cualquier dispositivo, con sesiones grabadas y biblioteca virtual permanente.</p>
+                    <div class="slide-actions">
+                        <a href="#productos" class="btn-primary">Ver Seminarios</a>
+                        <a href="contacto.html" class="btn-secondary">Solicitar Información</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Controles del Slider -->
+        <button class="slider-arrow prev" id="slidePrev" aria-label="Diapositiva anterior">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="slider-arrow next" id="slideNext" aria-label="Siguiente diapositiva">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <!-- Indicadores (Dots) -->
+        <div class="slider-dots" id="sliderDots">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+        </div>
+    </section>
+
+    <!-- 3. Información de la Empresa (Nosotros) -->
+    <section class="section-nosotros" id="nosotros">
+        <div class="container">
+            <div class="nosotros-grid">
+                <div class="nosotros-info">
+                    <span class="section-subtitle">¿Quiénes somos?</span>
+                    <h2 class="section-title">Excelencia en formación jurídica desde 2015</h2>
+                    <p class="nosotros-text">Capacitamos a profesionales, funcionarios y ejecutivos mediante diplomados, seminarios, talleres y congresos especializados en Derecho Registral, Notarial, Inmobiliario y Urbanístico.</p>
+                    <p class="nosotros-text">Nuestra formación combina experiencia docente, aplicación práctica y tecnología educativa, con el respaldo académico del Colegio de Abogados de Lima Sur y del Colegio de Abogados de Lima.</p>
+                    <div class="nosotros-stats">
+                        <div class="stat-card">
+                            <span class="stat-num">2015</span>
+                            <span class="stat-label">Inicio de actividades</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num">CAL</span>
+                            <span class="stat-label">Respaldo académico</span>
+                        </div>
+                    </div>
+                    <a href="nosotros.html" class="btn-about-more">Conocer nuestra institución <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="nosotros-media">
+                    <div class="media-frame">
+                        <img src="img/nosotros.jpg" alt="Clase de Escuela Jurídica" class="media-img">
+                        <div class="media-badge">
+                            <i class="fa-solid fa-award"></i>
+                            <span>Excelencia académica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4. Canal oficial de YouTube -->
+    <section class="section-videos section-youtube bg-light" id="youtube">
+        <div class="container">
+            <div class="text-center-heading">
+                <span class="section-subtitle youtube-subtitle"><i class="fa-brands fa-youtube"></i> Contenido jurídico gratuito</span>
+                <h2 class="section-title">Nuestro canal de YouTube</h2>
+                <p class="section-desc">Aprende con los seminarios y conferencias publicados por Escuela Jurídica. Reproduce aquí una selección de nuestro contenido oficial.</p>
+            </div>
+            
+            <div class="videos-grid">
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube-nocookie.com/embed/zUm7JeudgGQ" title="Seminario: Observaciones frecuentes en saneamiento de predios rurales y urbanos" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-tag">Seminario jurídico</span>
+                        <h3 class="video-card-title">Observaciones frecuentes en saneamiento de predios rurales y urbanos</h3>
+                        <p class="video-card-desc">Contenido oficial de Escuela Jurídica sobre criterios y situaciones frecuentes en el saneamiento de predios.</p>
+                        <a href="https://www.youtube.com/watch?v=zUm7JeudgGQ" class="video-youtube-link" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> Ver en YouTube</a>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube-nocookie.com/embed/nOPJvFFdCcY" title="El instrumento público notarial, protocolo notarial y la escritura pública" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <span class="video-tag">Derecho notarial</span>
+                        <h3 class="video-card-title">El instrumento público notarial, protocolo notarial y la escritura pública</h3>
+                        <p class="video-card-desc">Una explicación especializada sobre los principales instrumentos y actuaciones de la función notarial.</p>
+                        <a href="https://www.youtube.com/watch?v=nOPJvFFdCcY" class="video-youtube-link" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube"></i> Ver en YouTube</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 6 Productos o Servicios -->
+    <section class="section-productos" id="productos">
+        <div class="container">
+            <div class="text-center-heading">
+                <span class="section-subtitle">Nuestros Programas</span>
+                <h2 class="section-title">Capacitación de Alto Nivel Académico</h2>
+                <p class="section-desc">Descubre nuestros 6 programas académicos principales diseñados para responder a las demandas del mercado legal moderno.</p>
+            </div>
+
+            <!-- Grilla con exactamente 6 productos (requisito de pizarra) -->
+            <div class="productos-grid">
+                
+                <!-- Producto 1 -->
+                <div class="product-card">
+                    <div class="product-card-header">
+                        <span class="prod-badge badge-navy">Diplomado</span>
+                        <span class="prod-hours"><i class="fa-regular fa-clock"></i> 120 hrs</span>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="prod-cover">
+                            <img src="img/curso1.jpg" alt="Derecho Notarial y Registral" class="prod-cover-img">
+                        </div>
+                        <h3 class="prod-title">Diplomado en Derecho Notarial y Registral</h3>
+                        <p class="prod-desc">Especialízate en trámites de escrituras públicas, transferencias de propiedad y calificación registral en la SUNARP.</p>
+                    </div>
+                    <div class="product-card-footer">
+                        <a href="contacto.html" class="btn-product">Más Información</a>
+                    </div>
+                </div>
+
+                <!-- Producto 2 -->
+                <div class="product-card">
+                    <div class="product-card-header">
+                        <span class="prod-badge badge-orange">Curso</span>
+                        <span class="prod-hours"><i class="fa-regular fa-clock"></i> 40 hrs</span>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="prod-cover">
+                            <img src="img/curso2.jpg" alt="Saneamiento de Predios" class="prod-cover-img">
+                        </div>
+                        <h3 class="prod-title">Saneamiento Físico Legal de Predios</h3>
+                        <p class="prod-desc">Aprende los procedimientos técnicos y legales para la regularización de inmuebles rústicos y urbanos.</p>
+                    </div>
+                    <div class="product-card-footer">
+                        <a href="contacto.html" class="btn-product">Más Información</a>
+                    </div>
+                </div>
+
+                <!-- Producto 3 -->
+                <div class="product-card">
+                    <div class="product-card-header">
+                        <span class="prod-badge badge-burgundy">Seminario</span>
+                        <span class="prod-hours"><i class="fa-regular fa-clock"></i> 12 hrs</span>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="prod-cover">
+                            <img src="img/curso3.jpg" alt="Precedentes Registrales" class="prod-cover-img">
+                        </div>
+                        <h3 class="prod-title">Precedentes de Observancia Obligatoria</h3>
+                        <p class="prod-desc">Análisis exhaustivo de los fallos y resoluciones del Tribunal Registral con carácter vinculante y obligatorio.</p>
+                    </div>
+                    <div class="product-card-footer">
+                        <a href="contacto.html" class="btn-product">Más Información</a>
+                    </div>
+                </div>
+
+                <!-- Producto 4 -->
+                <div class="product-card">
+                    <div class="product-card-header">
+                        <span class="prod-badge badge-navy">Diplomado</span>
+                        <span class="prod-hours"><i class="fa-regular fa-clock"></i> 140 hrs</span>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="prod-cover">
+                            <img src="img/curso4.jpg" alt="Contratos Civiles" class="prod-cover-img">
+                        </div>
+                        <h3 class="prod-title">Derecho de Contratos y Obligaciones Civiles</h3>
+                        <p class="prod-desc">Redacción, interpretación y resolución de controversias en contratos típicos y atípicos en el ordenamiento civil.</p>
+                    </div>
+                    <div class="product-card-footer">
+                        <a href="contacto.html" class="btn-product">Más Información</a>
+                    </div>
+                </div>
+
+                <!-- Producto 5 -->
+                <div class="product-card">
+                    <div class="product-card-header">
+                        <span class="prod-badge badge-orange">Curso</span>
+                        <span class="prod-hours"><i class="fa-regular fa-clock"></i> 48 hrs</span>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="prod-cover">
+                            <img src="img/curso5.jpg" alt="Derecho Administrativo" class="prod-cover-img">
+                        </div>
+                        <h3 class="prod-title">Derecho Administrativo y Procedimiento Sancionador</h3>
+                        <p class="prod-desc">Estudio integral de la Ley N° 27444, actos administrativos y estrategias de defensa ante entidades estatales.</p>
+                    </div>
+                    <div class="product-card-footer">
+                        <a href="contacto.html" class="btn-product">Más Información</a>
+                    </div>
+                </div>
+
+                <!-- Producto 6 -->
+                <div class="product-card">
+                    <div class="product-card-header">
+                        <span class="prod-badge badge-burgundy">Seminario</span>
+                        <span class="prod-hours"><i class="fa-regular fa-clock"></i> 16 hrs</span>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="prod-cover">
+                            <img src="img/curso6.jpg" alt="Garantías Reales" class="prod-cover-img">
+                        </div>
+                        <h3 class="prod-title">Garantías Reales y Ejecución de Hipotecas</h3>
+                        <p class="prod-desc">Constitución de hipotecas y anticresis, calificación registral y procesos judiciales de ejecución de garantías.</p>
+                    </div>
+                    <div class="product-card-footer">
+                        <a href="contacto.html" class="btn-product">Más Información</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Clientes Representativos (Aliados / Socios / Proveedores) -->
+    <section class="section-aliados bg-light">
+        <div class="container">
+            <div class="text-center-heading-sm">
+                <span class="section-subtitle">Respaldo Institucional</span>
+                <h3 class="section-title-sm">Aliados y Convenios Académicos</h3>
+            </div>
+            
+            <!-- Carrusel de Aliados con Flechas y Autodesplazamiento -->
+            <div class="aliados-carousel-wrapper">
+                <button class="aliados-arrow prev" id="aliadosPrev" aria-label="Anterior aliado">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="aliados-carousel">
+                    <div class="aliados-track" id="aliadosTrack">
+                        <div class="logo-partner" title="Ministerio de Transportes y Comunicaciones">
+                            <div class="partner-logo-box">
+                                <img src="img/mtc.png" alt="Logo del Ministerio de Transportes y Comunicaciones" class="partner-logo" data-fallback="MTC">
+                            </div>
+                            <strong>Ministerio de Transportes y Comunicaciones</strong>
+                            <span>Entidad pública</span>
+                        </div>
+                        <div class="logo-partner" title="SUNARP Zona Registral XIV - Ayacucho">
+                            <div class="partner-logo-box">
+                                <img src="img/sunarp ayacucho.png" alt="Logo de SUNARP Zona Registral XIV - Ayacucho" class="partner-logo" data-fallback="SUNARP">
+                            </div>
+                            <strong>SUNARP</strong>
+                            <span>Zona Registral XIV · Ayacucho</span>
+                        </div>
+                        <div class="logo-partner" title="Provías Nacional">
+                            <div class="partner-logo-box partner-logo-box--red">
+                                <img src="img/provias.png" alt="Logo de Provías Nacional" class="partner-logo" data-fallback="PROVÍAS">
+                            </div>
+                            <strong>Provías Nacional</strong>
+                            <span>Infraestructura vial</span>
+                        </div>
+                        <div class="logo-partner" title="Notaría Gonzales Loli">
+                            <div class="partner-logo-box"><img src="img/notaria.png" alt="Logo de la Notaría Gonzales Loli" class="partner-logo" data-fallback="GL"></div>
+                            <strong>Notaría Gonzales Loli</strong>
+                            <span>Institución notarial</span>
+                        </div>
+                        <div class="logo-partner" title="Corte Superior de Justicia de Huancavelica">
+                            <div class="partner-logo-box"><img src="img/corte superior.png" alt="Logo de la Corte Superior de Justicia de Huancavelica" class="partner-logo" data-fallback="PJ"></div>
+                            <strong>Corte Superior de Justicia</strong>
+                            <span>Distrito Judicial de Huancavelica</span>
+                        </div>
+                        <div class="logo-partner" title="SUNARP Zona Registral III - Moyobamba">
+                            <div class="partner-logo-box">
+                                <img src="img/sunarp moyobamba.png" alt="Logo de SUNARP Zona Registral III - Moyobamba" class="partner-logo" data-fallback="SUNARP">
+                            </div>
+                            <strong>SUNARP</strong>
+                            <span>Zona Registral III · Moyobamba</span>
+                        </div>
+                        <div class="logo-partner" title="ERCC">
+                            <div class="partner-logo-box"><img src="img/Notaria_Raul_Camacho_2021.png" alt="Logo ERCC" class="partner-logo" data-fallback="ERCC"></div>
+                            <strong>ERCC</strong>
+                            <span>Institución aliada</span>
+                        </div>
+                        <div class="logo-partner" title="Corte Superior de Justicia de Lima Norte">
+                            <div class="partner-logo-box"><img src="img/corte justicia.png" alt="Logo de la Corte Superior de Justicia de Lima Norte" class="partner-logo" data-fallback="PJ"></div>
+                            <strong>Corte Superior de Justicia</strong>
+                            <span>Distrito Judicial de Lima Norte</span>
+                        </div>
+                        <div class="logo-partner" title="Notaría Paino">
+                            <div class="partner-logo-box"><img src="img/paino.png" alt="Logo de la Notaría Paino" class="partner-logo" data-fallback="PAINO"></div>
+                            <strong>Notaría Paino</strong>
+                            <span>Institución notarial</span>
+                        </div>
+                        <div class="logo-partner" title="SUNARP Zona Registral IX - Lima">
+                            <div class="partner-logo-box">
+                                <img src="img/sunarp lima.jpg" alt="Logo de SUNARP Zona Registral IX - Lima" class="partner-logo" data-fallback="SUNARP">
+                            </div>
+                            <strong>SUNARP</strong>
+                            <span>Zona Registral IX · Lima</span>
+                        </div>
+                        <div class="logo-partner" title="Superintendencia Nacional de Bienes Estatales">
+                            <div class="partner-logo-box">
+                                <img src="img/sbn.png" alt="Logo de la Superintendencia Nacional de Bienes Estatales" class="partner-logo" data-fallback="SBN">
+                            </div>
+                            <strong>Superintendencia Nacional de Bienes Estatales</strong>
+                            <span>Entidad pública · SBN</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="aliados-arrow next" id="aliadosNext" aria-label="Siguiente aliado">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Pie de Página (Footer) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                
+                <!-- Columna 1: Branding -->
+                <div class="footer-col footer-about">
+                    <div class="footer-logo-box">
+                        <img src="img/logo.png" alt="Logo de Escuela Jurídica" class="footer-logo">
+                    </div>
+                    <p class="footer-desc">Institución dedicada al perfeccionamiento profesional en derecho registral, notarial y civil con calidad garantizada.</p>
+                    <div class="footer-utp-project">
+                        <span>Proyecto académico</span>
+                        <div class="utp-logo" role="img" aria-label="Logo de la Universidad Tecnológica del Perú">
+                            <span>U</span><span>T</span><span>P</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/escuela.juridica.esejur" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Escuela Jurídica"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://www.linkedin.com/in/escuelajur%C3%ADdicaper%C3%BA/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn de Escuela Jurídica"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/escuelajuridica.edu.pe/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Escuela Jurídica"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://wa.me/51987654321" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de Escuela Jurídica"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <!-- Columna 2: Nombres de empresas aliadas -->
+                <div class="footer-col">
+                    <h4 class="footer-title">Empresas aliadas</h4>
+                    <ul class="footer-allies-list">
+                        <li>MTC y Provías Nacional</li>
+                        <li>SUNARP: Zonas III, IX y XIV</li>
+                        <li>Cortes Superiores de Justicia</li>
+                        <li>Notarías Gonzales Loli y Paino</li>
+                        <li>SBN y ERCC</li>
+                    </ul>
+                </div>
+
+                <!-- Columna 3: Contacto -->
+                <div class="footer-col">
+                    <h4 class="footer-title">Contacto</h4>
+                    <ul class="footer-contact-info">
+                        <li><i class="fa-solid fa-phone"></i> <a href="tel:+51987654321">+51 987 654 321</a></li>
+                        <li><i class="fa-solid fa-envelope"></i> <a href="mailto:informes@escuelajuridica.edu.pe">informes@escuelajuridica.edu.pe</a></li>
+                        <li><i class="fa-solid fa-location-dot"></i> <a href="https://www.google.com/maps/search/?api=1&amp;query=Calle+Elias+Aguirre+126+Oficina+302+Miraflores+Lima" target="_blank" rel="noopener noreferrer">Calle Elías Aguirre Nro. 126 Of. 302, Miraflores</a></li>
+                    </ul>
+                </div>
+
+                <!-- Columna 4: Personal de la empresa -->
+                <div class="footer-col footer-personal">
+                    <h4 class="footer-title">Personal de la empresa</h4>
+                    <p class="footer-desc">Equipo responsable de la atención y gestión académica.</p>
+                    <ul class="footer-staff-list">
+                        <li><i class="fa-solid fa-user-tie"></i> Lilia Mercedes Guerra Macedo</li>
+                        <li><i class="fa-solid fa-user-graduate"></i> Yourka Lucich Berrío</li>
+                        <li><i class="fa-solid fa-scale-balanced"></i> Rosario Guerra Macedo</li>
+                        <li><i class="fa-solid fa-user"></i> Ximena Góngora Guerra</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Copyright -->
+            <div class="footer-bottom">
+                <p>&copy; 2026 Escuela Jurídica. Todos los derechos reservados. | Proyecto Académico UTP.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript para Funcionalidades -->
+    <script src="site-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
