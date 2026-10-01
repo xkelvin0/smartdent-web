@@ -13,7 +13,7 @@ La coordinación manual por llamadas, WhatsApp, hojas de cálculo o cuadernos pu
 - Persistencia: Spring Data JPA/Hibernate y MariaDB de XAMPP.
 - Seguridad: Spring Security, contraseñas BCrypt y JWT sin estado.
 - Documentación: OpenAPI 3 y Swagger UI.
-- Pruebas: JUnit y MockMvc; 34 pruebas automatizadas superadas al 3 de septiembre de 2026.
+- Pruebas: JUnit 5 y Mockito; 19 pruebas unitarias superadas al 7 de septiembre de 2026.
 - Angular: planificado para un avance posterior, según la indicación docente.
 
 ### Pruebas automatizadas realizadas
@@ -30,7 +30,7 @@ La coordinación manual por llamadas, WhatsApp, hojas de cálculo o cuadernos pu
 - Mensajes enviados desde la página de contacto.
 - Generación de la documentación OpenAPI y Swagger.
 
-Estas comprobaciones son principalmente pruebas de integración con Spring Boot y MockMvc, ejecutadas mediante JUnit. El conjunto completo finaliza con 34 pruebas aprobadas, 0 fallos y 0 errores.
+Estas comprobaciones son pruebas unitarias aisladas con JUnit 5 y Mockito. Los repositorios, el gestor de autenticación y los servicios externos se sustituyen por mocks, por lo que no se inicia Spring ni se utiliza MySQL. El conjunto completo finaliza con 19 pruebas aprobadas, 0 fallos y 0 errores.
 
 ## Roles
 

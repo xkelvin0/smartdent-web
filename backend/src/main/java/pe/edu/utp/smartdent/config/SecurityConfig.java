@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/health").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/registro", "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/registro", "/api/auth/login", "/api/auth/recuperar-password", "/api/auth/reset-password", "/api/auth/verificar-cuenta").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contacto/mensajes").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/servicios/**", "/api/odontologos").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")

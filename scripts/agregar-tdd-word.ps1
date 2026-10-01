@@ -70,11 +70,11 @@ try {
             @{ Text = "Test Driven Development (TDD), o desarrollo guiado por pruebas, es una práctica de ingeniería de software en la que las pruebas se escriben antes del código funcional. Su propósito es convertir los requisitos en comportamientos verificables y proporcionar retroalimentación continua durante el desarrollo."; Style = $null },
             @{ Text = "2.4.1 Fundamentos TDD"; Style = "Ttulo3" },
             @{ Text = "TDD se desarrolla mediante un ciclo breve conocido como rojo, verde y refactorización. En la fase roja se escribe una prueba que representa el comportamiento esperado y se comprueba que falle. En la fase verde se implementa el código mínimo necesario para superar la prueba. Finalmente, durante la refactorización se mejora la estructura interna del código sin modificar el comportamiento comprobado."; Style = $null },
-            @{ Text = "Este enfoque favorece la claridad de los requisitos, la detección temprana de errores, el diseño modular y la prevención de regresiones. En SmartDent puede aplicarse a reglas como impedir cruces de horarios, restringir las operaciones según el rol, validar el registro de pacientes y controlar las transiciones de estado de una cita. TDD no elimina la necesidad de pruebas de integración o validaciones manuales, sino que las complementa."; Style = $null },
+            @{ Text = "Este enfoque favorece la claridad de los requisitos, la detección temprana de errores, el diseño modular y la prevención de regresiones. En SmartDent se aplica a reglas como impedir cruces de horarios, validar el registro de pacientes y controlar las sesiones de un tratamiento."; Style = $null },
             @{ Text = "2.4.2 Pruebas Unitarias con JUnit"; Style = "Ttulo3" },
             @{ Text = "JUnit es un framework del ecosistema Java que permite definir y ejecutar pruebas automatizadas. JUnit 5 utiliza anotaciones como @Test para identificar casos de prueba y métodos de aserción para comparar el resultado obtenido con el esperado. Una prueba unitaria debe evaluar una unidad pequeña de código de manera aislada, ser repetible y producir resultados independientes del orden de ejecución."; Style = $null },
-            @{ Text = "Cuando una clase depende de repositorios u otros servicios, Mockito puede crear objetos simulados para aislar su comportamiento. Para comprobar la interacción conjunta de controladores, seguridad, servicios y persistencia, Spring Boot proporciona @SpringBootTest y MockMvc. Estas últimas corresponden a pruebas de integración, por lo que deben distinguirse de las pruebas unitarias aunque ambas se ejecuten mediante JUnit."; Style = $null },
-            @{ Text = "El backend de SmartDent cuenta actualmente con 34 pruebas automatizadas. Estas verifican autenticación JWT, permisos por rol, catálogo, usuarios, citas, disponibilidad, historias clínicas, bloqueos de agenda, configuración del paciente, costos, reportes, mensajes de contacto y documentación OpenAPI. Maven permite ejecutar el conjunto completo con el comando .\mvnw.cmd test y genera un resultado reproducible para la evidencia del proyecto."; Style = $null }
+            @{ Text = "Cuando una clase depende de repositorios u otros componentes, Mockito permite reemplazarlos por objetos simulados. SmartDent utiliza @Mock, @InjectMocks y MockitoExtension para probar cada servicio sin iniciar Spring ni acceder a una base de datos."; Style = $null },
+            @{ Text = "El backend de SmartDent cuenta con 19 pruebas unitarias que verifican registro, autenticación, CRUD de servicios y reglas de citas. Maven permite ejecutarlas con el comando .\mvnw.cmd test."; Style = $null }
         )
         $body = $documentXml.SelectSingleNode("//w:body", $namespaceManager)
         $sectionProperties = $body.SelectSingleNode("w:sectPr", $namespaceManager)
@@ -87,25 +87,18 @@ try {
     }
 
     $testSummaryParagraph = $documentXml.SelectNodes("//w:body/w:p", $namespaceManager) | Where-Object {
-        (($_.SelectNodes(".//w:t", $namespaceManager) | ForEach-Object { $_.InnerText }) -join "") -like "El backend de SmartDent cuenta actualmente con 34 pruebas automatizadas.*"
+        (($_.SelectNodes(".//w:t", $namespaceManager) | ForEach-Object { $_.InnerText }) -join "") -like "El backend de SmartDent cuenta con 19 pruebas unitarias.*"
     } | Select-Object -First 1
 
     $updatedText = ($documentXml.SelectNodes("//w:body/w:p//w:t", $namespaceManager) | ForEach-Object { $_.InnerText }) -join " "
     if ($testSummaryParagraph -and $updatedText -notmatch "Autenticación y seguridad: registro") {
-        Set-WordParagraphText $documentXml $testSummaryParagraph "En SmartDent se implementaron 34 pruebas automatizadas. La mayoría son pruebas de integración ejecutadas con JUnit, Spring Boot y MockMvc; se organizaron en los siguientes grupos:"
+        Set-WordParagraphText $documentXml $testSummaryParagraph "En SmartDent se implementaron 19 pruebas unitarias con JUnit 5 y Mockito, sin iniciar Spring ni conectarse a una base de datos; se organizaron en los siguientes grupos:"
 
         $testBullets = @(
-            "• Autenticación y seguridad: registro, inicio de sesión, emisión y validación de JWT, credenciales incorrectas, acceso sin token, CORS y permisos por rol.",
-            "• Registro de pacientes: creación válida, cifrado de contraseñas con BCrypt y rechazo de correos o documentos duplicados.",
-            "• Catálogo odontológico: consulta pública de servicios y profesionales, y administración de precios, costos, duración y disponibilidad.",
-            "• Usuarios y odontólogos: listado administrativo, creación y actualización de profesionales con servicios asignados.",
-            "• Gestión de citas: reserva, disponibilidad, prevención de cruces, reprogramación, cancelación y cambios de estado.",
-            "• Historias clínicas: consulta por paciente, acceso restringido al odontólogo asignado y registro de diagnósticos, tratamientos e indicaciones.",
-            "• Bloqueos de agenda: creación y eliminación de horarios no disponibles, además de su aplicación al cálculo de disponibilidad.",
-            "• Configuración del paciente: persistencia del teléfono y de las preferencias de recordatorios.",
-            "• Reportes administrativos: resumen operativo, ingresos, costos variables, costos fijos, utilidad, margen y demanda de servicios.",
-            "• Mensajes de contacto: envío público, consulta administrativa y actualización del estado del mensaje.",
-            "• Documentación OpenAPI: publicación de /v3/api-docs, esquema de seguridad JWT y disponibilidad de los endpoints en Swagger."
+            "• Registro de pacientes: creación válida, normalización, cifrado y rechazo de duplicados.",
+            "• Autenticación: generación del JWT, consulta de perfil y rechazo de usuarios no disponibles.",
+            "• CRUD de servicios: listado, creación, actualización, estado y validaciones.",
+            "• Gestión de citas: cobro por sesiones y rechazo de fechas u horarios inválidos."
         )
 
         $referenceParagraph = $testSummaryParagraph
@@ -115,7 +108,7 @@ try {
             $referenceParagraph = $bulletParagraph
         }
 
-        $finalParagraph = New-WordParagraph $documentXml "El conjunto completo se ejecuta con .\mvnw.cmd test y actualmente finaliza con 34 pruebas aprobadas, 0 fallos y 0 errores." $null
+        $finalParagraph = New-WordParagraph $documentXml "El conjunto completo se ejecuta con .\mvnw.cmd test y finaliza con 19 pruebas unitarias aprobadas, 0 fallos y 0 errores." $null
         [void]$referenceParagraph.ParentNode.InsertAfter($finalParagraph, $referenceParagraph)
         $documentChanged = $true
     }

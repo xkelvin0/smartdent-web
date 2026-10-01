@@ -57,5 +57,33 @@
     return mapped;
   }
 
-  window.SmartDentServices = { toLegacy, listAdmin, update };
+  async function create(service) {
+    const created = await SmartDentApi.request("/admin/servicios", {
+      method: "POST",
+      body: JSON.stringify(toRequest(service))
+    });
+    const mapped = toLegacy(created);
+    const services = SmartDentCatalog.get();
+    services.push(mapped);
+    saveCache(services);
+    return mapped;
+  }
+
+  async function toggleStatus(service, active) {
+    if (!service?.backendId) {
+      throw new Error("No se encontró el identificador del servicio en el backend.");
+    }
+    const updated = await SmartDentApi.request(`/admin/servicios/${service.backendId}/estado?activo=${Boolean(active)}`, {
+      method: "PATCH"
+    });
+    const mapped = toLegacy(updated);
+    const services = SmartDentCatalog.get();
+    const index = services.findIndex((item) => item.id === mapped.id);
+    if (index >= 0) services[index] = mapped;
+    else services.push(mapped);
+    saveCache(services);
+    return mapped;
+  }
+
+  window.SmartDentServices = { toLegacy, listAdmin, update, create, toggleStatus };
 })();

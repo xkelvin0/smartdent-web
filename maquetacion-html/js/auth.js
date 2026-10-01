@@ -79,7 +79,7 @@ function setupLoginForm() {
   });
   password.addEventListener("blur", validatePassword);
 
-  forgotPassword?.addEventListener("click", (event) => {
+  // forgotPassword?.addEventListener("click", (event) => {
     event.preventDefault();
     clearLoginMessage();
     message.textContent = "Para recuperar tu acceso, comunícate con SmartDent desde la página de Contacto.";
@@ -90,7 +90,7 @@ function setupLoginForm() {
   if (registeredEmail) {
     email.value = registeredEmail;
     markField(email, "");
-    message.textContent = "Cuenta creada correctamente. Ingresa tu contraseña para continuar.";
+    message.textContent = "Cuenta creada. Revisa tu correo electrónico para verificarla antes de iniciar sesión.";
     message.classList.add("is-success");
     sessionStorage.removeItem("smartdent_registered_email");
     password.focus();
@@ -297,3 +297,31 @@ function setupRegisterForm() {
 setupPasswordToggles();
 setupLoginForm();
 setupRegisterForm();
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('verificar');
+  if (token) {
+    const msgBox = document.getElementById('login-message');
+    msgBox.textContent = 'Verificando cuenta...';
+    msgBox.className = 'form-message is-info';
+    try {
+      const res = await fetch(window.API_BASE_URL + '/auth/verificar-cuenta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+      if (res.ok) {
+        msgBox.textContent = '¡Cuenta verificada exitosamente! Ya puedes iniciar sesión.';
+        msgBox.className = 'form-message is-success';
+      } else {
+        const err = await res.text();
+        msgBox.textContent = err || 'El enlace de verificación es inválido o expiró.';
+        msgBox.className = 'form-message is-error';
+      }
+    } catch (e) {
+      msgBox.textContent = 'Error al contactar al servidor.';
+      msgBox.className = 'form-message is-error';
+    }
+  }
+});

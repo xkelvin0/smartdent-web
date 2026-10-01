@@ -200,7 +200,7 @@ techs = [
     ("spring", "Spring Boot", "API REST"),
     ("hibernate", "JPA / Hibernate", "Persistencia ORM"),
     ("mariadb", "MariaDB", "Base de datos"),
-    ("junit", "JUnit 5", "Pruebas"),
+    ("junit", "JUnit 5 + Mockito", "Pruebas unitarias"),
     ("swagger", "Swagger", "Documentación API"),
 ]
 for idx, (icon, title, desc) in enumerate(techs):
@@ -403,94 +403,95 @@ for i, (title, body, accent) in enumerate(cycles):
         add_text(slide, "→", x + 2.38, 3.03, 0.46, 0.35, 22, GOLD_LIGHT, True,
                  align=PP_ALIGN.CENTER)
 add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, 10.35, 1.95, 2.20, 3.00, WHITE, WHITE, True)
-add_text(slide, "34", 10.46, 2.31, 1.98, 0.78, 40, NAVY, True, align=PP_ALIGN.CENTER)
+add_text(slide, "19", 10.46, 2.31, 1.98, 0.78, 40, NAVY, True, align=PP_ALIGN.CENTER)
 add_text(slide, "PRUEBAS\nAPROBADAS", 10.58, 3.18, 1.74, 0.72, 13, GREEN, True,
          align=PP_ALIGN.CENTER)
 add_text(slide, "0 fallos · 0 errores", 10.53, 4.25, 1.84, 0.28, 10.5, MUTED, True,
          align=PP_ALIGN.CENTER)
 add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, 0.76, 5.36, 11.78, 0.96, NAVY_2, "244263", True)
-add_text(slide, "Cobertura principal: autenticación · roles · citas · disponibilidad · historias clínicas · reportes · OpenAPI",
+add_text(slide, "Cobertura unitaria: registro · autenticación · CRUD de servicios · reservas y reglas de citas",
          1.08, 5.68, 11.14, 0.30, 11.7, "D7E6F7", True, align=PP_ALIGN.CENTER)
 add_footer(slide, 10, True)
 
 
-# 11. Código JWT
+# 11. Código de autenticación
 slide = prs.slides.add_slide(blank)
-add_header(slide, "Prueba clave 01 · Seguridad JWT", "Verifica que el login genere un token válido con el rol correcto", 11)
+add_header(slide, "Prueba clave 01 · Servicio de autenticación", "Comprueba que el login autentique al usuario y devuelva su token", 11)
 code = """@Test
-void debeIniciarSesionYGenerarUnJwtValido() {
-    Credenciales c = registrarPaciente();
+void iniciaSesionYDevuelveTokenJwt() {
+    Usuario usuario = usuarioActivo(\"paciente@correo.com\");
+    when(usuarioRepository.findByEmailIgnoreCase(
+        \"paciente@correo.com\")).thenReturn(Optional.of(usuario));
+    when(jwtService.generarToken(usuario)).thenReturn(\"jwt-prueba\");
 
-    LoginResponse response = loginService.iniciarSesion(
-        new LoginRequest(c.email(), c.password()));
-    Jwt jwt = jwtDecoder.decode(response.token());
+    var response = service.iniciarSesion(
+        new LoginRequest(\" PACIENTE@CORREO.COM \", \"Clave1234\"));
 
+    verify(authenticationManager).authenticate(any(
+        UsernamePasswordAuthenticationToken.class));
+    assertThat(response.token()).isEqualTo(\"jwt-prueba\");
     assertThat(response.tokenType()).isEqualTo(\"Bearer\");
-    assertThat(response.expiresIn()).isPositive();
-    assertThat(jwt.getSubject()).isEqualTo(c.email());
-    assertThat(jwt.getClaimAsStringList(\"rol\"))
-        .containsExactly(\"PACIENTE\");
 }"""
 add_code_block(slide, code, 0.62, 1.95, 8.45, 4.82)
-add_card(slide, 9.38, 1.95, 3.30, 1.22, "QUÉ COMPRUEBA", "El token pertenece al usuario autenticado.", CYAN)
-add_card(slide, 9.38, 3.42, 3.30, 1.22, "REGLA DE SEGURIDAD", "El rol PACIENTE viaja como claim del JWT.", GOLD)
-add_card(slide, 9.38, 4.89, 3.30, 1.22, "RESULTADO", "La sesión puede autorizar endpoints protegidos.", GREEN)
-add_text(slide, "AuthSecurityIntegrationTests.java", 9.52, 6.42, 3.03, 0.23, 9, MUTED,
+add_card(slide, 9.38, 1.95, 3.30, 1.22, "AUTENTICACIÓN", "Verifica que se invoque AuthenticationManager.", CYAN)
+add_card(slide, 9.38, 3.42, 3.30, 1.22, "AISLAMIENTO", "Repositorio y servicio JWT se reemplazan por mocks.", GOLD)
+add_card(slide, 9.38, 4.89, 3.30, 1.22, "RESULTADO", "Devuelve el token con el tipo Bearer esperado.", GREEN)
+add_text(slide, "LoginServiceUnitTest.java", 9.52, 6.42, 3.03, 0.23, 9, MUTED,
          align=PP_ALIGN.CENTER)
 add_footer(slide, 11)
 
 
 # 12. Código citas
 slide = prs.slides.add_slide(blank)
-add_header(slide, "Prueba clave 02 · Reserva sin conflictos", "Comprueba persistencia, visibilidad por rol y prevención de cruces", 12)
+add_header(slide, "Prueba clave 02 · Sesiones sin doble cobro", "Comprueba una regla central del tratamiento odontológico", 12)
 code = """@Test
-void debeReservarYMostrarLaCitaEnLosTresPaneles() {
-    var cita = citaService.reservar(paciente,
-        new CrearCitaRequest(odontologo.getId(),
-            servicio.getId(), fecha, LocalTime.of(10, 0),
-            \"Evaluación preventiva\", \"987654321\"));
+void segundaSesionDelMismoTratamientoNoVuelveACobrar() {
+    Cita anterior = new Cita();
+    anterior.setEstado(CitaEstado.ATENDIDA);
+    anterior.setTratamientoCodigo(\"TRA-PRUEBA\");
+    anterior.setNumeroSesion(1);
+    anterior.setTotalSesiones(4);
+    when(citaRepository
+        .findByPaciente_IdAndServicio_IdOrderByCreadoEnDesc(1L, 3L))
+        .thenReturn(List.of(anterior));
 
-    assertThat(cita.estado()).isEqualTo(PENDIENTE);
-    assertThat(citaService.listarDelPaciente(paciente))
-        .extracting(\"id\").contains(cita.id());
-    assertThat(citaService.listarDelOdontologo(correoDoctor))
-        .extracting(\"id\").contains(cita.id());
-    assertThat(citaService.listarTodas())
-        .extracting(\"id\").contains(cita.id());
+    var cita = service.reservar(\"paciente@correo.com\",
+        request(fechaHabil(3), LocalTime.of(9, 0)));
+
+    assertThat(cita.numeroSesion()).isEqualTo(2);
+    assertThat(cita.sesionesRestantes()).isEqualTo(2);
+    assertThat(cita.precioPactado()).isZero();
 }"""
 add_code_block(slide, code, 0.62, 1.95, 8.45, 4.82)
-add_card(slide, 9.38, 1.95, 3.30, 1.22, "PACIENTE", "La nueva cita aparece en su panel.", CYAN)
-add_card(slide, 9.38, 3.42, 3.30, 1.22, "ODONTÓLOGO", "Solo el profesional asignado puede verla.", GOLD)
-add_card(slide, 9.38, 4.89, 3.30, 1.22, "ADMIN", "La reserva aparece en la agenda global.", "4B7BEC")
-add_text(slide, "CitaServiceIntegrationTests.java · fragmento real simplificado", 9.40, 6.38, 3.25, 0.34,
+add_card(slide, 9.38, 1.95, 3.30, 1.22, "SESIÓN", "La siguiente reserva continúa el tratamiento.", CYAN)
+add_card(slide, 9.38, 3.42, 3.30, 1.22, "SALDO", "Las sesiones restantes se actualizan.", GOLD)
+add_card(slide, 9.38, 4.89, 3.30, 1.22, "COBRO", "La segunda sesión tiene precio cero.", GREEN)
+add_text(slide, "CitaServiceUnitTest.java · prueba aislada con Mockito", 9.40, 6.38, 3.25, 0.34,
          8.7, MUTED, align=PP_ALIGN.CENTER)
 add_footer(slide, 12)
 
 
-# 13. Código historia clínica
+# 13. Código CRUD de servicios
 slide = prs.slides.add_slide(blank)
-add_header(slide, "Prueba clave 03 · Historia clínica", "La atención actualiza el expediente y marca la cita como atendida", 13)
+add_header(slide, "Prueba clave 03 · CRUD de servicios", "Valida la creación y normalización sin conectarse a MySQL", 13)
 code = """@Test
-void debeGuardarLaHistoriaYMarcarLaCitaAtendida() {
-    citaService.cambiarEstadoPorOdontologo(
-        correoDoctor, cita.id(), CONFIRMADA);
+void creaServicioNormalizandoElCodigo() {
+    when(repository.save(any(Servicio.class)))
+        .thenAnswer(invocation -> invocation.getArgument(0));
 
-    var historia = historiaClinicaService.guardar(
-        correoDoctor, paciente,
-        new GuardarHistoriaClinicaRequest(
-            cita.id(), TRATAMIENTO, \"Ninguna\",
-            \"Pulpitis irreversible\", \"Endodoncia iniciada\",
-            \"Tomar el medicamento indicado\", control, null));
+    var creado = service.crear(
+        request(\" srv-nuevo \", true));
 
-    assertThat(historia.ultimaCitaId()).isEqualTo(cita.id());
-    assertThat(citaService.listarDelPaciente(paciente)
-        .getFirst().estado()).isEqualTo(ATENDIDA);
+    assertThat(creado.codigo()).isEqualTo(\"SRV-NUEVO\");
+    assertThat(creado.precio())
+        .isEqualByComparingTo(\"120.00\");
+    verify(repository).save(any(Servicio.class));
 }"""
 add_code_block(slide, code, 0.62, 1.95, 8.45, 4.82)
-add_card(slide, 9.38, 1.95, 3.30, 1.22, "CONDICIÓN", "La cita debe estar confirmada antes de atenderse.", GOLD)
-add_card(slide, 9.38, 3.42, 3.30, 1.22, "TRAZABILIDAD", "Diagnóstico y tratamiento quedan vinculados.", CYAN)
-add_card(slide, 9.38, 4.89, 3.30, 1.22, "ESTADO", "Al guardar, la cita cambia a ATENDIDA.", GREEN)
-add_text(slide, "HistoriaClinicaIntegrationTests.java · fragmento real simplificado", 9.40, 6.38, 3.25, 0.34,
+add_card(slide, 9.38, 1.95, 3.30, 1.22, "AISLAMIENTO", "El repositorio se reemplaza por un mock.", GOLD)
+add_card(slide, 9.38, 3.42, 3.30, 1.22, "NORMALIZACIÓN", "El código se guarda en mayúsculas y sin espacios.", CYAN)
+add_card(slide, 9.38, 4.89, 3.30, 1.22, "RESULTADO", "Se verifican precio y operación de guardado.", GREEN)
+add_text(slide, "ServicioServiceUnitTest.java · prueba aislada con Mockito", 9.40, 6.38, 3.25, 0.34,
          8.5, MUTED, align=PP_ALIGN.CENTER)
 add_footer(slide, 13)
 
@@ -508,7 +509,7 @@ results = [
     "Persistencia central en MariaDB.",
     "Paneles separados para tres roles.",
     "JWT, BCrypt y permisos por endpoint.",
-    "34 pruebas automatizadas aprobadas.",
+    "19 pruebas unitarias aprobadas.",
 ]
 add_bullet_list(slide, results, 0.78, 3.02, 5.70, 2.80, 14, WHITE, GOLD, 0.54)
 add_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, 7.32, 1.15, 5.20, 5.28, WHITE, WHITE, True)

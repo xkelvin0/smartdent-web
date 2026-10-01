@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Contraseña | SmartDent</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="js/api.js" defer></script>
+</head>
+<body class="auth-page">
+  <main class="auth-main">
+    <section class="auth-card">
+      <header class="auth-header">
+        <h1 id="page-title">Recuperar Contraseña</h1>
+        <p id="page-subtitle" style="color:#64748b; font-size:14px; margin-top:5px;">Ingresa tu correo para enviarte un enlace de recuperación.</p>
+      </header>
+
+      <!-- Formulario 1: Solicitar Link -->
+      <form id="request-form" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="email">Correo Electrónico</label>
+          <div class="input-wrapper">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg>
+            <input id="email" type="email" placeholder="tu@correo.com" required>
+          </div>
+        </div>
+        <p id="request-message" class="form-message" style="margin-top:10px; font-size:14px; font-weight:600;"></p>
+        <button class="primary-button" type="submit" id="request-btn">Enviar enlace</button>
+      </form>
+
+      <!-- Formulario 2: Crear Nueva Contraseña (Oculto por defecto) -->
+      <form id="reset-form" class="auth-form" novalidate style="display: none;">
+        <div class="form-group">
+          <label for="new-password">Nueva Contraseña</label>
+          <div class="input-wrapper">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3M12 14v3"/></svg>
+            <input id="new-password" type="password" minlength="8" placeholder="••••••••" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirmar Contraseña</label>
+          <div class="input-wrapper">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3M12 14v3"/></svg>
+            <input id="confirm-password" type="password" minlength="8" placeholder="••••••••" required>
+          </div>
+        </div>
+        <p id="reset-message" class="form-message" style="margin-top:10px; font-size:14px; font-weight:600;"></p>
+        <button class="primary-button" type="submit" id="reset-btn">Guardar Contraseña</button>
+      </form>
+
+      <div style="margin-top: 25px; text-align: center;">
+        <a class="register-link" href="login.html" style="font-size:14px;">Volver a iniciar sesión</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+
+      const requestForm = document.getElementById('request-form');
+      const resetForm = document.getElementById('reset-form');
+      const pageTitle = document.getElementById('page-title');
+      const pageSubtitle = document.getElementById('page-subtitle');
+      
+      const reqMsg = document.getElementById('request-message');
+      const resMsg = document.getElementById('reset-message');
+
+      if (token) {
+        // Modo 2: Viene desde el correo y va a crear la nueva clave
+        requestForm.style.display = 'none';
+        resetForm.style.display = 'flex';
+        resetForm.style.flexDirection = 'column';
+        resetForm.style.gap = '15px';
+        pageTitle.textContent = "Nueva Contraseña";
+        pageSubtitle.textContent = "Ingresa tu nueva contraseña para acceder a SmartDent.";
+
+        resetForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const p1 = document.getElementById('new-password').value;
+          const p2 = document.getElementById('confirm-password').value;
+          
+          if(p1 !== p2) {
+            resMsg.textContent = "Las contraseñas no coinciden.";
+            resMsg.style.color = "red";
+            return;
+          }
+          if(p1.length < 6) {
+            resMsg.textContent = "Debe tener al menos 6 caracteres.";
+            resMsg.style.color = "red";
+            return;
+          }
+
+          document.getElementById('reset-btn').disabled = true;
+          document.getElementById('reset-btn').textContent = "Guardando...";
+
+          try {
+            const res = await fetch(`${window.API_BASE_URL}/auth/reset-password`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ token: token, nuevaPassword: p1 })
+            });
+
+            if (res.ok) {
+              resMsg.textContent = "¡Contraseña guardada! Redirigiendo...";
+              resMsg.style.color = "green";
+              setTimeout(() => window.location.href = 'login.html', 2000);
+            } else {
+              const err = await res.text();
+              resMsg.textContent = err || "El enlace caducó o es inválido.";
+              resMsg.style.color = "red";
+              document.getElementById('reset-btn').disabled = false;
+              document.getElementById('reset-btn').textContent = "Guardar Contraseña";
+            }
+          } catch(err) {
+            resMsg.textContent = "Error de conexión con el servidor.";
+            resMsg.style.color = "red";
+            document.getElementById('reset-btn').disabled = false;
+            document.getElementById('reset-btn').textContent = "Guardar Contraseña";
+          }
+        });
+      } else {
+        // Modo 1: Va a pedir que le envíen el enlace
+        requestForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('email').value;
+          document.getElementById('request-btn').disabled = true;
+          document.getElementById('request-btn').textContent = "Enviando correo...";
+
+          try {
+            const res = await fetch(`${window.API_BASE_URL}/auth/recuperar-password`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email })
+            });
+            // Por seguridad no decimos si existe o no
+            reqMsg.textContent = "Si el correo está registrado, te hemos enviado un enlace.";
+            reqMsg.style.color = "green";
+          } catch(err) {
+            reqMsg.textContent = "Error de conexión.";
+            reqMsg.style.color = "red";
+          } finally {
+            document.getElementById('request-btn').disabled = false;
+            document.getElementById('request-btn').textContent = "Enviar enlace";
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

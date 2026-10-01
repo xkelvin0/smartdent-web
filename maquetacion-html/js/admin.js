@@ -191,7 +191,7 @@ function renderAdminServices() {
   document.querySelector("#admin-services-table").innerHTML = visible.map((item) => {
     const margin = Number(item.price) - Number(item.cost);
     const percent = serviceMarginPercent(item);
-    return `<tr><td class="px-3 py-4 font-bold text-navy">${escapeAdminHtml(item.name)}</td><td class="px-3 py-4">${escapeAdminHtml(item.specialty)}</td><td class="px-3 py-4 font-semibold">${adminCurrency(item.price)}</td><td class="px-3 py-4">${adminCurrency(item.cost)}</td><td class="px-3 py-4"><strong class="${margin >= 0 ? "text-green-700" : "text-red-600"}">${adminCurrency(margin)}</strong><span class="ml-1 text-[9px] text-slate-400">(${Math.round(percent)}%)</span></td><td class="px-3 py-4">${Number(item.duration)} min</td><td class="px-3 py-4"><span class="rounded-full px-3 py-1 text-[9px] font-bold ${item.active ? "bg-green-50 text-green-700" : "bg-slate-100 text-slate-500"}">${item.active ? "ACTIVO" : "INACTIVO"}</span></td><td class="px-3 py-4 text-right"><button class="rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-bold text-navy" data-edit-service="${item.id}" type="button">Editar</button></td></tr>`;
+    return `<tr><td class="px-3 py-4 font-bold text-navy">${escapeAdminHtml(item.name)}</td><td class="px-3 py-4">${escapeAdminHtml(item.specialty)}</td><td class="px-3 py-4 font-semibold">${adminCurrency(item.price)}</td><td class="px-3 py-4">${adminCurrency(item.cost)}</td><td class="px-3 py-4"><strong class="${margin >= 0 ? "text-green-700" : "text-red-600"}">${adminCurrency(margin)}</strong><span class="ml-1 text-[9px] text-slate-400">(${Math.round(percent)}%)</span></td><td class="px-3 py-4">${Number(item.duration)} min</td><td class="px-3 py-4"><span class="rounded-full px-3 py-1 text-[9px] font-bold ${item.active ? "bg-green-50 text-green-700" : "bg-slate-100 text-slate-500"}">${item.active ? "ACTIVO" : "INACTIVO"}</span></td><td class="px-3 py-4 text-right"><div class="flex items-center justify-end gap-2"><button class="rounded-lg border border-slate-300 px-3 py-2 text-[10px] font-bold text-navy hover:bg-slate-50" data-edit-service="${item.id}" type="button">Editar</button><button class="rounded-lg px-3 py-2 text-[10px] font-bold transition ${item.active ? "bg-red-50 text-red-700 hover:bg-red-100" : "bg-green-50 text-green-700 hover:bg-green-100"}" data-toggle-service="${item.id}" type="button">${item.active ? "Desactivar" : "Activar"}</button></div></td></tr>`;
   }).join("");
 }
 
@@ -199,49 +199,144 @@ function setupServiceActions(render) {
   const table = document.querySelector("#admin-services-table");
   const price = document.querySelector("#service-price");
   const cost = document.querySelector("#service-cost");
+  const modalTitle = document.querySelector("#service-modal-title");
+  const editHeader = document.querySelector("#service-edit-header");
+  const createFields = document.querySelector("#service-create-fields");
+  const formError = document.querySelector("#service-form-error");
+  const submitBtn = document.querySelector("#service-submit-btn") || document.querySelector('#service-form button[type="submit"]');
+
+  const codeInput = document.querySelector("#service-code");
+  const nameInput = document.querySelector("#service-name-input");
+  const specialtyInput = document.querySelector("#service-specialty-input");
+  const descriptionInput = document.querySelector("#service-description");
+  const durationInput = document.querySelector("#service-duration");
+  const activeInput = document.querySelector("#service-active");
+  const idInput = document.querySelector("#service-id");
+
   const updatePreview = () => {
     const margin = Number(price.value || 0) - Number(cost.value || 0);
     const percent = Number(price.value) ? (margin / Number(price.value)) * 100 : 0;
     document.querySelector("#service-margin-preview").textContent = `${adminCurrency(margin)} (${Math.round(percent)}%)`;
   };
-  table.addEventListener("click", (event) => {
+
+  const newServiceBtn = document.querySelector("#new-service");
+  if (newServiceBtn) {
+    newServiceBtn.addEventListener("click", () => {
+      idInput.value = "";
+      modalTitle.textContent = "Nuevo servicio odontológico";
+      editHeader.classList.add("hidden");
+      createFields.classList.remove("hidden");
+      if (codeInput) { codeInput.value = ""; codeInput.required = true; }
+      if (nameInput) { nameInput.value = ""; nameInput.required = true; }
+      if (specialtyInput) { specialtyInput.value = ""; specialtyInput.required = true; }
+      if (descriptionInput) { descriptionInput.value = ""; descriptionInput.required = true; }
+      price.value = "";
+      cost.value = "";
+      durationInput.value = "45";
+      activeInput.checked = true;
+      if (formError) formError.classList.add("hidden");
+      submitBtn.textContent = "Crear servicio";
+      updatePreview();
+      openAdminModal("#service-modal");
+    });
+  }
+
+  table.addEventListener("click", async (event) => {
+    const toggleBtn = event.target.closest("[data-toggle-service]");
+    if (toggleBtn) {
+      const item = window.SmartDentCatalog.get().find((service) => service.id === toggleBtn.dataset.toggleService);
+      if (!item) return;
+      const willBeActive = !item.active;
+      const confirmMsg = willBeActive 
+        ? `¿Deseas activar el servicio "${item.name}" para que los pacientes puedan reservarlo?`
+        : `¿Deseas desactivar el servicio "${item.name}"? (No aparecerá en el catálogo de reservas para los pacientes)`;
+      if (!window.confirm(confirmMsg)) return;
+
+      toggleBtn.disabled = true;
+      toggleBtn.textContent = "...";
+      try {
+        await SmartDentServices.toggleStatus(item, willBeActive);
+        render();
+      } catch (error) {
+        window.alert(error.message || "No se pudo cambiar el estado del servicio.");
+        toggleBtn.disabled = false;
+        toggleBtn.textContent = item.active ? "Desactivar" : "Activar";
+      }
+      return;
+    }
+
     const button = event.target.closest("[data-edit-service]");
     if (!button) return;
     const item = window.SmartDentCatalog.get().find((service) => service.id === button.dataset.editService);
     if (!item) return;
-    document.querySelector("#service-id").value = item.id;
+    idInput.value = item.id;
+    modalTitle.textContent = "Editar servicio";
+    editHeader.classList.remove("hidden");
+    createFields.classList.add("hidden");
+    if (codeInput) codeInput.required = false;
+    if (nameInput) nameInput.required = false;
+    if (specialtyInput) specialtyInput.required = false;
+    if (descriptionInput) descriptionInput.required = false;
     document.querySelector("#service-edit-name").textContent = item.name;
     document.querySelector("#service-edit-specialty").textContent = item.specialty;
     price.value = item.price;
     cost.value = item.cost;
-    document.querySelector("#service-duration").value = item.duration;
-    document.querySelector("#service-active").checked = item.active;
+    durationInput.value = item.duration;
+    activeInput.checked = item.active;
+    if (formError) formError.classList.add("hidden");
+    submitBtn.textContent = "Guardar cambios";
     updatePreview();
     openAdminModal("#service-modal");
   });
+
   [price, cost].forEach((input) => input.addEventListener("input", updatePreview));
   bindAdminModal("#service-modal", "[data-close-service-modal]");
+
   document.querySelector("#service-form").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const services = window.SmartDentCatalog.get();
-    const item = services.find((service) => service.id === document.querySelector("#service-id").value);
-    if (!item) return;
-    item.price = Math.max(0, Number(price.value));
-    item.cost = Math.max(0, Number(cost.value));
-    item.duration = Math.max(15, Number(document.querySelector("#service-duration").value));
-    item.active = document.querySelector("#service-active").checked;
-    const submit = event.currentTarget.querySelector('button[type="submit"]');
-    submit.disabled = true;
-    submit.textContent = "Guardando...";
+    if (formError) formError.classList.add("hidden");
+    const isCreate = !idInput.value;
+    submitBtn.disabled = true;
+    submitBtn.textContent = isCreate ? "Creando servicio..." : "Guardando...";
+
     try {
-      await SmartDentServices.update(item);
+      if (isCreate) {
+        const rawCode = (codeInput?.value || "").trim().toUpperCase();
+        const code = rawCode.startsWith("SRV-") ? rawCode : `SRV-${rawCode.replace(/\s+/g, "-")}`;
+        const newService = {
+          code: code,
+          name: (nameInput?.value || "").trim(),
+          specialty: (specialtyInput?.value || "").trim(),
+          description: (descriptionInput?.value || "").trim() || "Tratamiento odontológico profesional.",
+          price: Math.max(0, Number(price.value)),
+          cost: Math.max(0, Number(cost.value)),
+          duration: Math.max(15, Number(durationInput.value || 30)),
+          active: activeInput.checked
+        };
+        await SmartDentServices.create(newService);
+      } else {
+        const services = window.SmartDentCatalog.get();
+        const item = services.find((service) => service.id === idInput.value);
+        if (!item) throw new Error("No se encontró el servicio seleccionado.");
+        item.price = Math.max(0, Number(price.value));
+        item.cost = Math.max(0, Number(cost.value));
+        item.duration = Math.max(15, Number(durationInput.value));
+        item.active = activeInput.checked;
+        await SmartDentServices.update(item);
+      }
+
       closeAdminModal("#service-modal");
       render();
     } catch (error) {
-      window.alert(error.message);
+      if (formError) {
+        formError.textContent = error.message || "Error al procesar el servicio.";
+        formError.classList.remove("hidden");
+      } else {
+        window.alert(error.message);
+      }
     } finally {
-      submit.disabled = false;
-      submit.textContent = "Guardar cambios";
+      submitBtn.disabled = false;
+      submitBtn.textContent = isCreate ? "Crear servicio" : "Guardar cambios";
     }
   });
 }

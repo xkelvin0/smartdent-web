@@ -26,10 +26,20 @@
     </section>
 
     <section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24" aria-labelledby="services-title">
-      <div class="mb-12 max-w-3xl">
+      <div class="mb-8 max-w-3xl">
         <p class="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-gold">Atención odontológica integral</p>
         <h2 id="services-title" class="text-3xl font-bold tracking-tight text-navy md:text-4xl">Todos nuestros servicios</h2>
-        <p class="mt-4 text-sm leading-7 text-slate-600 md:text-base">Encuentra tratamientos preventivos, estéticos y especializados para cada etapa de tu salud bucal. La duración es referencial y se confirma durante la evaluación clínica.</p>
+        <p class="mt-4 text-sm leading-7 text-slate-600 md:text-base">Encuentra tratamientos preventivos, estéticos y especializados para cada etapa de tu salud bucal. La duración es referencial.</p>
+      </div>
+      
+      <div class="mb-10 flex flex-col sm:flex-row gap-4 items-center">
+        <div class="relative w-full sm:max-w-md">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+          <input type="text" id="search-services" class="w-full rounded-lg border border-slate-300 py-3 pl-10 pr-4 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy transition-colors" placeholder="Buscar tratamiento...">
+        </div>
+        <select id="category-filter" class="w-full sm:w-auto min-w-[220px] rounded-lg border border-slate-300 py-3 px-4 text-sm focus:border-navy focus:outline-none focus:ring-1 focus:ring-navy bg-white cursor-pointer transition-colors">
+          <option value="">Todas las categorías</option>
+        </select>
       </div>
       <div id="services-grid" class="grid items-stretch gap-8 md:grid-cols-2"></div>
     </section>
@@ -60,6 +70,7 @@
     </div>
   </div>
 
+  <script src="js/api.js"></script>
   <script src="js/servicios.js"></script>
 </body>
 </html>

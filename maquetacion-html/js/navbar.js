@@ -27,17 +27,32 @@
         <a class="${navClass("contacto.html")}" href="contacto.html">Contacto</a>
       </nav>
       <div id="guest-navigation" class="flex shrink-0 items-center gap-3">
-        <a class="hidden rounded-lg border border-[#071426] px-4 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100 sm:inline-flex" href="login.html">Iniciar Sesión</a>
-        <button class="booking-button global-booking-button rounded-lg bg-[#8a6d00] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#735c00] hover:shadow-md" data-booking-link type="button">Agendar Cita</button>
+        <a class="hidden rounded-lg border border-[#071426] px-4 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100 lg:inline-flex" href="login.html">Iniciar Sesión</a>
+        <button class="booking-button global-booking-button hidden rounded-lg bg-[#8a6d00] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#735c00] hover:shadow-md lg:inline-flex" data-booking-link type="button">Agendar Cita</button>
+        <button class="mobile-menu-btn ml-1 flex items-center justify-center rounded-lg p-2 text-[#071426] transition hover:bg-slate-100 lg:hidden" type="button" aria-label="Abrir menú">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
       </div>
-      <div id="user-navigation" class="hidden shrink-0 items-center gap-3">
+      <div id="user-navigation" class="hidden shrink-0 items-center gap-2 sm:gap-3">
         <div class="hidden text-right xl:block">
           <p id="welcome-message" class="m-0 text-xs font-semibold leading-tight text-[#071426]"></p>
           <p id="user-role" class="m-0 text-[10px] leading-tight text-slate-500"></p>
         </div>
-        <button id="secondary-role-action" class="hidden rounded-lg border border-[#071426] px-4 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100" type="button"></button>
-        <button id="primary-role-action" class="rounded-lg bg-[#8a6d00] px-5 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#735c00] hover:shadow-md" type="button"></button>
-        <button id="logout-button" class="rounded-lg border border-[#071426] px-4 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100" type="button">Cerrar Sesión</button>
+        <button id="secondary-role-action" class="hidden rounded-lg border border-[#071426] px-3 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100 lg:inline-flex" type="button"></button>
+        <button id="primary-role-action" class="hidden rounded-lg bg-[#8a6d00] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#735c00] hover:shadow-md lg:inline-flex" type="button"></button>
+        <button id="logout-button" class="hidden rounded-lg border border-[#071426] px-3 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100 lg:inline-flex" type="button">Cerrar Sesión</button>
+        <button class="mobile-menu-btn ml-1 flex items-center justify-center rounded-lg p-2 text-[#071426] transition hover:bg-slate-100 lg:hidden" type="button" aria-label="Abrir menú">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden flex-col gap-4 border-t border-slate-200 bg-white px-5 py-6 shadow-lg lg:hidden absolute w-full left-0 top-20">
+      <a class="${navClass("index.html")} text-base" href="index.html">Inicio</a>
+      <a class="${navClass("servicios.html")} text-base" href="servicios.html">Servicios</a>
+      <a class="${navClass("nosotros.html")} text-base" href="nosotros.html">Nosotros</a>
+      <a class="${navClass("contacto.html")} text-base" href="contacto.html">Contacto</a>
+      <div class="mt-2 flex flex-col gap-3 border-t border-slate-100 pt-4" id="mobile-menu-actions">
+         <!-- Acciones dinámicas de menú móvil aquí -->
       </div>
     </div>`;
 
@@ -117,12 +132,31 @@
     return modal;
   }
 
-  header.querySelector("[data-booking-link]")?.addEventListener("click", handleBooking);
+  header.querySelectorAll("[data-booking-link]").forEach(btn => btn.addEventListener("click", handleBooking));
   document.addEventListener("click", (event) => {
     if (event.target.closest("[data-shared-booking]")) handleBooking(event);
   });
 
-  if (!session?.name || !session?.role) return;
+  // Lógica del menú móvil (Hamburguesa)
+  const mobileMenu = header.querySelector("#mobile-menu");
+  const mobileMenuActions = header.querySelector("#mobile-menu-actions");
+  
+  header.querySelectorAll(".mobile-menu-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden");
+      mobileMenu.classList.toggle("flex");
+    });
+  });
+
+  if (!session?.name || !session?.role) {
+    mobileMenuActions.innerHTML = `
+      <button class="flex items-center justify-center rounded-lg bg-[#8a6d00] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#735c00]" data-booking-link type="button">Agendar Cita</button>
+      <a class="flex items-center justify-center rounded-lg border border-[#071426] px-4 py-3 text-sm font-semibold text-[#071426] transition hover:bg-slate-50" href="login.html">Iniciar Sesión</a>
+    `;
+    // Re-vincular el evento para el botón recién inyectado
+    mobileMenuActions.querySelector("[data-booking-link]")?.addEventListener("click", handleBooking);
+    return;
+  }
 
   const actionsByRole = {
     PACIENTE: {
@@ -160,6 +194,17 @@
   }
 
   header.querySelector("#logout-button").addEventListener("click", () => {
+    localStorage.removeItem("smartdent_session");
+    window.location.href = "index.html";
+  });
+
+  // Acciones del menú móvil (Usuario Logueado)
+  mobileMenuActions.innerHTML = `
+    <a class="flex items-center justify-center rounded-lg bg-[#8a6d00] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#735c00]" href="${actions.primary[1]}">${actions.primary[0]}</a>
+    ${actions.secondary ? `<a class="flex items-center justify-center rounded-lg border border-[#071426] px-4 py-3 text-sm font-semibold text-[#071426] transition hover:bg-slate-50" href="${actions.secondary[1]}">${actions.secondary[0]}</a>` : ""}
+    <button id="mobile-logout-button" class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-100" type="button">Cerrar Sesión</button>
+  `;
+  header.querySelector("#mobile-logout-button")?.addEventListener("click", () => {
     localStorage.removeItem("smartdent_session");
     window.location.href = "index.html";
   });

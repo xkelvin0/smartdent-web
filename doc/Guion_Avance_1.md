@@ -22,7 +22,7 @@ La exposición debe centrarse en explicar las ideas principales. No es necesario
 >
 > En el servidor usamos Java 21 y Spring Boot. La persistencia se implementó con JPA, Hibernate y MariaDB.
 >
-> También usamos Spring Security, JWT y BCrypt para la autenticación, JUnit para las pruebas y Swagger para documentar la API.
+> También usamos Spring Security, JWT y BCrypt para la autenticación, JUnit 5 y Mockito para las pruebas unitarias, y Swagger para documentar la API.
 >
 > Angular todavía no se ha implementado porque corresponde a un avance posterior.
 
@@ -118,19 +118,21 @@ La exposición debe centrarse en explicar las ideas principales. No es necesario
 >
 > El ciclo comienza escribiendo una prueba que falla, luego se implementa lo necesario para aprobarla y finalmente se mejora el código sin alterar su comportamiento.
 >
-> Actualmente el backend cuenta con 34 pruebas automatizadas aprobadas, sin fallos ni errores.
+> Actualmente el backend cuenta con 19 pruebas unitarias con JUnit y Mockito, aprobadas sin fallos ni errores.
 >
-> Estas pruebas cubren autenticación, permisos, citas, disponibilidad, historias clínicas, reportes y documentación de la API.
+> Estas pruebas evalúan de forma aislada el registro de pacientes, la autenticación, el CRUD de servicios y las principales reglas de reserva de citas.
+>
+> Los repositorios y componentes externos se reemplazan con objetos simulados, por lo que las pruebas no levantan Spring ni se conectan a la base de datos.
 
-### Diapositiva 11 — Prueba JWT
+### Diapositiva 11 — Prueba del servicio de autenticación
 
-> Esta prueba comprueba que el inicio de sesión genere correctamente un token JWT.
+> Esta prueba comprueba de forma aislada el funcionamiento del servicio de inicio de sesión.
 >
-> Primero se registra un paciente, después se inicia sesión y finalmente se decodifica el token.
+> Para prepararla, Mockito simula el gestor de autenticación, el repositorio de usuarios y el servicio encargado de generar el token JWT.
 >
-> Las aserciones verifican que el tipo sea Bearer, que tenga una duración válida, que pertenezca al correo correcto y que contenga el rol de paciente.
+> Después se ejecuta el método de inicio de sesión y se verifica que el gestor de autenticación haya sido invocado.
 >
-> De esta manera comprobamos que la autenticación funciona antes de utilizarla en los paneles.
+> Finalmente, las aserciones comprueban que la respuesta contenga el token esperado, el tipo Bearer y los datos normalizados del paciente.
 
 **Transición:**
 
@@ -142,31 +144,31 @@ La exposición debe centrarse en explicar las ideas principales. No es necesario
 
 **Diapositivas 12 a 14 · 6:05–8:00**
 
-### Diapositiva 12 — Prueba de reserva
+### Diapositiva 12 — Prueba de una sesión sin doble cobro
 
-> Esta es una de las pruebas más importantes porque verifica el flujo central del proyecto.
+> Esta prueba verifica una de las reglas principales de los tratamientos que incluyen varias sesiones.
 >
-> La prueba crea una cita y comprueba que su estado inicial sea pendiente.
+> Primero se simula una cita anterior atendida, correspondiente a la primera de cuatro sesiones de un tratamiento.
 >
-> También verifica que aparezca en el panel del paciente, en la agenda del odontólogo asignado y en la agenda global del administrador.
+> Después el paciente reserva una nueva cita para el mismo servicio y el sistema la reconoce como la segunda sesión del tratamiento.
 >
-> Adicionalmente, el conjunto de pruebas comprueba que dos pacientes no puedan reservar al mismo odontólogo en el mismo horario.
+> Las aserciones verifican que queden dos sesiones restantes, que se conserve el código del tratamiento y que el precio de esta segunda sesión sea cero, evitando un cobro duplicado.
 
-### Diapositiva 13 — Historia clínica
+### Diapositiva 13 — Prueba del CRUD de servicios
 
-> Esta prueba verifica la atención clínica.
+> Esta prueba verifica la creación de un servicio odontológico de manera aislada.
 >
-> Primero se confirma la cita y luego el odontólogo registra el diagnóstico, el tratamiento y las indicaciones.
+> Mockito reemplaza el repositorio real y simula la operación de almacenamiento, por lo que no se necesita iniciar Spring ni utilizar la base de datos.
 >
-> El sistema comprueba que la historia quede asociada a la cita y que esta cambie automáticamente al estado atendida.
+> Luego se envía un código con espacios y letras minúsculas para comprobar la normalización realizada por la lógica de negocio.
 >
-> También se restringe el expediente para que solamente pueda acceder el odontólogo relacionado con el paciente.
+> Finalmente, se valida que el código resultante sea SRV-NUEVO, que el precio sea correcto y que el repositorio haya recibido la instrucción de guardar el servicio.
 
 ### Diapositiva 14 — Resultados y cierre
 
 > Como resultado obtuvimos un frontend conectado a una API real, persistencia en MariaDB, tres paneles diferenciados y seguridad mediante JWT y BCrypt.
 >
-> Además, contamos con 34 pruebas automatizadas aprobadas y documentación interactiva con Swagger.
+> Además, contamos con 19 pruebas unitarias aprobadas y documentación interactiva con Swagger.
 >
 > Como siguientes pasos migraremos el frontend a Angular, reforzaremos la seguridad para producción y desplegaremos la solución en la nube.
 >

@@ -1,0 +1,382 @@
+{
+  "info": {
+    "name": "SmartDent - Avance 2",
+    "description": "Coleccion para evidenciar CRUD, JWT, JPQL y transacciones del backend SmartDent.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    },
+    {
+      "key": "pacienteToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "odontologoToken",
+      "value": ""
+    },
+    {
+      "key": "citaId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Auth - Registrar paciente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/registro",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "registro"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombreCompleto\": \"Paciente Avance Dos\",\n  \"dni\": \"76543210\",\n  \"email\": \"avance2.paciente@smartdent.pe\",\n  \"password\": \"Clave1234\",\n  \"telefono\": \"987654321\"\n}"
+        }
+      }
+    },
+    {
+      "name": "02 Auth - Login paciente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.token) { pm.collectionVariables.set('pacienteToken', json.token); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"avance2.paciente@smartdent.pe\",\n  \"password\": \"Clave1234\"\n}"
+        }
+      }
+    },
+    {
+      "name": "03 Auth - Login admin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.token) { pm.collectionVariables.set('adminToken', json.token); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@smartdent.com\",\n  \"password\": \"Admin1234\"\n}"
+        }
+      }
+    },
+    {
+      "name": "04 Auth - Login odontologo",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.token) { pm.collectionVariables.set('odontologoToken', json.token); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"carlos.mendoza@smartdent.com\",\n  \"password\": \"Doctor1234\"\n}"
+        }
+      }
+    },
+    {
+      "name": "05 Perfil autenticado",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{pacienteToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/perfil",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "perfil"]
+        }
+      }
+    },
+    {
+      "name": "06 Servicios - Listar publicos",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/servicios",
+          "host": ["{{baseUrl}}"],
+          "path": ["servicios"]
+        }
+      }
+    },
+    {
+      "name": "07 Admin - Crear servicio",
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/admin/servicios",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "servicios"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"codigo\": \"SRV-AVANCE2\",\n  \"nombre\": \"Control preventivo avance 2\",\n  \"especialidad\": \"Prevencion\",\n  \"descripcion\": \"Servicio usado para evidenciar el CRUD del Avance 2.\",\n  \"precio\": 80.00,\n  \"costo\": 25.00,\n  \"duracionMinutos\": 30,\n  \"imagenUrl\": \"img/servicios/consulta-diagnostico.png\",\n  \"activo\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "08 Paciente - Disponibilidad",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{pacienteToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/pacientes/citas/disponibilidad?odontologoId=1&servicioId=1&fecha=2026-10-10",
+          "host": ["{{baseUrl}}"],
+          "path": ["pacientes", "citas", "disponibilidad"],
+          "query": [
+            {
+              "key": "odontologoId",
+              "value": "1"
+            },
+            {
+              "key": "servicioId",
+              "value": "1"
+            },
+            {
+              "key": "fecha",
+              "value": "2026-10-10"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "09 Paciente - Reservar cita",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json.id) { pm.collectionVariables.set('citaId', json.id); }"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{pacienteToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/pacientes/citas",
+          "host": ["{{baseUrl}}"],
+          "path": ["pacientes", "citas"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"odontologoId\": 1,\n  \"servicioId\": 1,\n  \"fecha\": \"2026-10-10\",\n  \"horaInicio\": \"09:00:00\",\n  \"motivo\": \"Consulta de prueba para avance 2\",\n  \"telefono\": \"987654321\"\n}"
+        }
+      }
+    },
+    {
+      "name": "10 Paciente - Listar mis citas",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{pacienteToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/pacientes/citas",
+          "host": ["{{baseUrl}}"],
+          "path": ["pacientes", "citas"]
+        }
+      }
+    },
+    {
+      "name": "11 Odontologo - Listar agenda",
+      "request": {
+        "method": "GET",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{odontologoToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/odontologos/citas",
+          "host": ["{{baseUrl}}"],
+          "path": ["odontologos", "citas"]
+        }
+      }
+    },
+    {
+      "name": "12 Odontologo - Guardar historia clinica",
+      "request": {
+        "method": "PUT",
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{odontologoToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/odontologos/historias-clinicas?pacienteEmail=avance2.paciente@smartdent.pe",
+          "host": ["{{baseUrl}}"],
+          "path": ["odontologos", "historias-clinicas"],
+          "query": [
+            {
+              "key": "pacienteEmail",
+              "value": "avance2.paciente@smartdent.pe"
+            }
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"citaId\": {{citaId}},\n  \"etapaTratamiento\": \"CONSULTA_INICIAL\",\n  \"alergias\": \"No refiere\",\n  \"diagnostico\": \"Evaluacion odontologica inicial\",\n  \"tratamiento\": \"Profilaxis y orientacion preventiva\",\n  \"indicaciones\": \"Mantener higiene y asistir al control\",\n  \"proximoControl\": \"2026-11-10\",\n  \"observaciones\": \"Paciente estable\"\n}"
+        }
+      }
+    },
+    {
+      "name": "13 Seguridad - Ruta protegida sin token",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/pacientes/citas",
+          "host": ["{{baseUrl}}"],
+          "path": ["pacientes", "citas"]
+        }
+      }
+    }
+  ]
+}

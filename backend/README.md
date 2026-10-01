@@ -2,6 +2,8 @@
 
 API REST construida con Spring Boot, Java 21, Spring Web MVC, JPA, Validation y MariaDB.
 
+Las pruebas del backend son unitarias y se ejecutan con JUnit 5 y Mockito, sin levantar el contexto de Spring ni conectarse a una base de datos.
+
 ## Requisitos
 
 - Java 21.

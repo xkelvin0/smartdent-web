@@ -65,7 +65,7 @@ El repositorio conserva el frontend del **Avance 1** desarrollado con HTML, CSS 
 - Spring Data JPA y MariaDB para persistencia.
 - Spring Security y JWT para autenticación y autorización.
 - Springdoc OpenAPI y Swagger UI para documentación interactiva.
-- JUnit y MockMvc para pruebas automatizadas.
+- JUnit 5 y Mockito para pruebas unitarias aisladas.
 
 ## Ejecución local
 
@@ -210,7 +210,7 @@ Los datos de negocio se almacenan en MariaDB mediante JPA/Hibernate. Esto incluy
 - Configuraciones personales, gastos fijos y mensajes de contacto persistentes.
 - Bloqueos de agenda persistentes conectados al panel del odontólogo y a la disponibilidad pública.
 - Documentación OpenAPI disponible mediante Swagger UI.
-- 34 pruebas automatizadas del backend superadas.
+- 19 pruebas unitarias del backend superadas, sin iniciar Spring ni utilizar una base de datos.
 - Pendiente para avances posteriores: migración del frontend a Angular y despliegue en la nube.
 
 ## Integrantes
