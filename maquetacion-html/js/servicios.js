@@ -41,6 +41,30 @@ function getCategoryIcon(cat) {
 let allServices = [];
 
 async function initServicesPage() {
+  const grid = document.querySelector("#services-grid");
+  if (grid) {
+    grid.innerHTML = Array(6).fill().map(() => `
+      <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="aspect-[4/3] bg-slate-200 animate-pulse"></div>
+        <div class="border-t-2 border-gold p-7 h-[320px] flex flex-col justify-between">
+          <div>
+            <div class="h-3 w-1/3 bg-slate-200 rounded animate-pulse mb-3"></div>
+            <div class="h-6 w-3/4 bg-slate-200 rounded animate-pulse mb-4"></div>
+            <div class="space-y-2">
+              <div class="h-3 w-full bg-slate-200 rounded animate-pulse"></div>
+              <div class="h-3 w-5/6 bg-slate-200 rounded animate-pulse"></div>
+              <div class="h-3 w-4/6 bg-slate-200 rounded animate-pulse"></div>
+            </div>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-100">
+            <div class="h-4 w-1/4 bg-slate-200 rounded animate-pulse"></div>
+            <div class="h-8 w-1/3 bg-slate-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </article>
+    `).join("");
+  }
+
   allServices = defaultServiceCatalog;
 
   try {

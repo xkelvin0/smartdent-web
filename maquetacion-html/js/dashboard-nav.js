@@ -39,4 +39,33 @@
   const initialLink = currentLink || links[0];
   setActiveLink(initialLink);
   showView(document.querySelector(initialLink.getAttribute("href")));
+  // Mobile menu logic
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const sidebar = document.querySelector('aside');
+  
+  if (mobileMenuBtn && sidebar) {
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 z-40 hidden bg-navy/50 backdrop-blur-sm lg:hidden';
+    document.body.appendChild(overlay);
+
+    const toggleSidebar = () => {
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    };
+
+    mobileMenuBtn.addEventListener('click', toggleSidebar);
+    overlay.addEventListener('click', toggleSidebar);
+
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        if (!overlay.classList.contains('hidden')) toggleSidebar();
+      });
+    });
+  }
 })();

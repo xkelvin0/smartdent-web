@@ -17,6 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import pe.edu.utp.smartdent.entity.VerificationToken;
+import pe.edu.utp.smartdent.repository.VerificationTokenRepository;
+
 import pe.edu.utp.smartdent.dto.auth.RegistroPacienteRequest;
 import pe.edu.utp.smartdent.entity.Rol;
 import pe.edu.utp.smartdent.entity.RolNombre;
@@ -31,6 +34,8 @@ class RegistroPacienteServiceUnitTest {
     @Mock UsuarioRepository usuarioRepository;
     @Mock RolRepository rolRepository;
     @Mock PasswordEncoder passwordEncoder;
+    @Mock VerificationTokenRepository tokenRepository;
+    @Mock EmailService emailService;
     @InjectMocks RegistroPacienteService service;
 
     @Test
@@ -41,7 +46,7 @@ class RegistroPacienteServiceUnitTest {
         when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         var response = service.registrar(new RegistroPacienteRequest(
-                "  Ana Torres  ", " 76543210 ", " ANA@CORREO.COM ", "Clave1234", " 987654321 "));
+                "  Ana Torres  ", " 76543210 ", " ANA@CORREO.COM ", "Clave1234", " 987654321 "), "http://localhost:8080");
 
         ArgumentCaptor<Usuario> captor = ArgumentCaptor.forClass(Usuario.class);
         verify(usuarioRepository).save(captor.capture());
@@ -50,14 +55,14 @@ class RegistroPacienteServiceUnitTest {
         assertThat(guardado.getNombreCompleto()).isEqualTo("Ana Torres");
         assertThat(guardado.getPasswordHash()).isEqualTo("hash-seguro");
         assertThat(guardado.getTelefono()).isEqualTo("987654321");
-        assertThat(guardado.isActivo()).isTrue();
+        assertThat(guardado.isActivo()).isFalse();
     }
 
     @Test
     void rechazaCorreoDuplicado() {
         when(usuarioRepository.existsByEmailIgnoreCase("ana@correo.com")).thenReturn(true);
 
-        assertThatThrownBy(() -> service.registrar(request("ana@correo.com", "76543210")))
+        assertThatThrownBy(() -> service.registrar(request("ana@correo.com", "76543210"), ""))
                 .isInstanceOf(RecursoDuplicadoException.class)
                 .hasMessageContaining("correo");
         verify(usuarioRepository, never()).save(any());
@@ -67,7 +72,7 @@ class RegistroPacienteServiceUnitTest {
     void rechazaDniDuplicado() {
         when(usuarioRepository.existsByDni("76543210")).thenReturn(true);
 
-        assertThatThrownBy(() -> service.registrar(request("ana@correo.com", "76543210")))
+        assertThatThrownBy(() -> service.registrar(request("ana@correo.com", "76543210"), ""))
                 .isInstanceOf(RecursoDuplicadoException.class)
                 .hasMessageContaining("DNI");
         verify(usuarioRepository, never()).save(any());
@@ -77,7 +82,7 @@ class RegistroPacienteServiceUnitTest {
     void informaCuandoNoExisteElRolPaciente() {
         when(rolRepository.findByNombre(RolNombre.PACIENTE)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.registrar(request("ana@correo.com", "76543210")))
+        assertThatThrownBy(() -> service.registrar(request("ana@correo.com", "76543210"), ""))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("PACIENTE");
     }

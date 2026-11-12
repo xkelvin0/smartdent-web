@@ -12,7 +12,7 @@
   <script src="js/tailwind-config.js"></script>
 </head>
 <body class="min-h-screen bg-canvas font-sans text-ink">
-  <aside class="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
+  <aside class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 -translate-x-full lg:translate-x-0">
     <a class="flex h-24 items-center border-b border-slate-100 px-6" href="index.html"><img class="h-10 w-auto" src="img/branding/logo-smartdent.png" alt="SmartDent"></a>
     <div class="px-6 py-5"><p class="text-xs font-bold text-navy">Panel del Paciente</p><p id="sidebar-user" class="mt-1 text-[10px] text-slate-500"></p></div>
     <nav class="flex-1 space-y-1 px-3 text-xs font-medium" aria-label="Panel del paciente">
@@ -110,3 +110,4 @@
   <script src="js/paciente.js"></script>
 </body>
 </html>
+

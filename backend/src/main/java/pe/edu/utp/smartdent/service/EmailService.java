@@ -26,10 +26,10 @@ public class EmailService {
             helper.setText(cuerpoHtml, true);
             
             // Configura de quién viene el correo (tu cuenta admin)
-            // helper.setFrom("tu_correo_admin@gmail.com"); 
+            helper.setFrom("kelvinace29@gmail.com", "SmartDent");
 
             javaMailSender.send(mensaje);
-        } catch (MessagingException e) {
+        } catch (MessagingException | java.io.UnsupportedEncodingException e) {
             throw new RuntimeException("Error al enviar el correo a " + destinatario, e);
         }
     }

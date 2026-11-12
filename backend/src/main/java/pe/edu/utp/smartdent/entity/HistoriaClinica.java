@@ -19,11 +19,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(
-        name = "historias_clinicas",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_historia_paciente_odontologo",
-                columnNames = {"paciente_id", "odontologo_id"}))
+@Table(name = "historias_clinicas")
 public class HistoriaClinica {
 
     @Id

@@ -140,11 +140,11 @@ public class OdontologoService {
 
     private Set<pe.edu.utp.smartdent.entity.Servicio> resolverServicios(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
-            return Set.of();
+            return new java.util.HashSet<>();
         }
         Set<Long> idsUnicos = Set.copyOf(ids);
-        Set<pe.edu.utp.smartdent.entity.Servicio> servicios = servicioRepository.findAllById(idsUnicos).stream()
-                .collect(Collectors.toSet());
+        Set<pe.edu.utp.smartdent.entity.Servicio> servicios = new java.util.HashSet<>(
+                servicioRepository.findAllById(idsUnicos));
         if (servicios.size() != idsUnicos.size()) {
             throw new RecursoNoEncontradoException("Uno o más servicios seleccionados no existen");
         }

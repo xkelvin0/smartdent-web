@@ -110,14 +110,14 @@ public class DatosInicialesService {
     }
 
     private void inicializarAdministrador() {
-        if (usuarioRepository.existsByEmailIgnoreCase("admin@smartdent.com")) {
+        if (usuarioRepository.existsByEmailIgnoreCase("kelvinace29@gmail.com")) {
             return;
         }
         Rol rolAdmin = rolRepository.findByNombre(RolNombre.ADMIN).orElseThrow();
         Usuario admin = new Usuario();
         admin.setNombreCompleto("Administrador SmartDent");
         admin.setDni("00000001");
-        admin.setEmail("admin@smartdent.com");
+        admin.setEmail("kelvinace29@gmail.com");
         admin.setPasswordHash(passwordEncoder.encode("Admin123"));
         admin.setTelefono("987000001");
         admin.setRol(rolAdmin);
@@ -167,8 +167,8 @@ public class DatosInicialesService {
         var odontologo = odontologoRepository.findByCodigoIgnoreCase(codigoOdontologo).orElseThrow();
         Set<Servicio> servicios = java.util.Arrays.stream(codigosServicio)
                 .map(codigo -> servicioRepository.findByCodigoIgnoreCase(codigo).orElseThrow())
-                .collect(Collectors.toSet());
-        odontologo.getServicios().addAll(servicios);
+                .collect(Collectors.toCollection(java.util.HashSet::new));
+        odontologo.setServicios(servicios);
     }
 
     private record ServicioInicial(

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 220" role="img" aria-labelledby="title description">
+  <title id="title">Universidad Tecnológica del Perú</title>
+  <desc id="description">Logotipo UTP en rojo, negro y blanco</desc>
+  <rect x="0" y="10" width="200" height="200" fill="#c4123f"/>
+  <rect x="200" y="10" width="200" height="200" fill="#000"/>
+  <rect x="400" y="10" width="200" height="200" fill="#c4123f"/>
+  <path fill="#fff" d="M45 54h43v91l12 12h20l12-12V54h43v108l-35 35H80l-35-35z"/>
+  <path fill="#fff" d="M240 54h120v43h-38v100h-44V97h-38z"/>
+  <path fill="#fff" d="M445 54h90l30 30v58l-30 30h-47v25h-43zm43 43v33h34v-33z"/>
+</svg>

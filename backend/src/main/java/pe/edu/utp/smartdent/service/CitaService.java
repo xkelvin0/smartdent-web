@@ -45,18 +45,21 @@ public class CitaService {
     private final OdontologoRepository odontologoRepository;
     private final ServicioRepository servicioRepository;
     private final BloqueoHorarioRepository bloqueoHorarioRepository;
+    private final NotificacionService notificacionService;
 
     public CitaService(
             CitaRepository citaRepository,
             UsuarioRepository usuarioRepository,
             OdontologoRepository odontologoRepository,
             ServicioRepository servicioRepository,
-            BloqueoHorarioRepository bloqueoHorarioRepository) {
+            BloqueoHorarioRepository bloqueoHorarioRepository,
+            NotificacionService notificacionService) {
         this.citaRepository = citaRepository;
         this.usuarioRepository = usuarioRepository;
         this.odontologoRepository = odontologoRepository;
         this.servicioRepository = servicioRepository;
         this.bloqueoHorarioRepository = bloqueoHorarioRepository;
+        this.notificacionService = notificacionService;
     }
 
     @Transactional
@@ -83,7 +86,9 @@ public class CitaService {
         asignarTratamientoYPrecio(cita, paciente, servicio);
 
         try {
-            return CitaResponse.desde(citaRepository.saveAndFlush(cita));
+            Cita guardada = citaRepository.saveAndFlush(cita);
+            notificacionService.notificarCitaReservada(guardada);
+            return CitaResponse.desde(guardada);
         } catch (DataIntegrityViolationException exception) {
             throw new RecursoDuplicadoException("Ese horario acaba de ser reservado. Elige otro horario");
         }
@@ -153,7 +158,9 @@ public class CitaService {
         cita.setHoraFin(horaFin);
         cita.setEstado(CitaEstado.PENDIENTE);
         try {
-            return CitaResponse.desde(citaRepository.saveAndFlush(cita));
+            Cita guardada = citaRepository.saveAndFlush(cita);
+            notificacionService.notificarCitaReprogramada(guardada);
+            return CitaResponse.desde(guardada);
         } catch (DataIntegrityViolationException exception) {
             throw new RecursoDuplicadoException("Ese horario acaba de ser reservado. Elige otro horario");
         }
@@ -165,6 +172,7 @@ public class CitaService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Cita no encontrada"));
         validarCitaModificable(cita);
         cita.setEstado(CitaEstado.CANCELADA);
+        notificacionService.notificarCitaCancelada(cita, "el paciente " + cita.getPaciente().getNombreCompleto());
         return CitaResponse.desde(cita);
     }
 
@@ -172,17 +180,17 @@ public class CitaService {
     public CitaResponse cambiarEstadoPorOdontologo(String emailOdontologo, Long citaId, CitaEstado nuevoEstado) {
         Cita cita = citaRepository.findByIdAndOdontologo_Usuario_EmailIgnoreCase(citaId, emailOdontologo)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Cita no encontrada en tu agenda"));
-        return cambiarEstado(cita, nuevoEstado);
+        return cambiarEstado(cita, nuevoEstado, cita.getOdontologo().getUsuario().getNombreCompleto());
     }
 
     @Transactional
     public CitaResponse cambiarEstadoPorAdmin(Long citaId, CitaEstado nuevoEstado) {
         Cita cita = citaRepository.findById(citaId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Cita no encontrada"));
-        return cambiarEstado(cita, nuevoEstado);
+        return cambiarEstado(cita, nuevoEstado, "Administración SmartDent");
     }
 
-    private CitaResponse cambiarEstado(Cita cita, CitaEstado nuevoEstado) {
+    private CitaResponse cambiarEstado(Cita cita, CitaEstado nuevoEstado, String actorLabel) {
         if (cita.getEstado() == nuevoEstado) {
             return CitaResponse.desde(cita);
         }
@@ -196,6 +204,12 @@ public class CitaService {
                     "No se puede cambiar una cita " + cita.getEstado() + " a " + nuevoEstado);
         }
         cita.setEstado(nuevoEstado);
+        switch (nuevoEstado) {
+            case CONFIRMADA -> notificacionService.notificarCitaConfirmada(cita, actorLabel);
+            case CANCELADA -> notificacionService.notificarCitaCancelada(cita, actorLabel);
+            case ATENDIDA -> notificacionService.notificarCitaAtendida(cita);
+            default -> { }
+        }
         return CitaResponse.desde(cita);
     }
 

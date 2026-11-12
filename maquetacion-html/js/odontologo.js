@@ -17,8 +17,47 @@ async function initializeDoctorPanel() {
   let activeRecordAppointmentId = null;
   agendaDate.value = localDateValue(new Date());
   document.querySelector("#block-date").min = localDateValue(new Date());
+  const tomorrowControl = new Date();
+  tomorrowControl.setDate(tomorrowControl.getDate() + 1);
+  const nextControlInput = document.querySelector("#record-next-control");
+  if (nextControlInput) nextControlInput.min = localDateValue(tomorrowControl);
   document.querySelector("#sidebar-user").textContent = doctorSession.name;
   document.querySelector("#welcome-title").textContent = `Bienvenido, ${doctorSession.name}`;
+
+  // Especialidad del doctor
+  const knownSpecialties = {
+    "carlos mendoza": "Implantología y Cirugía Oral",
+    "elena ruiz": "Estética y Ortodoncia",
+    "miguel silva": "Endodoncia Microscópica",
+    "lucía torres": "Periodoncia y Odontopediatría",
+    "lucia torres": "Periodoncia y Odontopediatría"
+  };
+  const nameKey = doctorSession.name.toLowerCase().replace(/^dr(a)?\.\s*/i, "").trim();
+  let currentSpecialty = knownSpecialties[nameKey] || "Odontología Especializada";
+
+  const updateSpecialtyUI = (specialty) => {
+    const sidebarEl = document.querySelector("#sidebar-specialty");
+    const badgeTextEl = document.querySelector("#doctor-specialty-text");
+    if (sidebarEl) sidebarEl.textContent = specialty;
+    if (badgeTextEl) badgeTextEl.textContent = specialty;
+  };
+  updateSpecialtyUI(currentSpecialty);
+
+  if (window.SmartDentApi) {
+    SmartDentApi.request("/odontologos", { auth: false })
+      .then((doctors) => {
+        if (Array.isArray(doctors)) {
+          const doc = doctors.find((d) => 
+            d.nombreCompleto.toLowerCase().includes(nameKey) ||
+            doctorSession.name.toLowerCase().includes(d.nombreCompleto.toLowerCase())
+          );
+          if (doc && doc.especialidad) {
+            updateSpecialtyUI(doc.especialidad);
+          }
+        }
+      })
+      .catch(() => {});
+  }
   try {
     await Promise.all([
       SmartDentAppointments.listDentist(),

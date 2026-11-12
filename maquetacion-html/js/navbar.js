@@ -13,8 +13,11 @@
   const activeClass = "border-b-2 border-[#8a6d00] pb-1 font-bold text-[#071426]";
   const linkClass = "text-slate-600 transition hover:text-[#8a6d00]";
   const navClass = (page) => currentPage === page ? activeClass : linkClass;
+  const mobileNavClass = (page) => currentPage === page 
+    ? "w-fit border-b-2 border-[#8a6d00] pb-1 font-bold text-[#071426]" 
+    : "text-slate-600 transition hover:text-[#8a6d00]";
 
-  header.className = "sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur";
+  header.className = "sticky top-0 z-50 w-full border-b border-slate-200 bg-white/75 shadow-sm backdrop-blur-md transition-colors duration-300";
   header.innerHTML = `
     <div class="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-5 lg:px-8">
       <a class="flex shrink-0 items-center" href="index.html" aria-label="SmartDent - Inicio">
@@ -38,7 +41,7 @@
           <p id="welcome-message" class="m-0 text-xs font-semibold leading-tight text-[#071426]"></p>
           <p id="user-role" class="m-0 text-[10px] leading-tight text-slate-500"></p>
         </div>
-        <button id="secondary-role-action" class="hidden rounded-lg border border-[#071426] px-3 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100 lg:inline-flex" type="button"></button>
+        <button id="secondary-role-action" class="hidden rounded-lg border border-[#071426] px-3 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100" type="button"></button>
         <button id="primary-role-action" class="hidden rounded-lg bg-[#8a6d00] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#735c00] hover:shadow-md lg:inline-flex" type="button"></button>
         <button id="logout-button" class="hidden rounded-lg border border-[#071426] px-3 py-2.5 text-xs font-semibold text-[#071426] transition hover:bg-slate-100 lg:inline-flex" type="button">Cerrar Sesión</button>
         <button class="mobile-menu-btn ml-1 flex items-center justify-center rounded-lg p-2 text-[#071426] transition hover:bg-slate-100 lg:hidden" type="button" aria-label="Abrir menú">
@@ -47,10 +50,19 @@
       </div>
     </div>
     <div id="mobile-menu" class="hidden flex-col gap-4 border-t border-slate-200 bg-white px-5 py-6 shadow-lg lg:hidden absolute w-full left-0 top-20">
-      <a class="${navClass("index.html")} text-base" href="index.html">Inicio</a>
-      <a class="${navClass("servicios.html")} text-base" href="servicios.html">Servicios</a>
-      <a class="${navClass("nosotros.html")} text-base" href="nosotros.html">Nosotros</a>
-      <a class="${navClass("contacto.html")} text-base" href="contacto.html">Contacto</a>
+      <div id="mobile-user-card" class="hidden items-center gap-3 rounded-xl bg-slate-50 p-3 border border-slate-100 mb-1">
+        <div class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#071426] text-white">
+          <span class="material-symbols-outlined text-xl">person</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p id="mobile-welcome-message" class="truncate text-sm font-bold text-[#071426]"></p>
+          <p id="mobile-user-role" class="text-xs text-slate-500 font-medium"></p>
+        </div>
+      </div>
+      <a class="${mobileNavClass("index.html")} text-base" href="index.html">Inicio</a>
+      <a class="${mobileNavClass("servicios.html")} text-base" href="servicios.html">Servicios</a>
+      <a class="${mobileNavClass("nosotros.html")} text-base" href="nosotros.html">Nosotros</a>
+      <a class="${mobileNavClass("contacto.html")} text-base" href="contacto.html">Contacto</a>
       <div class="mt-2 flex flex-col gap-3 border-t border-slate-100 pt-4" id="mobile-menu-actions">
          <!-- Acciones dinámicas de menú móvil aquí -->
       </div>
@@ -184,18 +196,37 @@
   userNavigation.classList.add("flex");
   header.querySelector("#welcome-message").textContent = `Bienvenido, ${session.name}`;
   header.querySelector("#user-role").textContent = actions.label;
+  
+  // Mostrar datos del usuario en el menú móvil
+  const mobileUserCard = header.querySelector("#mobile-user-card");
+  if (mobileUserCard) {
+    mobileUserCard.classList.remove("hidden");
+    mobileUserCard.classList.add("flex");
+    header.querySelector("#mobile-welcome-message").textContent = `Bienvenido, ${session.name}`;
+    header.querySelector("#mobile-user-role").textContent = actions.label;
+  }
+
   primaryAction.textContent = actions.primary[0];
   primaryAction.addEventListener("click", () => { window.location.href = actions.primary[1]; });
 
   if (actions.secondary) {
     secondaryAction.textContent = actions.secondary[0];
     secondaryAction.classList.remove("hidden");
+    secondaryAction.classList.add("lg:inline-flex");
     secondaryAction.addEventListener("click", () => { window.location.href = actions.secondary[1]; });
+  } else {
+    secondaryAction.classList.add("hidden");
+    secondaryAction.classList.remove("lg:inline-flex");
   }
 
   header.querySelector("#logout-button").addEventListener("click", () => {
     localStorage.removeItem("smartdent_session");
-    window.location.href = "index.html";
+    if (window.showToast) {
+      window.showToast("Has cerrado sesión exitosamente.", "info");
+      setTimeout(() => window.location.href = "index.html", 1500);
+    } else {
+      window.location.href = "index.html";
+    }
   });
 
   // Acciones del menú móvil (Usuario Logueado)
@@ -206,6 +237,11 @@
   `;
   header.querySelector("#mobile-logout-button")?.addEventListener("click", () => {
     localStorage.removeItem("smartdent_session");
-    window.location.href = "index.html";
+    if (window.showToast) {
+      window.showToast("Has cerrado sesión exitosamente.", "info");
+      setTimeout(() => window.location.href = "index.html", 1500);
+    } else {
+      window.location.href = "index.html";
+    }
   });
 })();

@@ -45,14 +45,7 @@ public class AuthController {
     @PostMapping("/registro")
     public ResponseEntity<RegistroPacienteResponse> registrarPaciente(
             @Valid @RequestBody RegistroPacienteRequest request, HttpServletRequest httpRequest) {
-        
-        String origin = httpRequest.getHeader("Origin");
-        if (origin == null) {
-            origin = httpRequest.getHeader("Referer");
-            if (origin != null && origin.endsWith("/")) origin = origin.substring(0, origin.length() - 1);
-        }
-        if (origin == null) origin = "http://localhost:5500";
-        
+        String origin = resolverFrontendOrigin(httpRequest);
         RegistroPacienteResponse response = registroPacienteService.registrar(request, origin);
         return ResponseEntity.created(URI.create("/api/usuarios/" + response.id())).body(response);
     }
@@ -69,15 +62,43 @@ public class AuthController {
 
     @PostMapping("/recuperar-password")
     public ResponseEntity<?> solicitarRecuperacion(@Valid @RequestBody RecuperarPasswordRequest request, HttpServletRequest httpRequest) {
-        String origin = httpRequest.getHeader("Origin");
-        if (origin == null) {
-            origin = httpRequest.getHeader("Referer");
-            if (origin != null && origin.endsWith("/")) origin = origin.substring(0, origin.length() - 1);
-        }
-        if (origin == null) origin = "http://localhost:5500";
-        
+        String origin = resolverFrontendOrigin(httpRequest);
         recuperarPasswordService.solicitarRecuperacion(request, origin);
         return ResponseEntity.ok().build();
+    }
+
+    private String resolverFrontendOrigin(HttpServletRequest httpRequest) {
+        String candidate = httpRequest.getHeader("X-Frontend-Url");
+        if (candidate == null || candidate.isBlank()) candidate = httpRequest.getHeader("Origin");
+        if (candidate == null || candidate.isBlank()) candidate = httpRequest.getHeader("Referer");
+        if (candidate == null || candidate.isBlank()) {
+            return "http://localhost:4200";
+        }
+        try {
+            URI uri = URI.create(candidate.trim());
+            String scheme = uri.getScheme();
+            String host = uri.getHost();
+            if (scheme == null || host == null || (!scheme.equals("http") && !scheme.equals("https"))) {
+                return "http://localhost:4200";
+            }
+            boolean allowedHost = host.equals("localhost")
+                    || host.equals("127.0.0.1")
+                    || host.startsWith("192.168.")
+                    || host.endsWith(".github.io")
+                    || host.endsWith(".onrender.com");
+            if (!allowedHost) {
+                return "http://localhost:4200";
+            }
+            int port = uri.getPort();
+            String baseOrigin = port > 0 ? scheme + "://" + host + ":" + port : scheme + "://" + host;
+            String path = uri.getPath();
+            if (path != null && path.contains("/maquetacion-html")) {
+                return baseOrigin + "/maquetacion-html";
+            }
+            return baseOrigin;
+        } catch (IllegalArgumentException ex) {
+            return "http://localhost:4200";
+        }
     }
 
     @PostMapping("/reset-password")

@@ -39,6 +39,7 @@
   async function request(path, options = {}) {
     const session = getSession();
     const headers = new Headers(options.headers || {});
+    headers.set('X-Frontend-Url', window.location.href);
     if (options.body && !headers.has("Content-Type")) {
       headers.set("Content-Type", "application/json");
     }
@@ -78,3 +79,36 @@
     clearSession
   };
 })();
+
+window.showToast = function(message, type = 'success') {
+  let toastContainer = document.getElementById('toast-container');
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.id = 'toast-container';
+    toastContainer.className = 'fixed bottom-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none';
+    document.body.appendChild(toastContainer);
+  }
+
+  const toast = document.createElement('div');
+  const isError = type === 'error';
+  const icon = isError ? 'error' : 'check_circle';
+  const bg = isError ? 'bg-red-50 text-red-800 border-red-200' : 'bg-[#071426] text-white border-[#071426]';
+  const iconColor = isError ? 'text-red-500' : 'text-[#8a6d00]';
+
+  toast.className = `flex items-center gap-3 px-5 py-4 rounded-xl border shadow-xl transform transition-all duration-300 translate-y-10 opacity-0 ${bg}`;
+  toast.innerHTML = `
+    <span class="material-symbols-outlined ${iconColor}">${icon}</span>
+    <span class="text-sm font-medium">${message}</span>
+  `;
+  
+  toastContainer.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.classList.remove('translate-y-10', 'opacity-0');
+  });
+
+  setTimeout(() => {
+    toast.classList.add('translate-y-10', 'opacity-0');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+};

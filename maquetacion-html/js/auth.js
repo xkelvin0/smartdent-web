@@ -79,19 +79,20 @@ function setupLoginForm() {
   });
   password.addEventListener("blur", validatePassword);
 
-  // forgotPassword?.addEventListener("click", (event) => {
-    event.preventDefault();
-    clearLoginMessage();
-    message.textContent = "Para recuperar tu acceso, comunícate con SmartDent desde la página de Contacto.";
-    message.classList.add("is-info");
-  });
+
 
   const registeredEmail = sessionStorage.getItem("smartdent_registered_email");
   if (registeredEmail) {
     email.value = registeredEmail;
     markField(email, "");
-    message.textContent = "Cuenta creada. Revisa tu correo electrónico para verificarla antes de iniciar sesión.";
-    message.classList.add("is-success");
+    if (window.showToast) {
+      window.showToast("Revisa tu correo para verificar la cuenta antes de iniciar sesión.", "success");
+    }
+    const message = document.querySelector("#login-message");
+    if (message) {
+      message.textContent = "Cuenta creada. Revisa tu correo electrónico para verificarla antes de iniciar sesión.";
+      message.classList.add("is-success");
+    }
     sessionStorage.removeItem("smartdent_registered_email");
     password.focus();
   }
@@ -118,8 +119,7 @@ function setupLoginForm() {
       });
       const session = SmartDentApi.saveSession(response);
       loginSuccessful = true;
-      message.textContent = "Inicio de sesión correcto. Redirigiendo...";
-      message.classList.add("is-success");
+      if (window.showToast) window.showToast("Inicio de sesión correcto", "success");
       const pendingDestination = sessionStorage.getItem("smartdent_redirect");
       sessionStorage.removeItem("smartdent_redirect");
       const destinationsByRole = {
@@ -129,6 +129,7 @@ function setupLoginForm() {
       };
       window.location.href = destinationsByRole[session.role] || "index.html";
     } catch (error) {
+      if (window.showToast) window.showToast(error.message, "error");
       message.textContent = error.message;
       message.classList.remove("is-success");
       if (error.status === 401) {
@@ -143,6 +144,30 @@ function setupLoginForm() {
       }
     }
   });
+
+  const params = new URLSearchParams(window.location.search);
+  const verifyToken = params.get("verificar");
+  if (verifyToken) {
+    message.textContent = "Verificando tu cuenta, por favor espera...";
+    message.classList.add("is-info");
+    SmartDentApi.request("/auth/verificar-cuenta", {
+      method: "POST",
+      body: JSON.stringify({ token: verifyToken }),
+      auth: false
+    }).then(() => {
+      message.textContent = "Cuenta verificada correctamente. Ya puedes iniciar sesión.";
+      message.classList.remove("is-info");
+      message.classList.add("is-success");
+      if (window.showToast) window.showToast("Cuenta verificada correctamente", "success");
+    }).catch(error => {
+      message.textContent = error.message;
+      message.classList.remove("is-info");
+      message.classList.add("text-red-500");
+      if (window.showToast) window.showToast(error.message, "error");
+    }).finally(() => {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+  }
 }
 
 function setupRegisterForm() {
@@ -262,7 +287,10 @@ function setupRegisterForm() {
       });
       registrationSuccessful = true;
       sessionStorage.setItem("smartdent_registered_email", registeredEmail);
-      registerMessage.textContent = "Cuenta creada correctamente. Te llevaremos al inicio de sesión...";
+      if (window.showToast) {
+        window.showToast("Cuenta creada. Te enviaremos un correo de confirmación.", "success");
+      }
+      registerMessage.textContent = "Cuenta creada. Revisa tu bandeja de entrada para activarla.";
       registerMessage.classList.add("is-success");
       registerButton.textContent = "Cuenta creada";
       form.reset();
@@ -283,7 +311,9 @@ function setupRegisterForm() {
       Object.entries(error.fields || {}).forEach(([field, fieldMessage]) => {
         if (fields[field]) setError(fields[field], fieldMessage);
       });
+      if (window.showToast) window.showToast(error.message, "error");
       registerMessage.textContent = error.message;
+      registerMessage.classList.add("is-danger");
       form.querySelector(".is-invalid")?.focus();
     } finally {
       if (!registrationSuccessful) {
@@ -316,12 +346,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         msgBox.className = 'form-message is-success';
       } else {
         const err = await res.text();
-        msgBox.textContent = err || 'El enlace de verificación es inválido o expiró.';
-        msgBox.className = 'form-message is-error';
+        const finalErr = err || 'El enlace de verificación es inválido o expiró.';
+        if (window.showToast) window.showToast(finalErr, "error");
+        else {
+          msgBox.textContent = finalErr;
+          msgBox.className = 'form-message is-error';
+        }
       }
     } catch (e) {
-      msgBox.textContent = 'Error al contactar al servidor.';
-      msgBox.className = 'form-message is-error';
+      if (window.showToast) window.showToast("Error al contactar al servidor.", "error");
+      else {
+        msgBox.textContent = 'Error al contactar al servidor.';
+        msgBox.className = 'form-message is-error';
+      }
     }
   }
 });

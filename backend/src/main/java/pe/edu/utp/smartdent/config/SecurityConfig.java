@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/health").permitAll()
+                        .requestMatchers("/api/health", "/error").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/registro", "/api/auth/login", "/api/auth/recuperar-password", "/api/auth/reset-password", "/api/auth/verificar-cuenta").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contacto/mensajes").permitAll()
@@ -118,7 +118,7 @@ public class SecurityConfig {
                 .filter(origin -> !origin.isBlank())
                 .toList());
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Frontend-Url"));
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

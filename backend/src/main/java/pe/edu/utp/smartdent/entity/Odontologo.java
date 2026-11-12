@@ -114,7 +114,14 @@ public class Odontologo {
     }
 
     public void setServicios(Set<Servicio> servicios) {
-        this.servicios = servicios;
+        if (this.servicios == null) {
+            this.servicios = new HashSet<>();
+        } else {
+            this.servicios.clear();
+        }
+        if (servicios != null) {
+            this.servicios.addAll(servicios);
+        }
     }
 
     public LocalDateTime getCreadoEn() {

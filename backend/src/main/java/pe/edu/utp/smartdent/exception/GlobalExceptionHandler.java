@@ -30,11 +30,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiError> manejarAutenticacion(AuthenticationException exception) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
+        String mensaje = "El correo o la contraseña son incorrectos";
+        if (exception instanceof org.springframework.security.authentication.DisabledException) {
+            mensaje = "Tu cuenta aún no está activada. Revisa tu correo para verificarla.";
+        }
         ApiError error = new ApiError(
                 LocalDateTime.now(),
                 status.value(),
                 status.getReasonPhrase(),
-                "El correo o la contraseña son incorrectos",
+                mensaje,
                 Map.of());
 
         return ResponseEntity.status(status).body(error);
@@ -81,5 +85,22 @@ public class GlobalExceptionHandler {
                 fields);
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> manejarExcepcionGeneral(Exception exception) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        String mensaje = "Ocurrió un error inesperado en el servidor";
+        if (exception.getMessage() != null && exception.getMessage().contains("Error al enviar el correo")) {
+            mensaje = "No se pudo enviar el correo de validación. Verifica que el correo sea válido o intenta más tarde.";
+        }
+        ApiError error = new ApiError(
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                mensaje,
+                Map.of());
+
+        return ResponseEntity.status(status).body(error);
     }
 }

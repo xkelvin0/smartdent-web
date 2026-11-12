@@ -12,9 +12,13 @@
   <script src="js/tailwind-config.js"></script>
 </head>
 <body class="min-h-screen bg-canvas font-sans text-ink">
-  <aside class="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
+  <aside class="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-slate-200 bg-white transition-transform duration-300 -translate-x-full lg:translate-x-0">
     <a class="flex h-24 items-center border-b border-slate-100 px-6" href="index.html"><img class="h-10 w-auto" src="img/branding/logo-smartdent.png" alt="SmartDent"></a>
-    <div class="px-6 py-5"><p class="text-xs font-bold text-navy">Panel del Odontólogo</p><p id="sidebar-user" class="mt-1 text-[10px] text-slate-500"></p></div>
+    <div class="px-6 py-5">
+      <p class="text-xs font-bold text-navy">Panel del Odontólogo</p>
+      <p id="sidebar-user" class="mt-1 text-xs font-semibold text-slate-800"></p>
+      <span id="sidebar-specialty" class="mt-1.5 inline-block rounded-md bg-gold-soft/40 px-2 py-0.5 text-[10px] font-bold text-navy"></span>
+    </div>
     <nav class="flex-1 space-y-1 px-3 text-xs font-medium" aria-label="Panel del odontólogo">
       <a class="flex items-center gap-3 rounded-lg bg-slate-100 px-4 py-3 font-bold text-navy" href="#summary"><span class="material-symbols-outlined text-lg">dashboard</span>Resumen</a>
       <a class="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-600 hover:bg-slate-50 hover:text-navy" href="#agenda"><span class="material-symbols-outlined text-lg">calendar_month</span>Mi Agenda</a>
@@ -25,13 +29,28 @@
   </aside>
 
   <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white px-5 lg:hidden">
-    <a href="index.html"><img class="h-9 w-auto" src="img/branding/logo-smartdent.png" alt="SmartDent"></a>
-    <button id="mobile-logout" class="grid h-9 w-9 place-items-center rounded-lg border border-slate-300" type="button" aria-label="Cerrar sesión"><span class="material-symbols-outlined text-lg">logout</span></button>
+    <div class="flex items-center gap-3">
+      <button id="mobile-menu-btn" class="grid h-9 w-9 place-items-center rounded-lg border border-slate-300 text-navy hover:bg-slate-50 transition-colors" type="button" aria-label="Abrir menú">
+        <span class="material-symbols-outlined text-lg">menu</span>
+      </button>
+      <a href="index.html"><img class="h-9 w-auto" src="img/branding/logo-smartdent.png" alt="SmartDent"></a>
+    </div>
+    <div class="flex gap-2"><button id="mobile-logout" class="grid h-9 w-9 place-items-center rounded-lg border border-slate-300 text-red-600 hover:bg-red-50 transition-colors" type="button" aria-label="Cerrar sesión"><span class="material-symbols-outlined text-lg">logout</span></button></div>
   </header>
 
   <main id="dashboard-top" class="min-h-screen px-5 py-8 lg:ml-64 lg:px-10 lg:py-10">
     <div class="mx-auto max-w-6xl">
-      <header class="mb-8"><p class="text-xs font-bold uppercase tracking-[.18em] text-gold">Área profesional</p><h1 id="welcome-title" class="mt-2 text-3xl font-bold text-navy"></h1><p class="mt-2 text-sm text-slate-500">Consulta tu agenda y actualiza el estado de tus atenciones.</p></header>
+      <header class="mb-8">
+        <p class="text-xs font-bold uppercase tracking-[.18em] text-gold">Área profesional</p>
+        <div class="mt-2 flex flex-wrap items-center gap-3">
+          <h1 id="welcome-title" class="text-3xl font-bold text-navy"></h1>
+          <span id="doctor-badge-specialty" class="inline-flex items-center gap-1.5 rounded-full bg-gold-soft/50 border border-gold/30 px-3.5 py-1 text-xs font-bold text-navy shadow-sm">
+            <span class="material-symbols-outlined text-sm">medical_services</span>
+            <span id="doctor-specialty-text">Odontólogo General</span>
+          </span>
+        </div>
+        <p class="mt-2 text-sm text-slate-500">Consulta tu agenda y actualiza el estado de tus atenciones.</p>
+      </header>
 
       <section id="summary" data-dashboard-view aria-label="Resumen profesional">
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -82,3 +101,6 @@
   <script src="js/odontologo.js"></script>
 </body>
 </html>
+
+
+

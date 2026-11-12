@@ -16,6 +16,9 @@ public record HistoriaClinicaResponse(
         String odontologoNombre,
         String odontologoEmail,
         Long ultimaCitaId,
+        String servicioNombre,
+        Integer numeroSesion,
+        Integer totalSesiones,
         EtapaTratamiento etapaTratamiento,
         String alergias,
         String diagnostico,
@@ -26,6 +29,17 @@ public record HistoriaClinicaResponse(
         LocalDateTime actualizadoEn) {
 
     public static HistoriaClinicaResponse desde(HistoriaClinica historia) {
+        String servicioNombre = null;
+        Integer numeroSesion = null;
+        Integer totalSesiones = null;
+        if (historia.getUltimaCita() != null) {
+            if (historia.getUltimaCita().getServicio() != null) {
+                servicioNombre = historia.getUltimaCita().getServicio().getNombre();
+            }
+            numeroSesion = historia.getUltimaCita().getNumeroSesion();
+            totalSesiones = historia.getUltimaCita().getTotalSesiones();
+        }
+
         return new HistoriaClinicaResponse(
                 historia.getId(), historia.getCodigo(),
                 historia.getPaciente().getId(), historia.getPaciente().getNombreCompleto(),
@@ -33,6 +47,9 @@ public record HistoriaClinicaResponse(
                 historia.getOdontologo().getUsuario().getNombreCompleto(),
                 historia.getOdontologo().getUsuario().getEmail(),
                 historia.getUltimaCita() == null ? null : historia.getUltimaCita().getId(),
+                servicioNombre,
+                numeroSesion,
+                totalSesiones,
                 historia.getEtapaTratamiento(), historia.getAlergias(), historia.getDiagnostico(),
                 historia.getTratamiento(), historia.getIndicaciones(), historia.getProximoControl(),
                 historia.getObservaciones(), historia.getActualizadoEn());

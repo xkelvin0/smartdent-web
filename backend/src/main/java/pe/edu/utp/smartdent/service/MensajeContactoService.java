@@ -15,8 +15,14 @@ import pe.edu.utp.smartdent.repository.MensajeContactoRepository;
 public class MensajeContactoService {
 
     private final MensajeContactoRepository repository;
+    private final NotificacionService notificacionService;
 
-    public MensajeContactoService(MensajeContactoRepository repository) { this.repository = repository; }
+    public MensajeContactoService(
+            MensajeContactoRepository repository,
+            NotificacionService notificacionService) {
+        this.repository = repository;
+        this.notificacionService = notificacionService;
+    }
 
     @Transactional
     public MensajeContactoResponse crear(CrearMensajeContactoRequest request) {
@@ -26,7 +32,9 @@ public class MensajeContactoService {
         item.setTelefono(normalizarOpcional(request.telefono()));
         item.setAsunto(request.asunto().trim());
         item.setMensaje(request.mensaje().trim());
-        return MensajeContactoResponse.desde(repository.save(item));
+        MensajeContacto guardado = repository.save(item);
+        notificacionService.notificarNuevoMensajeContacto(guardado);
+        return MensajeContactoResponse.desde(guardado);
     }
 
     @Transactional(readOnly = true)

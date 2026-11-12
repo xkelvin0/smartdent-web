@@ -27,16 +27,19 @@ public class HistoriaClinicaService {
     private final CitaRepository citaRepository;
     private final UsuarioRepository usuarioRepository;
     private final OdontologoRepository odontologoRepository;
+    private final NotificacionService notificacionService;
 
     public HistoriaClinicaService(
             HistoriaClinicaRepository historiaRepository,
             CitaRepository citaRepository,
             UsuarioRepository usuarioRepository,
-            OdontologoRepository odontologoRepository) {
+            OdontologoRepository odontologoRepository,
+            NotificacionService notificacionService) {
         this.historiaRepository = historiaRepository;
         this.citaRepository = citaRepository;
         this.usuarioRepository = usuarioRepository;
         this.odontologoRepository = odontologoRepository;
+        this.notificacionService = notificacionService;
     }
 
     @Transactional(readOnly = true)
@@ -49,7 +52,7 @@ public class HistoriaClinicaService {
     public HistoriaClinicaResponse consultarPorOdontologo(String emailOdontologo, String emailPaciente) {
         validarRelacionClinica(emailOdontologo, emailPaciente);
         return historiaRepository
-                .findByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCase(
+                .findTopByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCaseOrderByActualizadoEnDesc(
                         emailPaciente, emailOdontologo)
                 .map(HistoriaClinicaResponse::desde)
                 .orElse(null);
@@ -75,13 +78,25 @@ public class HistoriaClinicaService {
             if (cita.getEstado() != CitaEstado.CONFIRMADA && cita.getEstado() != CitaEstado.ATENDIDA) {
                 throw new ReglaNegocioException("Confirma la cita antes de registrar la atención clínica");
             }
+            boolean recienAtendida = cita.getEstado() != CitaEstado.ATENDIDA;
             cita.setEstado(CitaEstado.ATENDIDA);
+            if (recienAtendida) {
+                notificacionService.notificarCitaAtendida(cita);
+            }
         }
 
-        HistoriaClinica historia = historiaRepository
-                .findByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCase(
-                        emailPaciente, emailOdontologo)
-                .orElseGet(() -> nuevaHistoria(paciente, odontologo));
+        // Si la atención está ligada a una cita, buscamos si ya existe registro para esa cita o creamos uno nuevo
+        HistoriaClinica historia;
+        if (cita != null) {
+            historia = historiaRepository.findByUltimaCita_Id(cita.getId())
+                    .orElseGet(() -> nuevaHistoria(paciente, odontologo));
+        } else {
+            historia = historiaRepository
+                    .findTopByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCaseOrderByActualizadoEnDesc(
+                            emailPaciente, emailOdontologo)
+                    .orElseGet(() -> nuevaHistoria(paciente, odontologo));
+        }
+
         historia.setUltimaCita(cita != null ? cita : historia.getUltimaCita());
         historia.setEtapaTratamiento(request.etapaTratamiento());
         historia.setAlergias(normalizarOpcional(request.alergias()));

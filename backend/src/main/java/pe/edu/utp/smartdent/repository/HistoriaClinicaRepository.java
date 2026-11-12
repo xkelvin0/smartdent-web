@@ -11,6 +11,8 @@ public interface HistoriaClinicaRepository extends JpaRepository<HistoriaClinica
 
     List<HistoriaClinica> findByPaciente_EmailIgnoreCaseOrderByActualizadoEnDesc(String emailPaciente);
 
-    Optional<HistoriaClinica> findByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCase(
+    Optional<HistoriaClinica> findTopByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCaseOrderByActualizadoEnDesc(
             String emailPaciente, String emailOdontologo);
+
+    Optional<HistoriaClinica> findByUltimaCita_Id(Long citaId);
 }

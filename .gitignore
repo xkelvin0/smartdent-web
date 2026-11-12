@@ -20,9 +20,9 @@ build/
 
 # === Node / Angular ===
 node_modules/
-/dist
+dist/
 /tmp
-/out-tsc
+out-tsc/
 /.sass-cache
 connect.lock
 coverage/
@@ -55,10 +55,20 @@ Thumbs.db
 desktop.ini
 .agents/
 .gemini/
+.kilo/
+.metals/
 .env
 .env.*
 !.env.example
 !**/.env.example
+**/application-local.properties
+**/application-local.yml
 
-# === Archivos temporales de presentación ===
+# === Archivos temporales y entregables no-codigo ===
 doc/ppt-preview/
+/*.docx
+/*.pptx
+/SmartDent_Guion_*
+/CREDENCIALES.md
+/package.json
+/pnpm-lock.yaml
