@@ -65,9 +65,11 @@ desktop.ini
 **/application-local.yml
 
 # === Archivos temporales y entregables no-codigo ===
+doc/
 doc/ppt-preview/
-/*.docx
-/*.pptx
+*.docx
+*.pptx
+*.rar
 /SmartDent_Guion_*
 /CREDENCIALES.md
 /package.json

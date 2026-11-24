@@ -83,7 +83,7 @@ export class AuthStore {
   private persistToStorage(session: AuthSession): void {
     if (typeof window === 'undefined') return;
     try {
-      window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
     } catch {
       // Fallback silencioso en memoria (Signal activa)
     }
@@ -92,13 +92,10 @@ export class AuthStore {
   private hydrateFromStorage(): AuthSession | null {
     if (typeof window === 'undefined') return null;
     try {
-      const raw =
-        window.localStorage.getItem(SESSION_KEY) ??
-        window.sessionStorage.getItem(SESSION_KEY);
+      const raw = window.sessionStorage.getItem(SESSION_KEY);
       if (!raw) return null;
       const parsed: unknown = JSON.parse(raw);
       if (!isAuthSession(parsed) || parsed.expiresAt <= Date.now()) {
-        window.localStorage.removeItem(SESSION_KEY);
         window.sessionStorage.removeItem(SESSION_KEY);
         return null;
       }

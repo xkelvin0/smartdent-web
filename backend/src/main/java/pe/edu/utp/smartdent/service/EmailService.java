@@ -2,6 +2,7 @@ package pe.edu.utp.smartdent.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class EmailService {
             helper.setFrom("kelvinace29@gmail.com", "SmartDent");
 
             javaMailSender.send(mensaje);
-        } catch (MessagingException | java.io.UnsupportedEncodingException e) {
+        } catch (MessagingException | MailException | java.io.UnsupportedEncodingException e) {
             throw new RuntimeException("Error al enviar el correo a " + destinatario, e);
         }
     }

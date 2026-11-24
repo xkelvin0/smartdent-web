@@ -1,255 +1,219 @@
-# SmartDent — Gestión de citas odontológicas
+# SmartDent — Sistema Web Integrado de Gestión Odontológica
 
-SmartDent es un prototipo web para gestionar citas, pacientes y atenciones de una clínica odontológica. El proyecto corresponde al curso **Desarrollo Web Integrado** de la Universidad Tecnológica del Perú.
+Plataforma web Full-Stack para la gestión integral de pacientes, catálogo de servicios odontológicos, agenda de profesionales, citas sin cruces de horarios, historias clínicas multisesión y administración financiera. Proyecto del curso **Desarrollo Web Integrado** (Universidad Tecnológica del Perú · 2026).
 
-## Estado del proyecto
+## Enlaces en Producción (Nube)
 
-En el **Avance 3**, el repositorio incorpora la aplicación **Frontend SPA en Angular 19** (`frontend/`) construida con componentes Standalone, estrategia `OnPush`, Signals, enrutamiento perezoso con guards por rol, formularios reactivos estrictamente tipados y validaciones cliente-servidor, conservando el prototipo previo en `maquetacion-html/` y el backend en `backend/` con Spring Boot y MariaDB. La API REST gestiona usuarios, autenticación JWT, verificación de correo, recuperación de contraseña, servicios, odontólogos, citas, historias clínicas, bloqueos de agenda, configuración del paciente, reportes y mensajes de contacto en `smartdent_db`. El navegador conserva únicamente la sesión JWT; los datos de negocio se consultan desde la API.
+- **Aplicación Web Frontend (GitHub Pages):** https://xkelvin0.github.io/smartdent-web/
+- **API REST Backend Health (Render Cloud):** https://smartdent-web.onrender.com/api/health
+- **Documentación Interactiva Swagger UI:** https://smartdent-web.onrender.com/swagger-ui.html
 
-## Funcionalidades
+---
 
-### Sitio público
+## Guía Paso a Paso para Ejecutar el Proyecto en Tu Computadora (Equipo)
 
-- Página principal con servicios odontológicos.
-- Catálogo completo de servicios.
-- Páginas de Nosotros y Contacto.
-- Mapa de ubicación de la clínica.
-- Navegación y pie de página compartidos.
-- Reserva protegida mediante inicio de sesión.
+Sigue estos pasos en orden para levantar el proyecto completo en tu máquina local (**Windows**, **macOS** o **Linux**).
 
-### Autenticación
+### 1. Requisitos Previos (Instalar antes de empezar)
 
-- Registro de pacientes con validaciones y verificación de cuenta por correo.
-- Inicio de sesión por correo y contraseña con JWT.
-- Recuperación y restablecimiento de contraseña mediante token temporal.
-- Identificación de roles: paciente, odontólogo y administrador.
-- Redirección automática al panel correspondiente protegida por guards.
+Verifica que tengas instaladas las siguientes herramientas:
 
-### Panel del paciente
+| Herramienta | Versión Mínima | Comando de Verificación | Descarga / Notas |
+| :--- | :--- | :--- | :--- |
+| **Git** | Cualquier reciente | `git --version` | https://git-scm.com/downloads |
+| **Java JDK** | **JDK 21** (Obligatorio) | `java -version` | Eclipse Temurin 21 (Adoptium) |
+| **Node.js** | **v20 LTS** o superior | `node -v` | https://nodejs.org/ |
+| **pnpm** *(opcional)* | v9 o v10 | `pnpm -v` | Si no lo tienes: `npm install -g pnpm` (o puedes usar `npm`) |
+| **XAMPP (MariaDB/MySQL)** | MariaDB 10.4+ / MySQL 8+ | Puerto `3306` activo | https://www.apachefriends.org/ |
 
-- Resumen de citas y recordatorios.
-- Reserva, consulta, cancelación y reprogramación de citas.
-- Tratamientos multisesión con pago único, seguimiento de sesión actual y sesiones restantes.
-- Historial clínico e indicaciones del odontólogo.
-- Progreso del tratamiento por etapas.
-- Comprobantes de atenciones completadas.
-- Preferencias de contacto y recordatorios.
+> **Importante sobre Java:** Si `java -version` muestra una versión menor a la 21 (por ejemplo Java 8, 11 o 17), instala **JDK 21** y asegúrate de que la variable de entorno `JAVA_HOME` apunte a JDK 21 antes de ejecutar el backend.
 
-### Panel del odontólogo
+---
 
-- Agenda personal filtrada por día, semana, mes y estado.
-- Confirmación y cancelación de citas.
-- Bloqueo de horarios no disponibles.
-- Consulta de pacientes asignados.
-- Registro de diagnóstico, tratamiento, indicaciones y próximo control.
-- Actualización de la etapa del tratamiento.
-- Indicadores, alertas y actividad reciente.
+### 2. Clonar el Repositorio
 
-### Panel del administrador
+Abre una terminal (PowerShell, CMD o Git Bash) y ejecuta:
 
-- Agenda global con filtros y exportación CSV.
-- Consulta de pacientes, odontólogos y administradores.
-- Creación y edición de cuentas de odontólogos con asignación de servicios.
-- Gestión de servicios, precios, costos y disponibilidad.
-- Configuración de gastos fijos mensuales.
-- Cálculo estimado de ingresos, costos, utilidad y margen.
-- Gráficos de estados, actividad, demanda e ingresos frente a costos.
-- Bandeja de mensajes de contacto con estados nuevo, leído y respondido.
+```bash
+git clone https://github.com/xkelvin0/smartdent-web.git
+cd smartdent-web
+```
 
-## Tecnologías
+---
 
-- Angular 19.2 (Standalone Components, Signals, Reactive Forms, Functional Router Guards, HttpClient + Fetch).
-- TypeScript 5.7 (`strict: true`, `strictTemplates: true`) y Tailwind CSS 3.4.
-- Vitest 3.2 para pruebas unitarias automatizadas del frontend.
-- HTML5, CSS3 y JavaScript vanilla (prototipo conservado en `maquetacion-html/`).
-- Google Fonts y Material Symbols.
-- Java 21 y Spring Boot para la API REST.
-- Spring Data JPA y MariaDB para persistencia.
-- Spring Security y JWT para autenticación y autorización.
-- Springdoc OpenAPI y Swagger UI para documentación interactiva.
-- JUnit 5 y Mockito para pruebas unitarias aisladas.
+### 3. Iniciar la Base de Datos (XAMPP / MariaDB)
 
-## Ejecución local
+1. Abre **XAMPP Control Panel**.
+2. Haz clic en **Start** en el módulo **MySQL** (debe quedar en verde corriendo en el puerto `3306`).
+3. **No necesitas crear la base de datos ni las tablas manualmente:**
+   - El backend usa `jdbc:mariadb://localhost:3306/smartdent_db?createDatabaseIfNotExist=true` y `spring.jpa.hibernate.ddl-auto=update`.
+   - Al arrancar Spring Boot por primera vez, creará automáticamente la base de datos `smartdent_db`, todas las tablas y cargará los datos iniciales (`DatosInicialesService`): los 3 roles, 16 servicios odontológicos, 1 administrador y 4 odontólogos.
 
-1. Clona el repositorio:
+#### ¿Tu MySQL/MariaDB tiene contraseña o usa otro puerto?
 
-   ```bash
-   git clone https://github.com/xkelvin0/smartdent-web.git
-   ```
+Por defecto conecta con usuario `root` y contraseña vacía (`""`) en el puerto `3306`. Si en tu computadora configuraste contraseña en MySQL, **no edites `application.properties`**; en su lugar crea el archivo ignorado por Git `backend/src/main/resources/application-local.properties` con tus datos locales:
 
-2. Ingresa al proyecto:
+```properties
+spring.datasource.url=jdbc:mariadb://localhost:3306/smartdent_db?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=TU_CONTRASEÑA_AQUI
+```
 
-   ```bash
-   cd smartdent-web
-   ```
+*(Opcional)* Si deseas probar el envío real de correos para recuperación de contraseña, agrega también en ese mismo archivo `application-local.properties`:
 
-3. Enciende MySQL/MariaDB desde XAMPP y verifica que exista la base de datos `smartdent_db`.
+```properties
+spring.mail.username=tu_correo@gmail.com
+spring.mail.password=tu_app_password_de_gmail
+```
 
-4. Inicia el backend desde `backend`:
+---
 
-   ```powershell
-   .\mvnw.cmd spring-boot:run
-   ```
+### 4. Levantar el Backend (Spring Boot)
 
-5. Instala dependencias e inicia la SPA Angular (`frontend`):
+Abre una terminal en la carpeta raíz `smartdent-web` y ejecuta:
 
-   ```powershell
-   pnpm install --dir frontend
-   pnpm --dir frontend start
-   ```
+**En Windows (PowerShell o CMD):**
+```powershell
+cd backend
+.\mvnw.cmd spring-boot:run
+```
 
-6. Navega a la aplicación Angular:
+**En macOS / Linux / Git Bash:**
+```bash
+cd backend
+./mvnw spring-boot:run
+```
 
-   ```text
-   http://localhost:4200
-   ```
+> La primera ejecución descargará las dependencias de Maven (puede tardar 1-2 minutos dependiendo del internet).
 
-   El servidor de desarrollo redirige automáticamente `/api` hacia `http://localhost:8080` mediante `frontend/proxy.conf.json`. Para compilar producción o ejecutar las pruebas unitarias del frontend:
+**¿Cómo verificar que el backend levantó correctamente?**
+Cuando veas en la consola el mensaje `Started SmartdentBackendApplication`, abre en tu navegador:
+- Health Check: http://localhost:8080/api/health
+- Documentación Swagger UI: http://localhost:8080/swagger-ui.html
 
-   ```powershell
-   pnpm --dir frontend run build
-   pnpm --dir frontend test
-   ```
+**Deja esta terminal abierta** mientras uses la aplicación.
 
-   *(Opcional)* El prototipo previo continúa disponible sirviendo `maquetacion-html/index.html` con **Live Server** (`http://127.0.0.1:5500/maquetacion-html/index.html`).
+---
 
-> No se recomienda abrir los archivos únicamente con `file://`, ya que algunas funciones del navegador pueden comportarse de forma diferente.
+### 5. Instalar Dependencias y Levantar el Frontend (Angular 19)
 
-La documentación interactiva de la API se encuentra en `http://localhost:8080/swagger-ui.html`.
+Abre una **segunda terminal** en la carpeta raíz `smartdent-web` (sin cerrar la del backend) y ejecuta:
 
-En GitHub Pages, el cliente HTTP selecciona automáticamente el backend compartido desplegado en `https://smartdent-web.onrender.com`. En `localhost` continúa utilizando `http://localhost:8080` (o el proxy `/api` en `:4200`), por lo que ambos entornos pueden usarse sin editar el código. El archivo `index.html` de la raíz redirige automáticamente a la página principal del frontend.
+**Opción A — Usando `pnpm` (recomendado):**
+```bash
+cd frontend
+pnpm install
+pnpm start
+```
 
-## Respaldo y apagado seguro
+**Opción B — Usando `npm` (si no tienes `pnpm`):**
+```bash
+cd frontend
+npm install
+npm start
+```
 
-El proyecto incluye automatizaciones para proteger `smartdent_db`:
+**¿Cómo verificar que el frontend levantó correctamente?**
+Cuando la terminal muestre `Local: http://localhost:4200/`, abre en tu navegador:
 
-- `RESPALDAR_BD.cmd`: genera inmediatamente una copia SQL.
-- `INSTALAR_RESPALDO_AUTOMATICO.cmd`: programa una copia diaria a las 8:00 p. m.
-- `CERRAR_SMARTDENT.cmd`: comprueba que Spring Boot esté detenido, crea un respaldo y apaga MariaDB de manera segura.
+```text
+http://localhost:4200
+```
 
-Los respaldos se conservan fuera de la carpeta de datos de MariaDB, en `%LOCALAPPDATA%\SmartDent\backups`. Se guardan las 14 copias más recientes. Al finalizar una jornada, primero se debe detener Spring Boot con `Ctrl+C` y después ejecutar `CERRAR_SMARTDENT.cmd`; finalmente se puede cerrar XAMPP.
+> El servidor de Angular redirige automáticamente todas las peticiones `/api/...` hacia `http://127.0.0.1:8080` mediante `frontend/proxy.conf.json`, por lo que **no tendrás errores de CORS en local**.
 
-## Credenciales de prueba
+---
 
-Las cuentas precargadas de odontólogos y administrador están documentadas en [`doc/CREDENCIALES_PRUEBA.md`](doc/CREDENCIALES_PRUEBA.md). Los pacientes crean su propia cuenta desde la página de registro.
+### 6. Credenciales Precargadas para Probar el Sistema
 
-Estas credenciales son exclusivamente para la demostración académica. No deben utilizarse como modelo de seguridad para una aplicación real.
+Al iniciar el backend, `DatosInicialesService` crea automáticamente estas cuentas de prueba:
 
-## Estructura del repositorio
+| Rol | Correo Electrónico | Contraseña | Acceso |
+| :--- | :--- | :--- | :--- |
+| **Administrador** | `kelvinace29@gmail.com` | `Admin123` | Agenda global, usuarios, odontólogos, servicios, reportes y mensajes |
+| **Odontólogo 1** | `carlos.mendoza@smartdent.com` | `Carlos123` | Implantología y Cirugía Oral (`COP-10001`) |
+| **Odontólogo 2** | `elena.ruiz@smartdent.com` | `Elena123` | Estética y Ortodoncia (`COP-10002`) |
+| **Odontólogo 3** | `miguel.silva@smartdent.com` | `Miguel123` | Endodoncia Microscópica (`COP-10003`) |
+| **Odontólogo 4** | `lucia.torres@smartdent.com` | `Lucia123` | Periodoncia y Odontopediatría (`COP-10004`) |
+| **Paciente** | *(Regístrate en `/registro`)* | *(Tu contraseña)* | Entra a http://localhost:4200/registro y crea tu propia cuenta |
+
+---
+
+### 7. Ejecutar Pruebas Automatizadas y Compilación
+
+**Pruebas Unitarias Backend (JUnit 5 + Mockito — 19 pruebas):**
+```powershell
+cd backend
+.\mvnw.cmd test
+```
+
+**Pruebas Unitarias, Typecheck y Build Frontend (Vitest + Angular CLI):**
+```powershell
+cd frontend
+pnpm test
+pnpm run typecheck
+pnpm run build
+```
+*(Si usas `npm`, reemplaza `pnpm` por `npm run` en `test`, `typecheck` y `build`).*
+
+---
+
+### 8. Solución de Problemas Comunes (Troubleshooting)
+
+1. **`Communications link failure` o `Connection refused` al iniciar el backend:**
+   - **Causa:** MySQL en XAMPP está apagado o bloqueado.
+   - **Solución:** Abre XAMPP Control Panel y presiona **Start** en **MySQL** (puerto `3306`).
+2. **`UnsupportedClassVersionError` o error de compilación Maven:**
+   - **Causa:** Tienes una versión de Java inferior a JDK 21.
+   - **Solución:** Ejecuta `java -version`. Si no dice `21`, instala JDK 21 y actualiza `JAVA_HOME` y el `PATH`.
+3. **`Web server failed to start. Port 8080 was already in use`:**
+   - **Causa:** Ya tienes otra instancia del backend abierta.
+   - **Solución:** Cierra la otra terminal o ejecuta `taskkill /F /IM java.exe` (solo si no tienes otros procesos Java críticos) y vuelve a correr `.\mvnw.cmd spring-boot:run`.
+4. **`pnpm: command not found`:**
+   - **Solución:** Ejecuta `npm install -g pnpm` o usa directamente `npm install` y `npm start` dentro de `frontend/`.
+5. **El frontend abre en `:4200` pero al hacer login dice error de conexión:**
+   - **Causa:** El backend (`:8080`) no está corriendo o aún está terminando de iniciar.
+   - **Solución:** Verifica que http://localhost:8080/api/health responda `UP`. No abras archivos HTML directamente con `file://`.
+
+---
+
+## Arquitectura y Tecnologías
+
+- **Frontend (`frontend/`):** Angular 19.2 (Standalone Components, `OnPush`, Signals, Reactive Forms, Functional Router Guards, `HttpClient` + `withFetch()`, `jwtInterceptor`), TypeScript 5.7 (`strict: true`), Tailwind CSS 3.4 y Vitest 3.
+- **Backend (`backend/`):** Java 21, Spring Boot 4.1.1, Spring Data JPA / Hibernate, Spring Security 6 + JWT (HMAC-SHA256) + BCrypt, Springdoc OpenAPI / Swagger UI, JUnit 5 + Mockito y Docker Multi-Stage.
+- **Base de Datos:** MariaDB (local) / TiDB Cloud MySQL (producción).
+- **Respaldo Local (Windows):** Scripts `RESPALDAR_BD.cmd`, `INSTALAR_RESPALDO_AUTOMATICO.cmd` y `CERRAR_SMARTDENT.cmd` en la raíz del repositorio para respaldar `smartdent_db`.
+
+## Estructura del Repositorio
 
 ```text
 smartdent-web/
-├── scripts/                       # Respaldo seguro de MariaDB y generación documental
-├── RESPALDAR_BD.cmd               # Respaldo manual con doble clic
-├── CERRAR_SMARTDENT.cmd           # Respaldo y cierre seguro
-├── INSTALAR_RESPALDO_AUTOMATICO.cmd
-├── SmartDent_Avance_3.docx        # Entregable académico del Avance 3 (Sección 4.4 Angular)
-├── backend/                       # API REST con Spring Boot 4, JPA y JWT
-├── frontend/                      # SPA Angular 19 (Avance 3)
-│   ├── proxy.conf.json            # Proxy de desarrollo /api -> localhost:8080
+├── backend/                       # API REST con Spring Boot, JPA/Hibernate, Security + JWT y Dockerfile
+│   ├── pom.xml
+│   ├── Dockerfile
+│   └── src/
+│       ├── main/java/pe/edu/utp/smartdent/
+│       │   ├── config/            # Seguridad, CORS, OpenAPI y carga inicial (DatosInicialesService)
+│       │   ├── controller/        # Controladores REST por rol (public, paciente, odontologo, admin)
+│       │   ├── dto/               # Records DTO tipados de petición y respuesta
+│       │   ├── entity/            # Entidades JPA y enums del dominio odontológico
+│       │   ├── exception/         # GlobalExceptionHandler y excepciones de negocio
+│       │   ├── repository/        # Repositorios Spring Data JPA y consultas JPQL
+│       │   ├── security/          # JwtService y filtro stateless
+│       │   └── service/           # Lógica transaccional ACID y reglas clínicas
+│       └── test/                  # 19 pruebas unitarias con JUnit 5 y Mockito
+├── frontend/                      # SPA Angular 19 (Standalone + Signals + Tailwind CSS)
+│   ├── proxy.conf.json            # Proxy /api -> http://127.0.0.1:8080
 │   ├── tailwind.config.js         # Tokens visuales institucionales SmartDent
 │   └── src/app/
-│       ├── core/                  # AuthStore, ToastStore, jwtInterceptor, guards y API service
-│       ├── shared/                # Layouts, componentes UI transversales y SmartDentValidators
+│       ├── core/                  # AuthStore, ToastStore, NotificationStore, jwtInterceptor, guards y API service
+│       ├── shared/                # Layouts (PublicShell, DashboardShell), componentes UI y SmartDentValidators
 │       └── features/              # Dominios: public, auth, paciente, odontologo y admin
-├── doc/
-│   ├── canvas/                    # Evidencias y tablero del proyecto
-│   ├── CREDENCIALES_PRUEBA.md
-│   ├── SmartDent_Avance_1.docx
-│   └── requerimientos_funcionales.md
-├── maquetacion-html/
-│   ├── css/
-│   │   ├── estilos.css            # Estilos globales actuales
-│   │   └── styles.css             # Estilos conservados del módulo de acceso
-│   ├── img/
-│   │   ├── branding/              # Logos de SmartDent y UTP
-│   │   ├── odontologos/           # Fotografías de profesionales
-│   │   └── servicios/             # Imágenes de tratamientos
-│   ├── js/
-│   │   ├── api.js                 # Cliente HTTP compartido y sesión JWT
-│   │   ├── appointment-api.js     # Integración REST y adaptación visual de citas
-│   │   ├── clinical-api.js        # Integración REST de historias clínicas
-│   │   ├── service-api.js         # Integración REST del catálogo administrativo
-│   │   ├── admin-user-api.js      # Integración REST de usuarios y odontólogos
-│   │   ├── admin-report-api.js    # Integración REST de indicadores y finanzas
-│   │   ├── schedule-api.js        # Integración REST de bloqueos de agenda
-│   │   ├── patient-settings-api.js # Configuración persistente del paciente
-│   │   ├── contact-api.js         # Envío y administración de mensajes
-│   │   ├── auth.js                # Registro, login y validaciones
-│   │   ├── navbar.js              # Navegación pública compartida
-│   │   ├── footer.js              # Pie de página compartido
-│   │   ├── dashboard-nav.js       # Navegación de los paneles
-│   │   ├── reservar.js            # Reserva y reprogramación de citas
-│   │   ├── paciente.js            # Funciones del panel del paciente
-│   │   ├── odontologo.js          # Agenda y expedientes clínicos
-│   │   ├── admin.js               # Administración y reportes
-│   │   ├── service-catalog.js     # Catálogo central de tarifas y costos
-│   │   ├── servicios.js           # Interacción del catálogo público
-│   │   ├── contacto.js            # Validaciones de contacto
-│   │   └── tailwind-config.js     # Colores y configuración visual
-│   ├── index.html                 # Página principal pública
-│   ├── login.html                 # Inicio de sesión por roles
-│   ├── registro.html              # Creación de cuentas de pacientes
-│   ├── reservar.html              # Selección de servicio, doctor, fecha y hora
-│   ├── paciente.html              # Citas, historial, facturación y configuración
-│   ├── odontologo.html            # Agenda, pacientes y expedientes clínicos
-│   ├── admin.html                 # Agenda global, usuarios, tarifas y finanzas
-│   ├── servicios.html             # Catálogo de tratamientos odontológicos
-│   ├── nosotros.html              # Información de SmartDent y del proyecto
-│   └── contacto.html              # Formulario, datos y mapa de ubicación
+├── maquetacion-html/              # Maquetación HTML/CSS/JS inicial conservada como referencia
+├── scripts/                       # Utilidades de respaldo local de MariaDB
+├── RESPALDAR_BD.cmd               # Respaldo manual de smartdent_db en Windows
+├── CERRAR_SMARTDENT.cmd           # Respaldo y cierre seguro de MariaDB
+├── INSTALAR_RESPALDO_AUTOMATICO.cmd
 ├── .gitignore
 └── README.md
 ```
-
-### Rutas SPA Angular (`frontend/`)
-
-| Ruta | Acceso | Propósito |
-|---|---|---|
-| `/` | Público | Landing page y presentación de SmartDent |
-| `/servicios` | Público | Catálogo filtrable de tratamientos odontológicos |
-| `/nosotros` | Público | Información de la clínica y staff médico |
-| `/contacto` | Público | Formulario reactivo de mensajes y ubicación |
-| `/login` | Invitado (`guestGuard`) | Autenticación JWT y activación de cuenta (`?verificar=`) |
-| `/registro` | Invitado (`guestGuard`) | Registro de pacientes con validación de DNI y fortaleza |
-| `/recuperar` | Público | Solicitud y restablecimiento de contraseña (`?token=`) |
-| `/paciente` | `PACIENTE` (`authGuard` + `roleGuard`) | Panel personal, citas, reprogramación e historial clínico |
-| `/paciente/reservar` | `PACIENTE` (`authGuard` + `roleGuard`) | Agendamiento con disponibilidad horaria en vivo |
-| `/paciente/configuracion` | `PACIENTE` (`authGuard` + `roleGuard`) | Preferencias de contacto y recordatorios |
-| `/odontologo` | `ODONTOLOGO` (`authGuard` + `roleGuard`) | Agenda profesional, confirmación y ficha clínica |
-| `/odontologo/bloqueos` | `ODONTOLOGO` (`authGuard` + `roleGuard`) | Gestión de bloqueos horarios con validación de rango |
-| `/admin` | `ADMIN` (`authGuard` + `roleGuard`) | Agenda global, KPIs y exportación CSV |
-| `/admin/servicios` | `ADMIN` (`authGuard` + `roleGuard`) | Administración de tarifas, costos y sesiones |
-| `/admin/odontologos` | `ADMIN` (`authGuard` + `roleGuard`) | Alta/edición de odontólogos y asignación de servicios |
-| `/admin/finanzas` | `ADMIN` (`authGuard` + `roleGuard`) | Indicadores financieros y costos fijos mensuales |
-| `/admin/mensajes` | `ADMIN` (`authGuard` + `roleGuard`) | Bandeja de atención de mensajes de contacto |
-
-## Persistencia
-
-Los datos de negocio se almacenan en MariaDB mediante JPA/Hibernate. Esto incluye usuarios, odontólogos, servicios, citas, historias clínicas, bloqueos de agenda, costos fijos, preferencias del paciente y mensajes de contacto. `localStorage` conserva solamente el perfil de la sesión activa y su JWT; `sessionStorage` se utiliza para estados temporales de navegación en el prototipo previo.
-
-## Estado de integración
-
-- API REST de usuarios, roles, servicios, odontólogos y citas implementada.
-- Persistencia mediante JPA/Hibernate y MariaDB implementada.
-- Registro, login, verificación de correo, recuperación de contraseña y autorización JWT implementados.
-- Disponibilidad, reserva, reprogramación, cancelación y agendas por rol implementadas en el backend.
-- Historias clínicas persistentes conectadas a los paneles de paciente y odontólogo.
-- Catálogo administrativo de precios, costos, duración y disponibilidad conectado a la API.
-- Listado real de usuarios y gestión de odontólogos conectados al backend.
-- Configuraciones personales, gastos fijos y mensajes de contacto persistentes.
-- Bloqueos de agenda persistentes conectados al panel del odontólogo y a la disponibilidad pública.
-- Documentación OpenAPI disponible mediante Swagger UI.
-- 19 pruebas unitarias del backend superadas, sin iniciar Spring ni utilizar una base de datos.
-- Migración completa del frontend a Angular 19 (`frontend/`) con componentes Standalone `OnPush`, routing con lazy loading y guards por rol, formularios reactivos tipados, validaciones síncronas/cross-field/servidor y 7 pruebas unitarias con Vitest.
-- Pendiente para avances posteriores: despliegue productivo integral con endurecimiento en la nube.
-
-## Integrantes
-
-- Acevedo Huarachi Kelvin Jesus — U23309803.
-- Añorga Pinedo Paolo Alexander — U23305864.
-- Calle Paredes Maykol Adan — U23242558.
-- Salinas Perez Joseph Sebastian — U23325202.
-
-## Nota de seguridad
-
-Este avance es una maqueta académica. Las contraseñas ya se cifran con BCrypt y no se guardan en el navegador. Para producción todavía se deberá reforzar el almacenamiento del token, usar HTTPS y proteger adecuadamente la información clínica.
