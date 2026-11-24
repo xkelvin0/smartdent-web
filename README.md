@@ -10,7 +10,17 @@ Plataforma web Full-Stack para la gestión integral de pacientes, catálogo de s
 
 ---
 
-## Guía Paso a Paso para Ejecutar el Proyecto en Tu Computadora (Equipo)
+## Ejecución Automática en 1 Clic (Windows — Recomendado para el Equipo)
+
+Si usas **Windows**, solo clona el repositorio y haz **doble clic** en [`INSTALAR_Y_EJECUTAR.cmd`](INSTALAR_Y_EJECUTAR.cmd) (o ejecútalo desde PowerShell: `.\INSTALAR_Y_EJECUTAR.cmd`). El script se encarga automáticamente de:
+1. Verificar e instalar mediante `winget` los requisitos faltantes (**Java JDK 21**, **Node.js LTS**, **pnpm** y **XAMPP**).
+2. Iniciar **MySQL/MariaDB** en el puerto `3306` si estaba apagado.
+3. Instalar las dependencias de Angular en `frontend/`.
+4. Levantar **Spring Boot (`:8080`)** y **Angular (`:4200`)** y abrir `http://localhost:4200` en tu navegador.
+
+---
+
+## Guía Manual Paso a Paso (Windows / macOS / Linux)
 
 Sigue estos pasos en orden para levantar el proyecto completo en tu máquina local (**Windows**, **macOS** o **Linux**).
 
