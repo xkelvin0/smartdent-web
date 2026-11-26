@@ -2,6 +2,8 @@ package pe.edu.utp.smartdent.service;
 
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,8 @@ import pe.edu.utp.smartdent.repository.UsuarioRepository;
 
 @Service
 public class RegistroPacienteService {
+
+    private static final Logger log = LoggerFactory.getLogger(RegistroPacienteService.class);
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
@@ -81,7 +85,17 @@ public class RegistroPacienteService {
                 "<p style=\"color: #64748b; font-size: 14px;\">Este enlace expirará en 24 horas.</p>" +
                 "</div>";
 
-        emailService.enviarCorreo(usuarioGuardado.getEmail(), asunto, cuerpo);
+        // En entornos cloud gratuitos (p. ej. Render Free) los puertos SMTP salientes pueden estar bloqueados;
+        // si falla el envío del correo, activamos la cuenta automáticamente para no bloquear el registro.
+        try {
+            emailService.enviarCorreo(usuarioGuardado.getEmail(), asunto, cuerpo);
+        } catch (RuntimeException ex) {
+            log.warn("No se pudo enviar correo de verificación a {}. Activando cuenta automáticamente: {}",
+                    usuarioGuardado.getEmail(), ex.getMessage());
+            usuarioGuardado.setActivo(true);
+            usuarioGuardado = usuarioRepository.save(usuarioGuardado);
+            verificationTokenRepository.delete(token);
+        }
 
         return RegistroPacienteResponse.desde(usuarioGuardado);
     }
