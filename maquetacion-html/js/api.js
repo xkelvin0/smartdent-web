@@ -2,7 +2,7 @@
   const configuredBaseUrl = window.SMARTDENT_API_BASE_URL
     || document.querySelector('meta[name="smartdent-api-base"]')?.content;
   const defaultBaseUrl = window.location.hostname.endsWith("github.io")
-    ? "https://smartdent-web.onrender.com/api"
+    ? "https://smartdent-web-ha54.onrender.com/api"
     : `http://${window.location.hostname}:8080/api`;
   const API_BASE_URL = (configuredBaseUrl || defaultBaseUrl).replace(/\/$/, "");
   const SESSION_KEY = "smartdent_session";

@@ -5,8 +5,8 @@ Plataforma web Full-Stack para la gestión integral de pacientes, catálogo de s
 ## Enlaces en Producción (Nube)
 
 - **Aplicación Web Frontend (GitHub Pages):** https://xkelvin0.github.io/smartdent-web/
-- **API REST Backend Health (Render Cloud):** https://smartdent-web.onrender.com/api/health
-- **Documentación Interactiva Swagger UI:** https://smartdent-web.onrender.com/swagger-ui.html
+- **API REST Backend Health (Render Cloud):** https://smartdent-web-ha54.onrender.com/api/health
+- **Documentación Interactiva Swagger UI:** https://smartdent-web-ha54.onrender.com/swagger-ui.html
 
 ---
 

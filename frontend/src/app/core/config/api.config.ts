@@ -6,7 +6,7 @@ export function resolveApiBaseUrl(): string {
   }
   const host = window.location.hostname;
   if (host.endsWith('github.io')) {
-    return 'https://smartdent-web.onrender.com/api';
+    return 'https://smartdent-web-ha54.onrender.com/api';
   }
   if (window.location.port === '4200') {
     return '/api';
