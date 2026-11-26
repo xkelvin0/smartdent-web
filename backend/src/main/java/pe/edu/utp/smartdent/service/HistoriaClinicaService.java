@@ -42,6 +42,13 @@ public class HistoriaClinicaService {
         this.notificacionService = notificacionService;
     }
 
+    /**
+     * [EXPLICACIÓN SUSTENTACIÓN - MODELO CLÍNICO MULTISESIÓN 1:N]:
+     * Gestiona la historia clínica odontológica del paciente.
+     * 1. Soporta múltiples atenciones cronológicas por paciente (evolución clínica 1:N).
+     * 2. Valida la relación médico-paciente antes de permitir lectura/escritura (Data Privacy y Ley de Salud).
+     * 3. Registra etapas de tratamiento (DIAGNOSTICO, TRATAMIENTO, CONTROL, ALTA) vinculando la cita atendida.
+     */
     @Transactional(readOnly = true)
     public List<HistoriaClinicaResponse> listarDelPaciente(String emailPaciente) {
         return historiaRepository.findByPaciente_EmailIgnoreCaseOrderByActualizadoEnDesc(emailPaciente)

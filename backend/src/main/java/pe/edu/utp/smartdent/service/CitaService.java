@@ -62,6 +62,17 @@ public class CitaService {
         this.notificacionService = notificacionService;
     }
 
+    /**
+     * [EXPLICACIÓN SUSTENTACIÓN - LÓGICA DE NEGOCIO Y TRANSACCIONALIDAD]:
+     * Método core para agendamiento de citas.
+     * 1. Cumple principios ACID mediante anotación @Transactional (si cualquier validación falla, hace Rollback automático).
+     * 2. Aplica validación cruzada en 4 capas:
+     *    - Paciente activo y verificado
+     *    - Odontólogo habilitado y vinculado a la especialidad solicitada
+     *    - Duración calculada según el catálogo de servicios (30, 45, 60 min)
+     *    - Cero solapamiento temporal evaluado con algoritmo de intervalos en DB.
+     * 3. Genera código único de cita seguro y dispara notificación asíncrona.
+     */
     @Transactional
     public CitaResponse reservar(String emailPaciente, CrearCitaRequest request) {
         Usuario paciente = buscarPaciente(emailPaciente);

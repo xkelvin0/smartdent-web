@@ -30,6 +30,14 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
     boolean existsByPaciente_EmailIgnoreCaseAndOdontologo_Usuario_EmailIgnoreCase(
             String emailPaciente, String emailOdontologo);
 
+    /**
+     * [EXPLICACIÓN SUSTENTACIÓN - ALGORITMO ANTI-CRUCE DE HORARIOS]:
+     * Implementa la condición matemática estricta de solapamiento de intervalos temporales:
+     * Dos rangos [inicioA, finA) e [inicioB, finB) colisionan si y solo si:
+     *      (c.horaInicio < :horaFin) AND (c.horaFin > :horaInicio)
+     * Se evalúa directamente a nivel de base de datos (JPQL indexado) para garantizar
+     * O(1) en memoria de servidor y prevenir condiciones de carrera (Race Conditions).
+     */
     @Query("""
             select (count(c) > 0) from Cita c
             where c.odontologo.id = :odontologoId

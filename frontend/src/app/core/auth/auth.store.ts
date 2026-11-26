@@ -8,6 +8,13 @@ import {
 
 const SESSION_KEY = 'smartdent_session';
 
+/**
+ * [EXPLICACIÓN SUSTENTACIÓN - GESTIÓN DE ESTADO REACTIVO CON ANGULAR 19 SIGNALS]:
+ * 1. Sustituye patrones antiguos basados en BehaviorSubject / NgRx boilerplate por Signals nativas de Angular 19.
+ * 2. Cero overhead: 'computed' recalcula valores de forma perezosa (lazy evaluation) solo cuando cambia la sesión activa.
+ * 3. Reactividad de grano fino: Actualiza exactamente el nodo del DOM dependiente sin disparar Change Detection masivo (Zone.js free ready).
+ * 4. Tipado estricto e inmutabilidad: Expone propiedades de solo lectura (.asReadonly()) para proteger el estado de modificaciones externas.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private readonly _session = signal<AuthSession | null>(this.hydrateFromStorage());

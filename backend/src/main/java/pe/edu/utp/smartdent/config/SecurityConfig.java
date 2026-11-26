@@ -37,6 +37,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 public class SecurityConfig {
 
+    /**
+     * [EXPLICACIÓN SUSTENTACIÓN - ARQUITECTURA DE SEGURIDAD STATELESS & RBAC]:
+     * 1. STATELESS: No almacena sesiones en memoria de servidor (JSESSIONID nulo), ideal para escalabilidad horizontal en la nube.
+     * 2. CSRF Desactivado: Justificado por diseño al utilizar tokens JWT en cabecera Authorization: Bearer, inmune a CSRF tradicional basado en cookies.
+     * 3. RBAC (Control de Acceso Basado en Roles): Restringe endpoints estrictamente por autoridad:
+     *    - /api/admin/** -> ROLE_ADMIN
+     *    - /api/odontologos/** -> ROLE_ODONTOLOGO
+     *    - /api/pacientes/** -> ROLE_PACIENTE
+     * 4. OAuth2 Resource Server: Decodifica y valida la firma criptográfica HMAC-SHA256 del JWT en cada petición.
+     */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

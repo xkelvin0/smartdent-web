@@ -13,6 +13,13 @@ const PUBLIC_AUTH_ENDPOINTS: readonly string[] = [
   '/auth/verificar-cuenta',
 ];
 
+/**
+ * [EXPLICACIÓN SUSTENTACIÓN - INTERCEPTOR FUNCIONAL HTTP CON INYECCIÓN DE JWT]:
+ * 1. Implementa HttpInterceptorFn (interceptor funcional moderno de Angular, sin clases ni factories legadas).
+ * 2. Transparencia de capa de red: Inyecta automáticamente 'Authorization: Bearer <token>' a todas las peticiones salientes hacia endpoints privados.
+ * 3. Detección de endpoints públicos: Excluye login, registro y recuperación para evitar envío innecesario de cabeceras.
+ * 4. Normalización dinámica de URLs: Permite alternar sin cambios de código entre proxy local (/api) y backend remoto en Render Cloud.
+ */
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authStore = inject(AuthStore);
   const router = inject(Router);
