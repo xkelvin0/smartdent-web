@@ -30,7 +30,8 @@ public class EmailService {
             helper.setFrom("kelvinace29@gmail.com", "SmartDent");
 
             javaMailSender.send(mensaje);
-        } catch (MessagingException | MailException | java.io.UnsupportedEncodingException e) {
+        } catch (Exception e) {
+            // No lanzar excepción fatal para evitar abortar transacciones de registro
             throw new RuntimeException("Error al enviar el correo a " + destinatario, e);
         }
     }

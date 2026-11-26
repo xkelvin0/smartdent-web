@@ -85,16 +85,19 @@ public class RegistroPacienteService {
                 "<p style=\"color: #64748b; font-size: 14px;\">Este enlace expirará en 24 horas.</p>" +
                 "</div>";
 
-        // En entornos cloud gratuitos (p. ej. Render Free) los puertos SMTP salientes pueden estar bloqueados;
-        // si falla el envío del correo, activamos la cuenta automáticamente para no bloquear el registro.
+        // En entornos locales sin SMTP configurado o cloud gratuitos (Render) donde SMTP está bloqueado,
+        // no fallamos el registro: activamos la cuenta automáticamente para que el usuario pueda ingresar.
         try {
             emailService.enviarCorreo(usuarioGuardado.getEmail(), asunto, cuerpo);
-        } catch (RuntimeException ex) {
+        } catch (Throwable ex) {
             log.warn("No se pudo enviar correo de verificación a {}. Activando cuenta automáticamente: {}",
                     usuarioGuardado.getEmail(), ex.getMessage());
             usuarioGuardado.setActivo(true);
             usuarioGuardado = usuarioRepository.save(usuarioGuardado);
-            verificationTokenRepository.delete(token);
+            try {
+                verificationTokenRepository.delete(token);
+            } catch (Throwable ignored) {
+            }
         }
 
         return RegistroPacienteResponse.desde(usuarioGuardado);
